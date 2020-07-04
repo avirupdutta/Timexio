@@ -1,0 +1,67 @@
+<%- include('partials/nabvar.ejs') %>
+<main>
+	<!--================login_part Area =================-->
+	<section class="login_part section_padding ">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-sm-12 col-lg-6 col-md-6 mx-auto">
+					<div class="login_part_form">
+						<div class="login_part_form_iner">
+							<%- include ('./partials/messages') %>
+							<h3>
+								Welcome Back!
+							</h3>
+							<form
+								class="row contact_form"
+								action="/users/login"
+								method="post"
+								novalidate="novalidate"
+							>
+								<div class="col-md-12 form-group p_star">
+									<input
+										type="text"
+										class="form-control"
+										id="name"
+										name="email"
+										value=""
+										placeholder="Email"
+									/>
+								</div>
+								<div class="col-md-12 form-group p_star">
+									<input
+										type="password"
+										class="form-control"
+										id="password"
+										name="password"
+										value=""
+										placeholder="Password"
+									/>
+								</div>
+								<div class="col-md-12 form-group mt-4">
+									<p>
+										Don't have an account?
+										<a
+											class="text-primary"
+											href="/users/signup"
+											>Sign Up</a
+										>
+									</p>
+									<button
+										type="submit"
+										value="submit"
+										class="btn_3"
+									>
+										log in
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--================login_part end =================-->
+</main>
+<%- include('./partials/footer.ejs') %> <%- include('./partials/search-box.ejs')
+%>

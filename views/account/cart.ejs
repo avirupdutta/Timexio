@@ -1,0 +1,93 @@
+<%- include('../partials/nabvar.ejs') %>
+<main>
+	<div class="hero-cap text-center mt-2 mb-5">
+		<h1>Your Cart</h1>
+	</div>
+    <!--================Cart Area =================-->
+    <section class="cart_area section_padding">
+      <div class="container">
+        <div class="cart_inner">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Product</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="media">
+                      <div class="d-flex">
+                        <img src="img/gallery/card1.png" alt="" />
+                      </div>
+                      <div class="media-body">
+                        <p>Minimalistic shop for multipurpose use</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <h4>$360.00</h4>
+                  </td>
+                  <td>
+                    <div class="product_count">
+                      <span class="input-number-decrement"> <i class="ti-minus"></i></span>
+                      <input class="input-number" type="text" value="1" min="0" max="10">
+                      <span class="input-number-increment"> <i class="ti-plus"></i></span>
+                    </div>
+                  </td>
+                  <td>
+                    <h4>$720.00</h4>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="media">
+                      <div class="d-flex">
+                        <img src="img/gallery/card2.png" alt="" />
+                      </div>
+                      <div class="media-body">
+                        <p>Minimalistic shop for multipurpose use</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <h4>$360.00</h4>
+                  </td>
+                  <td>
+                    <div class="product_count">
+                        <span class="input-number-decrement"> <i class="ti-minus"></i></span>
+                        <input class="input-number" type="text" value="1" min="0" max="10">
+                        <span class="input-number-increment"> <i class="ti-plus"></i></span>
+                    </div>
+                  </td>
+                  <td>
+                    <h4>$720.00</h4> 
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <h4>Subtotal</h4>
+                  </td>
+                  <td>
+                    <h4>$2160.00</h4>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="checkout_btn_inner float-right">
+              <a class="btn_1" href="/">Continue Shopping</a>
+              <a class="btn_1 checkout_btn_1" href="/account/checkout">Proceed to checkout</a>
+            </div>
+          </div>
+        </div>
+    </section>
+    <!--================End Cart Area =================-->
+</main>
+<%- include('../partials/footer.ejs') %> <%- include('../partials/search-box.ejs')
+%>
