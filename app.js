@@ -47,11 +47,13 @@ app.use(expressLayouts);
 app.set("view engine", "ejs");
 app.set("layout extractScripts", true);
 app.use("/", express.static("static"));
+app.use("/category", express.static("static"));
 app.use("/account", express.static("static"));
 app.use("/users", express.static("static"));
 app.use("/admin", express.static("static"));
 app.use("/admin/data", express.static("static/admin/"));
 app.use("/admin/product/:id", express.static("static/admin/"));
+app.use("/admin/user/:id", express.static("static/admin/"));
 
 // Body parser
 app.use(express.urlencoded({ extended: false }));

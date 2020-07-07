@@ -13,24 +13,18 @@
 						<nav>
 							<ul id="navigation">
 								<li><a href="/">Home</a></li>
-								<li><a href="shop.html">shop</a></li>
+								<li><a href="/popular">Popular</a></li>
 								<li><a href="about.html">about</a></li>
 								<li class="hot">
-									<a href="#">Latest</a>
+									<a href="#">Categories</a>
 									<ul class="submenu">
-										<li>
-											<a href="shop.html">
-												Product list</a
-											>
-										</li>
-										<li>
-											<a href="product_details.html">
-												Product Details</a
-											>
-										</li>
+										<% categories.forEach(category => { %>
+											<li>
+												<a href="/category/<%= category %>"><%= category %></a>
+											</li>
+										<% }) %>
 									</ul>
 								</li>
-
 								<li>
 									<a href="#">Pages</a>
 									<ul class="submenu">
@@ -51,6 +45,25 @@
 										</li>
 									</ul>
 								</li>
+								<% if (locals.isAuthenticated) { %>
+									<li>
+										<a href="/account"><span class="flaticon-user"></span></a>
+									</li>
+									<li>
+										<a href="/account/cart"><span class="flaticon-shopping-cart"></span></a>
+									</li>
+								<% if (locals.admin) { %>
+									<li>
+										<a href="/admin"><span>Admin</span></a>
+									</li>
+								<% } %> <% } else { %>
+									<li>
+										<a class="text-primary" href="/users/login">Login</a>
+									</li>
+									<li>
+										<a class="text-danger" href="/users/signup">Sign Up</a>
+									</li>
+								<% } %>
 							</ul>
 						</nav>
 					</div>
@@ -62,28 +75,6 @@
 									<span class="flaticon-search"></span>
 								</div>
 							</li>
-							<% if (locals.isAuthenticated) { %>
-							<li>
-								<a href="/account"
-									><span class="flaticon-user"></span
-								></a>
-							</li>
-							<li>
-								<a href="/account/cart"
-									><span class="flaticon-shopping-cart"></span
-								></a>
-							</li>
-							<% if (locals.admin) { %>
-							<li>
-								<a href="/admin"><span>Admin</span></a>
-							</li>
-							<% } %> <% } else { %>
-							<li>
-								<a class="text-danger" href="/users/signup"
-									>Sign Up</a
-								>
-							</li>
-							<% } %>
 						</ul>
 					</div>
 				</div>

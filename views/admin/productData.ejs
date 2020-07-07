@@ -65,16 +65,7 @@
 								<tr>
 									<% fields.forEach(fieldName => { %>
 										<td>
-											<% if (typeof item[fieldName] === typeof Array()) { %>
-												<!-- todo - item[fieldName] will have "images" array. Iterate over it and add the options -->
-												<select class="form-control">
-													<% item[fieldName].forEach(imageURL => { %>
-														<option value="<%= imageURL %>"><%= imageURL %></option>
-													<% }) %>
-												</select>
-											<% } else { %>
-												<%= item[fieldName].toString().substring(0, 50) %>
-											<% } %>
+											<%= item[fieldName].toString().substring(0, 50) %>
 										</td>
 										<% }) %>
 										<td class="text-center">
@@ -106,21 +97,16 @@
 				</div>
 				<form action="/admin/product/add" method="post">
 					<div class="modal-body">
-
-						<input type="text" name="category" class="form-control" value="Category - <%= currentModel %>" required disabled>
-
+						<input type="text" name="category" class="form-control" value="<%= currentModel %>" required hidden>
 						<input type="text"   name="name"  class="form-control mt-2 mb-2" placeholder="Product Name" required>
-						<input type="number" name="price" class="form-control mt-2 mb-2" placeholder="Price ($)" required>
+						<input type="number" name="price" class="form-control mt-2 mb-2" placeholder="Price (INR)" required>
 						<input type="number" name="quantity" class="form-control mt-2 mb-2" placeholder="Quantity Available" required>
 						<input type="number" name="tax" class="form-control mt-2 mb-2" placeholder="Tax (%)" required>
 
-						
 						<input type="url" name="primaryImage" class="form-control mt-2 mb-2"  placeholder="Link of Primary Image" required>
 						<input type="url" name="productImage1" class="form-control mt-2 mb-2" placeholder="Link of Product Image 1">
 						<input type="url" name="productImage2" class="form-control mt-2 mb-2" placeholder="Link of Product Image 2">
 						<input type="url" name="productImage3" class="form-control mt-2 mb-2" placeholder="Link of Product Image 3">
-
-
 
 						<textarea name="specs" class="form-control mt-2 mb-2" placeholder="specs..." required></textarea>
 					</div>
@@ -172,7 +158,7 @@
 				if (willDelete) {
 					$.ajax({
 						type: 'DELETE',
-						url: `/admin/user/${id}/delete`,
+						url: `/admin/product/${id}/delete`,
 						success: function (data) { 
 							location.reload();
 						},

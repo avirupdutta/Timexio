@@ -3,13 +3,15 @@ const bcryptjs = require("bcryptjs");
 const passport = require("passport");
 const User = require("../models/User");
 const { forwardAuthenticated } = require("../config/auth");
+const categories = require("../models/productCategories");
+const { getCommonMetaData } = require("./utils");
 
 const router = express.Router();
 
 // Register Page
 router.get("/signup", forwardAuthenticated, (req, res) => {
 	res.render("signup", {
-		title: "Sign Up"
+		...getCommonMetaData(req, "Sign Up")
 	});
 });
 router.post("/signup", (req, res) => {
@@ -25,7 +27,8 @@ router.post("/signup", (req, res) => {
 		errors.push({ msg: "Passwords didn't matched" });
 	}
 	if (errors.length > 0) {
-		res.render("register", {
+		res.render("signup", {
+			...getCommonMetaData(req, "Sign Up"),
 			errors,
 			name,
 			email,
@@ -76,7 +79,7 @@ router.post("/signup", (req, res) => {
 // Login Page
 router.get("/login", forwardAuthenticated, (req, res) => {
 	res.render("login", {
-		title: "Login"
+		...getCommonMetaData(req, "Login")
 	});
 });
 

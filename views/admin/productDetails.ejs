@@ -72,6 +72,10 @@
 							<label for="specs">Specifications<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
 							<textarea id="specs" name="specs" class="form-control mt-2 mb-2" rows="10" placeholder="specs..." required><%= product.specs %></textarea>
 						</div>
+						<div class="form-group">
+							<label for="created">Created At</label>
+							<input type="datetime" id="created" class="form-control mt-2 mb-2"  value="<%= product.created %>" disabled>
+						</div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>

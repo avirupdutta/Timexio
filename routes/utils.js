@@ -1,4 +1,6 @@
 const modelNames = require("../models/index");
+const categories = require("../models/productCategories");
+
 const {
 	ensureAuthenticated,
 	ensureAdminAuthorized
@@ -19,7 +21,10 @@ const getFieldNames = model => {
 			fieldName !== "_id" &&
 			fieldName !== "__v" &&
 			fieldName !== "password" &&
-			fieldName !== "category"
+			fieldName !== "category" &&
+			fieldName !== "created" &&
+			fieldName !== "images" &&
+			fieldName !== "specs"
 	);
 };
 
@@ -49,7 +54,8 @@ const setProductsRoutes = (router, categories) => {
 								price: item.price,
 								images: item.images,
 								quantity: item.quantity,
-								tax: item.tax
+								tax: item.tax,
+								created: item.created
 							};
 						})
 					});
@@ -59,8 +65,19 @@ const setProductsRoutes = (router, categories) => {
 	});
 };
 
+const getCommonMetaData = (req, title) => {
+	return {
+		title,
+		name: req.user ? req.user.name : null,
+		admin: req.user ? req.user.admin : null,
+		isAuthenticated: req.isAuthenticated(),
+		categories
+	};
+};
+
 module.exports = {
 	getAdminMetaData,
 	getFieldNames,
-	setProductsRoutes
+	setProductsRoutes,
+	getCommonMetaData
 };

@@ -1,4 +1,6 @@
 const express = require("express");
+const bcryptjs = require("bcryptjs");
+
 const {
 	getAdminMetaData,
 	getFieldNames,
@@ -124,7 +126,8 @@ router.get(
 					quantity,
 					tax,
 					images,
-					specs
+					specs,
+					created
 				} = item;
 				const [
 					primaryImage,
@@ -134,7 +137,7 @@ router.get(
 				] = images;
 
 				return res.render("admin/productDetails", {
-					...getAdminMetaData("req.user.name"),
+					...getAdminMetaData(req.user.name),
 					product: {
 						id,
 						category,
@@ -146,7 +149,8 @@ router.get(
 						primaryImage,
 						productImage1,
 						productImage2,
-						productImage3
+						productImage3,
+						created
 					},
 					productCategories
 				});
@@ -156,7 +160,40 @@ router.get(
 	}
 );
 
-//*  Working POST Route to update a specific product
+// ** Working GET Route for a specific User detail **
+//* Display single User
+router.get(
+	"/user/:id/details",
+	ensureAuthenticated,
+	ensureAdminAuthorized,
+	(req, res) => {
+		// get the id from req params
+		const id = req.params.id;
+
+		// check if the product with that id exists
+		User.findById(id, (error, item) => {
+			// if item is found
+			if (item) {
+				const { id, name, email, password, date, admin } = item;
+
+				return res.render("admin/userDetails", {
+					...getAdminMetaData(req.user.name),
+					user: {
+						id,
+						name,
+						email,
+						password,
+						date,
+						admin
+					}
+				});
+			}
+			return res.render("404");
+		});
+	}
+);
+
+//*  Working POST Route to update a specific Product
 router.post(
 	"/product/:id/edit",
 	ensureAuthenticated,
@@ -226,6 +263,71 @@ router.post(
 					});
 			} else {
 				req.flash("error_msg", "Product not found for update");
+				return res.redirect("back");
+			}
+		});
+	}
+);
+
+//*  Working POST Route to update a specific User
+router.post(
+	"/user/:id/edit",
+	ensureAuthenticated,
+	ensureAdminAuthorized,
+	(req, res) => {
+		// get the id from req params
+		const id = req.params.id;
+
+		// check if the product with that id exists
+		User.findById(id, (error, item) => {
+			// if not send 404
+			if (error) {
+				req.flash("error_msg", "User not found for update");
+				return res.redirect("back");
+			}
+
+			// if item is found
+			else if (item) {
+				const { name, email, password, admin } = req.body;
+
+				// validate the params
+				// ! skipped
+				// if invalid send 400 (bad request)
+				// ! skipped
+
+				// else perform update
+				item.name = name;
+				item.email = email;
+				item.admin = admin == "true" ? true : false;
+
+				// hash the password
+				bcryptjs.genSalt(10, (err, salt) => {
+					bcryptjs.hash(password, salt, (err, hashedPassword) => {
+						if (err) {
+							req.flash("error_msg", "Something went wrong!");
+							return res.redirect("back");
+						}
+						item.password = hashedPassword;
+					});
+				});
+
+				item.save()
+					.then(item => {
+						req.flash(
+							"success_msg",
+							"User info updated successfully!"
+						);
+						return res.redirect("back");
+					})
+					.catch(err => {
+						req.flash(
+							"error_msg",
+							"Internal error occured. Try again later!"
+						);
+						return res.redirect("back");
+					});
+			} else {
+				req.flash("error_msg", "User not found for update");
 				return res.redirect("back");
 			}
 		});
