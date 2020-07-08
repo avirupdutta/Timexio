@@ -6241,8 +6241,8 @@ del {
 }
 .btn_3:hover {
 	background-color: #2577fd;
-    color: #fff;
-    cursor: pointer;
+	color: #fff;
+	cursor: pointer;
 }
 .btn_2 {
 	display: inline-block;
@@ -9684,4 +9684,19 @@ input:focus {
 	.breadcrumb_part .breadcrumb_iner h2 {
 		font-size: 30px;
 	}
+}
+
+.filters a,
+.categories a {
+	color: #000;
+	display: block;
+	margin: 1rem 0;
+}
+.sortby-list a {
+	color: #000;
+	margin: 0 1rem;
+}
+.sortby-list .active {
+	color: #0071fe;
+	font-weight: 700;
 }

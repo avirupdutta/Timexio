@@ -44,13 +44,22 @@ router.get("/", async (req, res) => {
 });
 
 // category page
-router.get("/category/:model", (req, res) => {
-	const modelName = req.params.model;
-	if (categories.includes(modelName)) {
+router.get("/category/:model", async (req, res) => {
+	const categoryName = req.params.model;
+	if (categories.includes(categoryName)) {
 		// render all products under that category
-		res.render("category", {
-			...getCommonMetaData(req, "Home")
-		});
+		try {
+			const products = await Product.find({ category: categoryName });
+			res.render("category", {
+				...getCommonMetaData(req, "Home"),
+				categoryName,
+				products
+			});
+		} catch (error) {
+			res.render("500", {
+				...getCommonMetaData(req, `Something went wrong`)
+			});
+		}
 	} else {
 		res.render("404", {
 			...getCommonMetaData(req, `${modelName} category not found!`)

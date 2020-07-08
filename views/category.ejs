@@ -1,13 +1,78 @@
 <%- include('partials/nabvar.ejs') %>
 <main>
     <div class="row mt-5">
-        <div class="col-sm-6 col-md-2 border border-primary">
-            <h4>Filters</h4>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius tempore atque natus numquam sed ratione suscipit reiciendis. Expedita eaque est fuga, porro nulla eos rem nam enim, aut illum deleniti.
+        <div class="col-sm-6 col-md-2">
+            <div class="categories mb-5">
+                <h4>Categories</h4>
+                <% categories.forEach(category => { %>
+                    <a href="/category/<%= category %>">- <%= category %></a>
+                <% }) %>
+            </div>
+            <div class="filters mb-5">
+                <h4>Filters</h4>
+                <a href="#">- Most Popular</a>
+                <a href="#">- Trending</a>
+                <a href="#">- Featured</a>
+                <a href="#">- Offers</a>
+            </div>
+            <div class="price-range mb-5">
+                <form action="#">
+                    <label for="priceRangeFields"><h4>Price Range</h4></label>
+                    <div class="input-group" id="priceRangeFields">
+                        <input type="number" placeholder="Min." aria-label="Minimum Price" class="form-control">
+                        <input type="number" placeholder="Max." aria-label="Maximum Price" class="form-control">
+                      </div>
+                </form>
+            </div>
+            <div class="availability">
+                <form action="#">
+                    <h4>Availability</h4>
+                    <input type="checkbox" value="true" id="availability">
+                    <label for="availability">Include out of stock</label>
+                </form>
+            </div>
         </div>
-        <div class="col-sm-6 col-md-10 border border-danger">
-            <h4>Products</h4>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi vitae obcaecati aut repudiandae tempora illo, tenetur corrupti accusamus pariatur aperiam, illum natus dolor incidunt labore, quia quae fugit nisi impedit?
+        <div class="col-sm-6 col-md-10">
+            <h1><%= categoryName %></h1>
+            <% if (products.length > 0) { %>
+                <p>Showing 1-10 results from "<%= products.length %>" products</p>    
+                <div class="sortby-list">
+                    <h5 class="d-inline">Sort By:</h5>
+                    <a href="#" class="active">Relevence</a>
+                    <a href="#">Low to High</a>
+                    <a href="#">High to Low</a>
+                    <a href="#">Popularity</a>
+                    <a href="#">Latest</a>
+                </div>
+            <% } %>
+
+            <hr>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <% if (products.length === 0) { %>
+                        <div class="m-5 p-5">
+                            <h3 class="m-auto text-muted">No <%= categoryName %> found to display!</h3>
+                        </div>
+                    <% } %>
+                </div>
+                <% products.forEach(product => { %>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                        <a href="/product/<%= product.id %>/details">
+                            <div class="single-new-pro mb-30 text-center">
+                                <div class="product-img">
+                                    <img class="" src="<%= product.images[0] %>" alt="product image"/>
+                                </div>
+                                <div class="product-caption">
+                                    <h6>
+                                        <%= product.name %>
+                                    </h6>
+                                    <h3 class="text-danger">&#8377;<%= product.price %></h3>
+                                </div>
+                            </div>
+                        </a>
+                    </div> 
+                <% }) %>
+            </div>
         </div>
     </div>
 </main>
