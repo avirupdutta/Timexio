@@ -49,20 +49,44 @@ router.get("/category/:model", async (req, res) => {
 	if (categories.includes(categoryName)) {
 		// render all products under that category
 		try {
-			const products = await Product.find({ category: categoryName });
+			let products;
+			let sortBy = req.query.sortBy;
+			switch (sortBy) {
+				case "lowToHigh":
+					products = await Product.find({
+						category: categoryName
+					}).sort({ price: 1 });
+					break;
+				case "highToLow":
+					products = await Product.find({
+						category: categoryName
+					}).sort({ price: -1 });
+					break;
+				case "latest":
+					products = await Product.find({
+						category: categoryName
+					}).sort({ created: 1 });
+					break;
+				default:
+					products = await Product.find({ category: categoryName });
+					sortBy = "relevence";
+					break;
+			}
 			res.render("category", {
 				...getCommonMetaData(req, "Home"),
 				categoryName,
-				products
+				products,
+				sortBy
 			});
 		} catch (error) {
+			console.log(error);
 			res.render("500", {
 				...getCommonMetaData(req, `Something went wrong`)
 			});
 		}
 	} else {
 		res.render("404", {
-			...getCommonMetaData(req, `${modelName} category not found!`)
+			...getCommonMetaData(req, `${categoryName} category not found!`)
 		});
 	}
 });
