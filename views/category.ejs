@@ -38,11 +38,11 @@
                 <p>Showing 1-10 results from "<%= products.length %>" products</p>    
                 <div class="sortby-list">
                     <h5 class="d-inline">Sort By:</h5>
-                    <a href="#" class="active">Relevence</a>
-                    <a href="#">Low to High</a>
-                    <a href="#">High to Low</a>
-                    <a href="#">Popularity</a>
-                    <a href="#">Latest</a>
+                    <a href="?sortBy=relevence"  class="<%= locals.sortBy === 'relevence'  ? 'active' : '' %>">Relevence</a>
+                    <a href="?sortBy=lowToHigh"  class="<%= locals.sortBy === 'lowToHigh'  ? 'active' : '' %>">Low to High</a>
+                    <a href="?sortBy=highToLow"  class="<%= locals.sortBy === 'highToLow'  ? 'active' : '' %>">High to Low</a>
+                    <a href="?sortBy=popularity" class="<%= locals.sortBy === 'popularity' ? 'active' : '' %>">Popularity</a>
+                    <a href="?sortBy=latest"     class="<%= locals.sortBy === 'latest'     ? 'active' : '' %>">Latest</a>
                 </div>
             <% } %>
 
