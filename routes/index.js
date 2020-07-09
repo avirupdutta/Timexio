@@ -6,6 +6,7 @@ const router = express.Router();
 const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 const Product = require("../models/Product");
 
+//* ======= PUBLIC ROUTES BELOW! ======= //
 // welcome page
 router.get("/", async (req, res) => {
 	let data = {};
@@ -43,37 +44,70 @@ router.get("/", async (req, res) => {
 	});
 });
 
+// product details
+router.get("/product/:id/details", async (req, res) => {
+	const id = req.params.id;
+	try {
+		const product = await Product.findById(id);
+		res.render("productDetails", {
+			...getCommonMetaData(req, product.name),
+			product
+		});
+	} catch (error) {}
+});
+
 // category page
 router.get("/category/:model", async (req, res) => {
 	const categoryName = req.params.model;
 	if (categories.includes(categoryName)) {
 		// render all products under that category
+		// todo - Add filter by price feature
 		try {
 			let products;
-			let sortBy = req.query.sortBy;
+			let { sortBy, minPrice, maxPrice } = req.query;
+
+			// sorting products
 			switch (sortBy) {
 				case "lowToHigh":
 					products = await Product.find({
-						category: categoryName
+						category: categoryName,
+						price: {
+							$lte: maxPrice || 1000000000,
+							$gte: minPrice || 0
+						}
 					}).sort({ price: 1 });
 					break;
 				case "highToLow":
 					products = await Product.find({
-						category: categoryName
+						category: categoryName,
+						price: {
+							$lte: maxPrice || 1000000000,
+							$gte: minPrice || 0
+						}
 					}).sort({ price: -1 });
 					break;
 				case "latest":
 					products = await Product.find({
-						category: categoryName
-					}).sort({ created: 1 });
+						category: categoryName,
+						price: {
+							$lte: maxPrice || 1000000000,
+							$gte: minPrice || 0
+						}
+					}).sort({ created: -1 });
 					break;
 				default:
-					products = await Product.find({ category: categoryName });
+					products = await Product.find({
+						category: categoryName,
+						price: {
+							$lte: maxPrice || 1000000000,
+							$gte: minPrice || 0
+						}
+					});
 					sortBy = "relevence";
 					break;
 			}
 			res.render("category", {
-				...getCommonMetaData(req, "Home"),
+				...getCommonMetaData(req, `Category for ${categoryName}`),
 				categoryName,
 				products,
 				sortBy
@@ -81,7 +115,8 @@ router.get("/category/:model", async (req, res) => {
 		} catch (error) {
 			console.log(error);
 			res.render("500", {
-				...getCommonMetaData(req, `Something went wrong`)
+				...getCommonMetaData(req, `Something went wrong`),
+				sortBy: "relevence"
 			});
 		}
 	} else {
@@ -91,6 +126,36 @@ router.get("/category/:model", async (req, res) => {
 	}
 });
 
+// search results page
+router.get("/search", async (req, res) => {
+	const keywords = req.query.keywords.split(" ");
+	if (keywords.length > 1) {
+		// search engine algo here
+		let products = [],
+			sortBy = "relevence";
+		res.render("searchResults", {
+			...getCommonMetaData(
+				req,
+				`Showing results for ${req.query.keywords}`
+			),
+			categoryName: categories,
+			searchKeywords: req.query.keywords,
+			products,
+			sortBy
+		});
+	} else {
+		res.redirect("/");
+	}
+});
+
+// a page for auauthorized access
+router.get("/unauthorized", function(req, res) {
+	res.render("unauthorized", {
+		...getCommonMetaData(req, "Authorization Error!")
+	});
+});
+
+//* ======= PRIVATE ROUTES BELOW! ======= //
 // dashboard
 router.get("/account", ensureAuthenticated, (req, res) => {
 	res.render("account/userAccount", {
@@ -109,12 +174,6 @@ router.get("/account/cart", ensureAuthenticated, (req, res) => {
 router.get("/account/checkout", ensureAuthenticated, (req, res) => {
 	res.render("account/checkout", {
 		...getCommonMetaData(req, "Checkout")
-	});
-});
-
-router.get("/unauthorized", function(req, res) {
-	res.render("unauthorized", {
-		...getCommonMetaData(req, "Authorization Error!")
 	});
 });
 

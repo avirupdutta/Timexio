@@ -1,0 +1,38 @@
+<%- include('partials/nabvar.ejs') %>
+<main>
+    <div class="row mt-5">
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+            <img src="<%= product.images[0] %>" class="w-100" alt="primary image">
+        </div>
+        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 pl-5 pr-5">
+            <h3><%= product.name %></h3>
+            <hr>
+            <table class="table table-borderless">
+                <tr>
+                    <td><p class="lead">M.R.P:</p></td>
+                    <td><del class="text-danger">&#8377;<%= (product.price * 13.685).toFixed(2) %></del></td>
+                </tr>
+                <tr>
+                    <td><h4 class="">Price:</h4></td>
+                    <td>
+                        <h4 class="text-danger">&#8377;<%= product.price + ((product.tax/100)*product.price) %></h4>
+                        <% if (product.price + ((product.tax/100)*product.price) > 300) { %>
+                            <small><strong>FREE DELIVERY!</strong></small>
+                        <% } else { %>
+                            <small>Shipping charges &#8377;50</small>
+                        <% } %>
+                    </td>
+                </tr>
+                <tr>
+                    <td><p class="lead">You save:</p></td>
+                    <td>
+                        <p class="text-danger">&#8377;<%= ((product.price * 13.685) - product.price + ((product.tax/100)*product.price)).toFixed(2)  %></p>
+                        Inclusive of all taxes (<%= product.tax %>%)
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</main>
+<%- include('./partials/footer.ejs') %> 
+<%- include('./partials/search-box.ejs') %>

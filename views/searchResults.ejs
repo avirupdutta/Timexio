@@ -16,7 +16,7 @@
                 <a href="#">- Offers</a>
             </div>
             <div class="price-range mb-5">
-                <form action="/category/<%= categoryName %>" method="GET">
+                <form action="/search" method="GET">
                     <label for="priceRangeFields"><h4>Price Range</h4></label>
                     <div class="input-group input-group-sm" id="priceRangeFields">
                         <input type="number" name="minPrice" placeholder="Min." aria-label="Minimum Price" class="form-control">
@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="col-sm-6 col-md-9 pl-5">
-            <h1><%= categoryName %></h1>
+            <h1>Showing results for "<%= searchKeywords %>"</h1>
             <% if (products.length > 0) { %>
                 <p>Showing 1-10 results from "<%= products.length %>" products</p>    
                 <div class="sortby-list">
@@ -53,7 +53,7 @@
                 <div class="col-12 text-center">
                     <% if (products.length === 0) { %>
                         <div class="m-5 p-5">
-                            <h3 class="m-auto text-muted">No <%= categoryName %> found to display!</h3>
+                            <h3 class="m-auto text-muted">Nothing found as "<%= searchKeywords %>"</h3>
                         </div>
                     <% } %>
                 </div>

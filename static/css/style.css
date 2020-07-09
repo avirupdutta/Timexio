@@ -2511,14 +2511,16 @@ input:focus {
 }
 .search-model-box .search-model-form {
 	padding: 0 15px;
+	width: 80%;
 }
 .search-model-box .search-model-form input {
-	width: 500px;
+	width: 100%;
 	font-size: 40px;
 	border: none;
 	border-bottom: 2px solid #333;
 	background: none;
 	color: #999;
+	text-align: center;
 }
 @media only screen and (min-width: 576px) and (max-width: 767px) {
 	.search-model-box .search-model-form input {
