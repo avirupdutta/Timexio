@@ -20,28 +20,34 @@ router.get("/", async (req, res) => {
 	// ========================================
 
 	// For New Arrivals
-	await Product.find({}, (err, items) => {
-		if (err) {
-			console.log(err);
-		}
-		const newArrivalProducts = items
-			.sort((item1, item2) => {
-				if (item1.created > item2.created) {
-					return -1;
-				} else if (item1.created < item2.created) {
-					return 1;
-				} else {
-					return 0;
-				}
-			})
-			.slice(0, 10);
-		data.newArrivalProducts = newArrivalProducts;
-	});
+	try {
+		await Product.find({}, (err, items) => {
+			if (err) {
+				console.log(err);
+			}
+			const newArrivalProducts = items
+				.sort((item1, item2) => {
+					if (item1.created > item2.created) {
+						return -1;
+					} else if (item1.created < item2.created) {
+						return 1;
+					} else {
+						return 0;
+					}
+				})
+				.slice(0, 10);
+			data.newArrivalProducts = newArrivalProducts;
+		});
 
-	res.render("index", {
-		...getCommonMetaData(req, "Home"),
-		...data
-	});
+		res.render("index", {
+			...getCommonMetaData(req, "Home"),
+			...data
+		});
+	} catch (error) {
+		res.render("500", {
+			...getCommonMetaData(req, `Something went wrong`)
+		});
+	}
 });
 
 // product details

@@ -2,7 +2,15 @@
 <main>
     <div class="row mt-5">
         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
-            <img src="<%= product.images[0] %>" class="w-100" alt="primary image">
+            <div class="image-previews">
+                <p class="lead"><small>Click on any image to zoom</small></p>
+                <% product.images.forEach(image => { %>
+                    <% if (image.length > 0) { %>
+                        <img src=<%= image %> alt="preview image" class="border p-2 product-preview-image" style="height: 50px; width: 50px;">
+                    <% } %>
+                <% }) %>
+            </div>
+            <img src="<%= product.images[0] %>" class="w-100 mt-4" id="productPrimaryImage" alt="primary image">
         </div>
         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 pl-5 pr-5">
             <h3><%= product.name %></h3>
@@ -10,7 +18,9 @@
             <table class="table table-borderless">
                 <tr>
                     <td><p class="lead">M.R.P:</p></td>
-                    <td><del class="text-danger">&#8377;<%= (product.price * 13.685).toFixed(2) %></del></td>
+                    <td>
+                        <del class="text-danger">&#8377;<%= (product.price * 13.685).toFixed(2) %></del>
+                    </td>
                 </tr>
                 <tr>
                     <td><h4 class="">Price:</h4></td>
@@ -31,8 +41,32 @@
                     </td>
                 </tr>
             </table>
+            <div class="buy-cart-btns mb-5">
+                <button class="btn-buy text-capitalize">Buy Now <i data-feather="zap"></i></button>
+                <button class="btn-addToCart text-capitalize">Add to Cart <i data-feather="shopping-cart"></i></button>
+            </div>
+            <h4>Availability: 
+                <% if (product.quantity > 1) { %>
+                    <i data-feather="check-circle" class="text-success"></i>
+                <% } else { %>
+                    <i data-feather="x-circle" class="text-danger"></i>
+                <% } %>
+            </h4>
+            <div class="specs mt-5">
+                <h4>Specifications</h4>
+                <p><%= product.specs %></p>
+            </div>
         </div>
     </div>
 </main>
+
+<script>
+    $('.product-preview-image').click(function (e) { 
+        var image = e.currentTarget.src;
+        $('#productPrimaryImage').attr('src', image);
+    })
+</script>
+
+
 <%- include('./partials/footer.ejs') %> 
 <%- include('./partials/search-box.ejs') %>

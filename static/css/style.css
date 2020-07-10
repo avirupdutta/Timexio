@@ -9702,3 +9702,38 @@ input:focus {
 	color: #0071fe;
 	font-weight: 700;
 }
+.btn-addToCart,
+.btn-buy {
+	width: 180px;
+	padding: 1.3rem;
+	border: none;
+	font-size: 1.2rem;
+	color: #fff;
+}
+.btn-addToCart {
+	background-color: #007bff;
+	transition: all 0.3s ease-in-out;
+}
+.btn-addToCart:hover {
+	background-color: #0053ec;
+	box-shadow: 0 0 10px 0 #aaa;
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
+}
+
+.btn-buy {
+	background-color: #ffa000;
+	transition: all 0.3s ease-in-out;
+}
+.btn-buy:hover {
+	background-color: #ff892d;
+	box-shadow: 0 0 10px 0 #aaa;
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
+}
+.product-preview-image:hover {
+	cursor: pointer;
+	box-shadow: 0 0 10px 0 #eee;
+	transition: all 0.3s ease-in-out;
+	border: 1px solid #007bff !important;
+}
