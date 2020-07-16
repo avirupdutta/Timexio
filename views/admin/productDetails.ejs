@@ -26,6 +26,7 @@
 					</h6>
 				</div>
 				<div class="card-body">
+					<p>Items Sold: <strong><%= product.sold %></strong></p>
                     <form action="/admin/product/<%= product.id %>/edit" method="post">
 						<div class="form-group">
 							<label for="category">Category<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
@@ -54,19 +55,19 @@
 						</div>
 						<div class="form-group">
 							<label for="primary Image">Primary Image<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
-							<input type="url" name="primaryImage" class="form-control mt-2 mb-2"   value="<%= product.primaryImage %>" placeholder="Link of Primary Image" required>
+							<input type="url" name="primaryImage" class="form-control mt-2 mb-2"   value="<%= product.images[0] %>" placeholder="Link of Primary Image" required>
 						</div>
 						<div class="form-group">
 							<label for="productImage1">Product Image 1</label>
-							<input type="url" id="productImage1" name="productImage1" class="form-control mt-2 mb-2"  value="<%= product.productImage1 %>" placeholder="Link of Product Image 1">
+							<input type="url" id="productImage1" name="productImage1" class="form-control mt-2 mb-2"  value="<%= product.images[1] %>" placeholder="Link of Product Image 1">
 						</div>
 						<div class="form-group">
 							<label for="productImage2">Product Image 2</label>
-							<input type="url" id="productImage2" name="productImage2" class="form-control mt-2 mb-2"  value="<%= product.productImage2 %>" placeholder="Link of Product Image 2">
+							<input type="url" id="productImage2" name="productImage2" class="form-control mt-2 mb-2"  value="<%= product.images[2] %>" placeholder="Link of Product Image 2">
 						</div>
 						<div class="form-group">
 							<label for="productImage3">Product Image 3</label>
-							<input type="url" id="productImage3" name="productImage3" class="form-control mt-2 mb-2"  value="<%= product.productImage3 %>" placeholder="Link of Product Image 3">
+							<input type="url" id="productImage3" name="productImage3" class="form-control mt-2 mb-2"  value="<%= product.images[3] %>" placeholder="Link of Product Image 3">
 						</div>
 						<div class="form-group">
 							<label for="specs">Specifications<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>

@@ -32,6 +32,10 @@ const productSchema = new mongoose.Schema({
 	created: {
 		type: Date,
 		default: Date.now
+	},
+	sold: {
+		type: Number,
+		default: 0
 	}
 });
 

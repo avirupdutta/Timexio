@@ -1,6 +1,7 @@
 const express = require("express");
 const categories = require("../models/productCategories");
 const { getCommonMetaData } = require("./utils");
+const User = require("../models/User");
 
 const router = express.Router();
 const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
@@ -21,23 +22,8 @@ router.get("/", async (req, res) => {
 
 	// For New Arrivals
 	try {
-		await Product.find({}, (err, items) => {
-			if (err) {
-				console.log(err);
-			}
-			const newArrivalProducts = items
-				.sort((item1, item2) => {
-					if (item1.created > item2.created) {
-						return -1;
-					} else if (item1.created < item2.created) {
-						return 1;
-					} else {
-						return 0;
-					}
-				})
-				.slice(0, 10);
-			data.newArrivalProducts = newArrivalProducts;
-		});
+		const newArrivalProducts = await Product.find({}).sort({ created: -1 });
+		data.newArrivalProducts = newArrivalProducts;
 
 		res.render("index", {
 			...getCommonMetaData(req, "Home"),
@@ -170,10 +156,104 @@ router.get("/account", ensureAuthenticated, (req, res) => {
 });
 
 // cart page
-router.get("/account/cart", ensureAuthenticated, (req, res) => {
-	res.render("account/cart", {
-		...getCommonMetaData(req, "Cart")
+router.get("/account/cart", ensureAuthenticated, async (req, res) => {
+	let cartItems = [];
+	await User.findById(req.user.id, (error, user) => {
+		if (user) {
+			cartItems = [...user.cart]
+		}
 	});
+	console.log(cartItems)
+	console.log("starting render...");
+	return res.render("account/cart", {
+		...getCommonMetaData(req, "Showing all products in your cart"),
+		cartItems
+	});
+	
+});
+
+// adds new product to cart
+router.post("/account/cart/:id/add", ensureAuthenticated, async (req, res) => {
+	const productId = req.params.id;
+
+	User.findById(req.user.id, async (error, user) => {
+		if (user) {
+			let cartItem = user.cart.find(item => item.id === productId);
+
+			if (cartItem) {
+				user.cart = user.cart.map(itemInCart => {
+					if (itemInCart.id === productId) {
+						itemInCart.quantity++;
+					}
+					return itemInCart;
+				})
+				user.markModified('cart')
+			} else {
+				try {
+					await Product.findById(productId, (error, product) => {
+						if (product) {
+							user.cart.unshift({
+								id: product.id,
+								name: product.name,
+								image: product.images[0],
+								price: product.price,
+								quantity: 1,
+							});
+						}
+					})
+				} catch (error) {
+					console.log(error)
+				}
+			}
+			try {
+				await user.save();
+				res.redirect("/account/cart");
+			} catch (error) {
+				console.log(error)
+			}
+			
+		} else {
+			req.flash("error_msg", "Something went wrong! Try again later");
+			res.redirect("back");
+		}
+	});
+});
+
+// route to update quantity of specific item in cart
+router.post("/account/cart", async (req, res) => {
+	const { userId, productId, quantity } = req.body;
+	try {
+		let user, product;
+		await User.findById(userId, (err, item) => {
+			if (err) {
+				return res
+					.status(500)
+					.json({ error: "Server Error! Something went wrong" });
+			}
+			if (item) {
+				user = item;
+			} else {
+				return res.status(404).json({ error: "User Not Found" });
+			}
+		});
+		await Product.findById(productId, (err, item) => {
+			if (err) {
+				return res
+					.status(500)
+					.json({ error: "Server Error! Something went wrong" });
+			}
+			if (item) {
+				product = item;
+			} else {
+				return res.status(404).json({ error: "Product Not Found" });
+			}
+		});
+
+		return res.status(201).json({ user, product, quantity });
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ error: error.message });
+	}
 });
 
 // checkout page

@@ -73,7 +73,9 @@
 											<div class="text-center">
 												<i class="fas fa-ban text-danger"  data-toggle="tooltip" data-placement="left" title="Not Allowed"></i><p class="d-none">Not Allowed</p>
 											</div>
-										<% } else { %>
+										<% } else if(item[fieldName] instanceof Array) { %>
+											<%= item[fieldName].length %>
+										<% } else {%>
 											<%= item[fieldName] %>
 										<% } %>
 									</td>

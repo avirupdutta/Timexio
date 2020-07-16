@@ -14,9 +14,6 @@
 					<%= currentModel %>
 				</h1>
 				<div class="text-right">
-					<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#AddNewData">
-						<i class="fas fa-plus fa-sm text-white-50"></i> Add New
-					</button>
 					<a
 						href="#"
 						class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"
@@ -46,6 +43,7 @@
 						>
 							<thead>
 								<tr>
+                                    <th>Order Id</th>
 									<% fields.forEach(fieldName => { %>
 										<th class="text-dark"><%= fieldName %></th>
 									<% }) %>
@@ -54,6 +52,7 @@
 							</thead>
 							<tfoot>
 								<tr>
+                                    <th>Order Id</th>
 									<% fields.forEach(fieldName => { %>
 										<th class="text-dark"><%= fieldName %></th>
 									<% }) %>
@@ -88,40 +87,6 @@
 		</div>
 		<!-- /.container-fluid -->
 
-		<!-- Button triggered modals -->
-		<!-- Modal for adding new product -->
-		<div class="modal fade" id="AddNewData" tabindex="-1" role="dialog" aria-labelledby="AddNewDataLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Add New <%= currentModel %></h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				</div>
-				<form action="/admin/product/add" method="post">
-					<div class="modal-body">
-						<input type="text" name="category" class="form-control" value="<%= currentModel %>" required hidden>
-						<input type="text"   name="name"  class="form-control mt-2 mb-2" placeholder="Product Name" required>
-						<input type="number" name="price" class="form-control mt-2 mb-2" placeholder="Price (INR)" required>
-						<input type="number" name="quantity" class="form-control mt-2 mb-2" placeholder="Quantity Available" required>
-						<input type="number" name="tax" class="form-control mt-2 mb-2" placeholder="Tax (%)" required>
-
-						<input type="url" name="primaryImage" class="form-control mt-2 mb-2"  placeholder="Link of Primary Image" required>
-						<input type="url" name="productImage1" class="form-control mt-2 mb-2" placeholder="Link of Product Image 1">
-						<input type="url" name="productImage2" class="form-control mt-2 mb-2" placeholder="Link of Product Image 2">
-						<input type="url" name="productImage3" class="form-control mt-2 mb-2" placeholder="Link of Product Image 3">
-
-						<textarea name="specs" class="form-control mt-2 mb-2" placeholder="specs..." required></textarea>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary">Save</button>
-					</div>
-				</form>
-			</div>
-			</div>
-		</div>
 
 	</div>
 	<!-- End of Main Content -->

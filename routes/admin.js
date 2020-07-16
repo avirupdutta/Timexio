@@ -14,6 +14,7 @@ const {
 const User = require("../models/User");
 const Product = require("../models/Product");
 const productCategories = require("../models/productCategories");
+const Order = require("../models/Orders");
 
 // ** Working GET Route for admin dashboard **
 router.get("/", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
@@ -33,21 +34,29 @@ router.get("/user", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
 
 			currentModel: User,
 			fields: getFieldNames(User),
-			data: data.map(item => {
-				return {
-					id: item.id,
-					name: item.name,
-					email: item.email,
-					date: item.date,
-					admin: item.admin
-				};
-			})
+			data
 		});
 	});
 });
 
 // ** Working GET Routes for Products **
 setProductsRoutes(router, productCategories);
+
+//todo - Setup admin panel for all orders
+router.get("/order", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
+	Order.find({}, (err, orders) => {
+		if (err) {
+			res.render("500");
+		}
+
+		return res.render("admin/orderData", {
+			...getAdminMetaData(req.user.name),
+			currentModel: Order.modelName,
+			fields: getFieldNames(Order),
+			data: orders
+		});
+	});
+});
 
 // ** Working POST Route for Products **
 //* ADDS new produts in the system
@@ -115,44 +124,16 @@ router.get(
 		const id = req.params.id;
 
 		// check if the product with that id exists
-		Product.findById(id, (error, item) => {
+		Product.findById(id, (error, product) => {
+			if (error) {
+				res.render("500");
+			}
 			// if item is found
-			if (item) {
-				const {
-					id,
-					category,
-					name,
-					price,
-					quantity,
-					tax,
-					images,
-					specs,
-					created
-				} = item;
-				const [
-					primaryImage,
-					productImage1,
-					productImage2,
-					productImage3
-				] = images;
-
+			if (product) {
 				return res.render("admin/productDetails", {
 					...getAdminMetaData(req.user.name),
-					product: {
-						id,
-						category,
-						name,
-						price,
-						quantity,
-						tax,
-						specs,
-						primaryImage,
-						productImage1,
-						productImage2,
-						productImage3,
-						created
-					},
-					productCategories
+					productCategories,
+					product
 				});
 			}
 			return res.render("404");
@@ -171,21 +152,17 @@ router.get(
 		const id = req.params.id;
 
 		// check if the product with that id exists
-		User.findById(id, (error, item) => {
+		User.findById(id, (error, user) => {
+			if (error) {
+				return res.render("500");
+			}
 			// if item is found
-			if (item) {
-				const { id, name, email, password, date, admin } = item;
+			if (user) {
+				// const { id, name, email, password, date, admin } = item;
 
 				return res.render("admin/userDetails", {
 					...getAdminMetaData(req.user.name),
-					user: {
-						id,
-						name,
-						email,
-						password,
-						date,
-						admin
-					}
+					user
 				});
 			}
 			return res.render("404");

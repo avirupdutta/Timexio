@@ -12,7 +12,8 @@
             </div>
             <img src="<%= product.images[0] %>" class="w-100 mt-4" id="productPrimaryImage" alt="primary image">
         </div>
-        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 pl-5 pr-5">
+        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 p-5">
+            <%- include('partials/messages.ejs')  %> 
             <h3><%= product.name %></h3>
             <hr>
             <table class="table table-borderless">
@@ -36,14 +37,17 @@
                 <tr>
                     <td><p class="lead">You save:</p></td>
                     <td>
-                        <p class="text-danger">&#8377;<%= ((product.price * 13.685) - product.price + ((product.tax/100)*product.price)).toFixed(2)  %></p>
-                        Inclusive of all taxes (<%= product.tax %>%)
+                        <p class="text-danger">&#8377;<%= ((product.price * 13.685) - product.price + ((product.tax/100)*product.price)).toFixed(2)  %> <small class="text-dark">Inclusive of all taxes (<%= product.tax %>%)</small></p>
                     </td>
                 </tr>
             </table>
-            <div class="buy-cart-btns mb-5">
-                <button class="btn-buy text-capitalize">Buy Now <i data-feather="zap"></i></button>
-                <button class="btn-addToCart text-capitalize">Add to Cart <i data-feather="shopping-cart"></i></button>
+            <div class="buy-cart-btns mb-5 d-flex justify-content-center justify-content-md-start flex-wrap">
+                <button class="btn-buy text-capitalize m-1">Buy Now <i data-feather="zap"></i></button>
+                <form action="/account/cart/<%= product.id %>/add" method="POST">
+                    <button type="submit" class="btn-addToCart text-capitalize m-1">
+                        Add to Cart <i data-feather="shopping-cart"></i>
+                    </button>
+                </form>
             </div>
             <h4>Availability: 
                 <% if (product.quantity > 1) { %>

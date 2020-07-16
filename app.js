@@ -58,8 +58,9 @@ app.use("/admin/data", express.static("static/admin/"));
 app.use("/admin/product/:id", express.static("static/admin/"));
 app.use("/admin/user/:id", express.static("static/admin/"));
 
-// Body parser
+// for parsing the body
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Routes
 app.use("/", require("./routes/index"));

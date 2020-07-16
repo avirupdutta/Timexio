@@ -24,7 +24,15 @@ const getFieldNames = model => {
 			fieldName !== "category" &&
 			fieldName !== "created" &&
 			fieldName !== "images" &&
-			fieldName !== "specs"
+			fieldName !== "specs" &&
+			fieldName !== "date" &&
+			fieldName !== "userEmail" &&
+			fieldName !== "productId" &&
+			fieldName !== "userId" &&
+			fieldName !== "userFullName" &&
+			fieldName !== "paymentMethod" &&
+			fieldName !== "deliveryAddress" &&
+			fieldName !== "deliveryDate"
 	);
 };
 
@@ -46,18 +54,7 @@ const setProductsRoutes = (router, categories) => {
 						currentModel: category,
 						productCategories: categories,
 						fields: getFieldNames(Product),
-						data: data.map(item => {
-							return {
-								id: item.id,
-								name: item.name,
-								specs: item.specs,
-								price: item.price,
-								images: item.images,
-								quantity: item.quantity,
-								tax: item.tax,
-								created: item.created
-							};
-						})
+						data
 					});
 				});
 			}
