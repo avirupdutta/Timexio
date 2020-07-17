@@ -183,10 +183,10 @@
 	}
 
 	/* 6. Nice Selectorp  */
-	var nice_Select = $("select");
-	if (nice_Select.length) {
-		nice_Select.niceSelect();
-	}
+	// var nice_Select = $("select");
+	// if (nice_Select.length) {
+	// 	nice_Select.niceSelect();
+	// }
 
 	/* 7.  Custom Sticky Menu  */
 	$(window).on("scroll", function() {
@@ -371,9 +371,9 @@
 	}
 
 	// niceSelect js code
-	$(document).ready(function() {
-		$("select").niceSelect();
-	});
+	// $(document).ready(function() {
+	// 	$("select").niceSelect();
+	// });
 
 	// menu fixed js code
 	$(window).scroll(function() {

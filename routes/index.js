@@ -159,17 +159,20 @@ router.get("/account", ensureAuthenticated, (req, res) => {
 router.get("/account/cart", ensureAuthenticated, async (req, res) => {
 	let cartItems = [];
 	await User.findById(req.user.id, (error, user) => {
+		if (error) {
+			return res.render('500', {
+				title: 'Something went wrong! Try again later.'
+			})
+		}
 		if (user) {
 			cartItems = [...user.cart]
+			return res.render("account/cart", {
+				...getCommonMetaData(req, "Showing all products in your cart"),
+				cartItems,
+				userId: req.user.id
+			});
 		}
 	});
-	console.log(cartItems)
-	console.log("starting render...");
-	return res.render("account/cart", {
-		...getCommonMetaData(req, "Showing all products in your cart"),
-		cartItems
-	});
-	
 });
 
 // adds new product to cart
@@ -220,36 +223,47 @@ router.post("/account/cart/:id/add", ensureAuthenticated, async (req, res) => {
 });
 
 // route to update quantity of specific item in cart
-router.post("/account/cart", async (req, res) => {
-	const { userId, productId, quantity } = req.body;
+router.patch("/account/cart/update", async (req, res) => {
+	const { updatedQuantity, userId, productId } = req.body
+
 	try {
 		let user, product;
-		await User.findById(userId, (err, item) => {
+
+		await User.findById(userId, (err, userItem) =>{
 			if (err) {
 				return res
 					.status(500)
 					.json({ error: "Server Error! Something went wrong" });
 			}
-			if (item) {
-				user = item;
+			if (userItem) {
+				user = userItem
 			} else {
 				return res.status(404).json({ error: "User Not Found" });
 			}
 		});
-		await Product.findById(productId, (err, item) => {
+
+		await Product.findById(productId, (err, productItem) => {
 			if (err) {
 				return res
 					.status(500)
 					.json({ error: "Server Error! Something went wrong" });
 			}
-			if (item) {
-				product = item;
+			if (productItem) {
+				product = productItem;
 			} else {
 				return res.status(404).json({ error: "Product Not Found" });
 			}
 		});
+		
+		user.cart.forEach(cartItem => {
+			if (cartItem.id === product.id) {
+				cartItem.quantity = updatedQuantity
+				user.markModified('cart')
+			}
+		})
 
-		return res.status(201).json({ user, product, quantity });
+		await user.save();
+		return res.status(200).json({ userId: userId, productId: productId, updatedQuantity });
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({ error: error.message });
