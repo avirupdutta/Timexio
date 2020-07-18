@@ -25,10 +25,10 @@
                       <td>
                         <div class="media">
                           <div class="d-flex">
-                            <img class="border-0" src="<%= product.image %>" alt="product image" />
+                            <a href="/product/<%= product.id %>/details" target="_blank"><img class="border-0" src="<%= product.image %>" alt="product image" /></a>
                           </div>
                           <div class="media-body">
-                            <p><%= product.name %></p>
+                            <a href="/product/<%= product.id %>/details" target="_blank"><p><%= product.name %></p></a>
                           </div>
                         </div>
                       </td>
@@ -44,7 +44,9 @@
                         <option value="5" <%= product.quantity == '5'? 'selected' : '' %> >5</option>
                       </select>
                     </td>
-                    <td class="text-center"><span data-feather="x-circle"></span></td>
+                    <td class="text-center">
+                      <button class="del-product-btn fa fa-trash-o" data-productId="<%= product.id %>"></button>
+                    </td>
                   </tr>
                   <% }) %>
                   <tr>
@@ -75,27 +77,53 @@
 
 <script>
   var quantitySelectors = document.querySelectorAll('select');
+  var deleteBtns = document.querySelectorAll('.del-product-btn');
+  var userId = document.querySelector('#userId').value;
+
+  // setting event listeners for quantity selection
   quantitySelectors.forEach(function (selector) { 
     selector.addEventListener('change', function (e) { 
       var updatedQuantity = e.target.value;
       var productId = e.target.dataset.productid;
-      console.log(productId, ': value changed to: ', e.target.value);
       var dataObj = {
-        userId: document.querySelector('#userId').value,
+        userId: userId,
         productId: productId,
         updatedQuantity: updatedQuantity
       }
-      console.log(dataObj)
       $.ajax({
         type: "PATCH",
         contentType: "application/json",
-        url: "http://localhost:5000/account/cart/update",
+        url: window.location.href+"/update",
         data: JSON.stringify(dataObj),
         success: function (response) {
           swal("Cart updated successfully!", "", 'success');
         },
         error: function (response) { 
-          swal("Cart update Failed!", "", 'error');
+          swal("Cart update Failed!", "If this problem persists, reload the page.", 'error');
+        }
+      });
+    })
+  });
+
+  // setting event listeners for all delete buttons
+  deleteBtns.forEach(function (delBtn) { 
+    delBtn.addEventListener('click', function (e) { 
+      var productId = e.target.dataset.productid;
+      console.log(productId);
+      var dataObj = {
+        userId: userId,
+        productId: productId
+      }
+      $.ajax({
+        type: "DELETE",
+        contentType: "application/json",
+        url: window.location.href+"/delete",
+        data: JSON.stringify(dataObj),
+        success: function (response) {
+          window.location.reload();
+        },
+        error: function (response) { 
+          swal("Something went wrong!", "Product not is removed from the cart", 'error');
         }
       });
     })

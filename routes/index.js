@@ -186,7 +186,7 @@ router.post("/account/cart/:id/add", ensureAuthenticated, async (req, res) => {
 			if (cartItem) {
 				user.cart = user.cart.map(itemInCart => {
 					if (itemInCart.id === productId) {
-						itemInCart.quantity++;
+						itemInCart.quantity < 5? itemInCart.quantity++ : itemInCart.quantity;
 					}
 					return itemInCart;
 				})
@@ -269,6 +269,58 @@ router.patch("/account/cart/update", async (req, res) => {
 		return res.status(500).json({ error: error.message });
 	}
 });
+
+// route to delete specific item in cart
+router.delete("/account/cart/delete", async (req, res) => {
+	const { productId, userId } = req.body;
+
+
+	try {
+		let user, product;
+
+		await User.findById(userId, (err, userItem) =>{
+			if (err) {
+				return res
+					.status(500)
+					.json({ error: "Server Error! Something went wrong" });
+			}
+			if (userItem) {
+				user = userItem
+			} else {
+				return res.status(404).json({ error: "User Not Found" });
+			}
+		});
+
+		await Product.findById(productId, (err, productItem) => {
+			if (err) {
+				return res
+					.status(500)
+					.json({ error: "Server Error! Something went wrong" });
+			}
+			if (productItem) {
+				product = productItem;
+			} else {
+				return res.status(404).json({ error: "Product Not Found" });
+			}
+		});
+		
+		user.cart = user.cart.filter(item => {
+			if (item.id !== productId) {
+				return true;
+			} else {
+				user.markModified('cart');
+				return false;
+			}
+		});
+
+		await user.save();
+		return res.status(200).json({ userId: userId, productId: productId });
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ error: error.message });
+	}
+
+})
 
 // checkout page
 router.get("/account/checkout", ensureAuthenticated, (req, res) => {

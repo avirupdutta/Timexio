@@ -9737,3 +9737,18 @@ input:focus {
 	transition: all 0.3s ease-in-out;
 	border: 1px solid #007bff !important;
 }
+.del-product-btn {
+	border: none;
+	cursor: pointer;
+	border-radius: 3rem;
+	width: 2.5rem;
+	height: 2.5rem;
+	font-size: 1.5rem;
+	color: #dc3545;
+	transition: all 0.3s ease-in-out;
+}
+.del-product-btn:hover {
+	background-color: #dc3545;
+	color: #fff;
+	transition: all 0.3s ease-in-out;
+}
