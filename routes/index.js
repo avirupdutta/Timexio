@@ -148,16 +148,20 @@ router.get("/unauthorized", function(req, res) {
 });
 
 //* ======= PRIVATE ROUTES BELOW! ======= //
-// dashboard
+//===============
+// Account Page
+//===============
 router.get("/account", ensureAuthenticated, (req, res) => {
 	res.render("account/userAccount", {
 		...getCommonMetaData(req, "Account")
 	});
 });
 
+//===============
 // cart page
+//===============
 router.get("/account/cart", ensureAuthenticated, async (req, res) => {
-	let cartItems = [];
+	let cartItems = [], priceDetails = {};
 	await User.findById(req.user.id, (error, user) => {
 		if (error) {
 			return res.render('500', {
@@ -165,11 +169,21 @@ router.get("/account/cart", ensureAuthenticated, async (req, res) => {
 			})
 		}
 		if (user) {
-			cartItems = [...user.cart]
+			cartItems = [...user.cart];
+			if (cartItems.length > 1) {
+				priceDetails.items = cartItems.reduce((acc, current) => parseFloat(acc.quantity) + parseFloat(current.quantity));
+				priceDetails.totalAmount = cartItems.reduce((acc, current) => 
+					(parseFloat(acc.quantity) * parseFloat(acc.price)) + (parseFloat(current.quantity)) * parseFloat(current.price));
+			} else if(cartItems.length === 1){
+				priceDetails.items = cartItems[0].quantity;
+				priceDetails.totalAmount = cartItems[0].quantity * cartItems[0].price
+			}
+
 			return res.render("account/cart", {
 				...getCommonMetaData(req, "Showing all products in your cart"),
 				cartItems,
-				userId: req.user.id
+				userId: req.user.id,
+				priceDetails
 			});
 		}
 	});
@@ -320,9 +334,11 @@ router.delete("/account/cart/delete", async (req, res) => {
 		return res.status(500).json({ error: error.message });
 	}
 
-})
+});
 
+//===============
 // checkout page
+//===============
 router.get("/account/checkout", ensureAuthenticated, (req, res) => {
 	res.render("account/checkout", {
 		...getCommonMetaData(req, "Checkout")

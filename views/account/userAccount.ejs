@@ -1,15 +1,42 @@
 <%- include('../partials/nabvar.ejs') %>
 <main>
-	<h1 class="mt-4">Account</h1>
-	<p class="lead mb-3">Welcome <%= name %></p>
-	<a href="/users/logout" class="btn btn-secondary">Logout</a>
-	<br />
-	<br />
-	<h3>Your Orders</h3>
-	<p>TV</p>
-	<p>Fridge</p>
-	<p>Microven</p>
-	<p>Washing Machine</p>
+	<div class="container">
+		<div class="row mt-5">
+			<div class="col-6">
+				<h1><%= name %></h1>
+			</div>
+			<div class="col-6">
+				<p class="text-right"><a href="/users/logout" class="text-danger">Logout <span data-feather="log-out"></span></a></p>
+			</div>
+		</div>
+		
+		<br />
+		<br />
+		<div class="card-deck">
+			<a href="#" class="card shadow-sm border-0">
+				<div class="card-body text-center m-5">
+					<p class="icon-lg"><span data-feather="truck"></span></p>
+					<h5 class="card-text mt-4">All Orders</h5>
+					<p>See all your active or pending orders.</p>
+				</div>
+			</a>
+			<a href="#" class="card shadow-sm border-0">
+				<div class="card-body text-center m-5">
+					<p class="icon-lg"><span data-feather="lock"></span></p>
+					<h5 class="card-text mt-4">Account Credentials</h5>
+					<p>Edit login, name, email, and etc.</p>
+				</div>
+			</a>
+			<a href="#" class="card shadow-sm border-0">
+				<div class="card-body text-center m-5">
+					<p class="icon-lg"><span data-feather="message-square"></span></p>
+					<h5 class="card-text mt-4">Help Center</h5>
+					<p>Need help? Chat with our professionals.</p>
+				</div>
+			</a>
+		</div>
+		
+	</div>
 </main>
 <%- include('../partials/footer.ejs') %> <%-
 include('../partials/search-box.ejs') %>

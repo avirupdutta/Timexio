@@ -58,8 +58,38 @@ router.get("/order", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
 	});
 });
 
-// ** Working POST Route for Products **
-//* ADDS new produts in the system
+/*===================================================*/
+//***************** PRODUCT ROUTES *******************
+/*===================================================*/
+
+// GET - fetch specific product
+router.get(
+	"/product/:id/details",
+	ensureAuthenticated,
+	ensureAdminAuthorized,
+	(req, res) => {
+		// get the id from req params
+		const id = req.params.id;
+
+		// check if the product with that id exists
+		Product.findById(id, (error, product) => {
+			if (error) {
+				res.render("500");
+			}
+			// if item is found
+			if (product) {
+				return res.render("admin/productDetails", {
+					...getAdminMetaData(req.user.name),
+					productCategories,
+					product
+				});
+			}
+			return res.render("404");
+		});
+	}
+);
+
+// POST - add new product
 router.post(
 	"/product/add",
 	ensureAuthenticated,
@@ -113,64 +143,7 @@ router.post(
 	}
 );
 
-// ** Working GET Route for a specific Product detail **
-//* Display single product
-router.get(
-	"/product/:id/details",
-	ensureAuthenticated,
-	ensureAdminAuthorized,
-	(req, res) => {
-		// get the id from req params
-		const id = req.params.id;
-
-		// check if the product with that id exists
-		Product.findById(id, (error, product) => {
-			if (error) {
-				res.render("500");
-			}
-			// if item is found
-			if (product) {
-				return res.render("admin/productDetails", {
-					...getAdminMetaData(req.user.name),
-					productCategories,
-					product
-				});
-			}
-			return res.render("404");
-		});
-	}
-);
-
-// ** Working GET Route for a specific User detail **
-//* Display single User
-router.get(
-	"/user/:id/details",
-	ensureAuthenticated,
-	ensureAdminAuthorized,
-	(req, res) => {
-		// get the id from req params
-		const id = req.params.id;
-
-		// check if the product with that id exists
-		User.findById(id, (error, user) => {
-			if (error) {
-				return res.render("500");
-			}
-			// if item is found
-			if (user) {
-				// const { id, name, email, password, date, admin } = item;
-
-				return res.render("admin/userDetails", {
-					...getAdminMetaData(req.user.name),
-					user
-				});
-			}
-			return res.render("404");
-		});
-	}
-);
-
-//*  Working POST Route to update a specific Product
+// POST - update specific product
 router.post(
 	"/product/:id/edit",
 	ensureAuthenticated,
@@ -246,7 +219,63 @@ router.post(
 	}
 );
 
-//*  Working POST Route to update a specific User
+//  DELETE - delete a specific Product
+router.delete("/product/:id/delete", (req, res) => {
+	// get the id from req params
+	const id = req.params.id;
+
+	// check if the product with that id exists
+	Product.findByIdAndDelete(id, (error, responseDoc) => {
+		// if not send 404
+		if (error) {
+			return res.status(400).json({ status: 400, error: "Bad Request" });
+		}
+
+		// if item is found
+		else if (responseDoc) {
+			return res.status(200).json(responseDoc);
+		} else {
+			return res
+				.status(404)
+				.json({ status: 404, error: "Product Not Found" });
+		}
+	});
+});
+
+
+/*===================================================*/
+//***************** USER ROUTES **********************
+/*===================================================*/
+
+// GET - fetch particular user's details 
+router.get(
+	"/user/:id/details",
+	ensureAuthenticated,
+	ensureAdminAuthorized,
+	(req, res) => {
+		// get the id from req params
+		const id = req.params.id;
+
+		// check if the product with that id exists
+		User.findById(id, (error, user) => {
+			if (error) {
+				return res.render("500");
+			}
+			// if item is found
+			if (user) {
+				// const { id, name, email, password, date, admin } = item;
+
+				return res.render("admin/userDetails", {
+					...getAdminMetaData(req.user.name),
+					user
+				});
+			}
+			return res.render("404");
+		});
+	}
+);
+
+// POST - update a specific User's details
 router.post(
 	"/user/:id/edit",
 	ensureAuthenticated,
@@ -265,7 +294,7 @@ router.post(
 
 			// if item is found
 			else if (item) {
-				const { name, email, password, admin } = req.body;
+				const { name, email, admin } = req.body;
 
 				// validate the params
 				// ! skipped
@@ -277,16 +306,6 @@ router.post(
 				item.email = email;
 				item.admin = admin == "true" ? true : false;
 
-				// hash the password
-				bcryptjs.genSalt(10, (err, salt) => {
-					bcryptjs.hash(password, salt, (err, hashedPassword) => {
-						if (err) {
-							req.flash("error_msg", "Something went wrong!");
-							return res.redirect("back");
-						}
-						item.password = hashedPassword;
-					});
-				});
 
 				item.save()
 					.then(item => {
@@ -311,30 +330,7 @@ router.post(
 	}
 );
 
-//*  Working POST Route to delete a specific Product
-router.delete("/product/:id/delete", (req, res) => {
-	// get the id from req params
-	const id = req.params.id;
-
-	// check if the product with that id exists
-	Product.findByIdAndDelete(id, (error, responseDoc) => {
-		// if not send 404
-		if (error) {
-			return res.status(400).json({ status: 400, error: "Bad Request" });
-		}
-
-		// if item is found
-		else if (responseDoc) {
-			return res.status(200).json(responseDoc);
-		} else {
-			return res
-				.status(404)
-				.json({ status: 404, error: "Product Not Found" });
-		}
-	});
-});
-
-//*  Working POST Route to delete a specific User
+//  DELETE - delete a specific User
 router.delete("/user/:id/delete", (req, res) => {
 	// get the id from req params
 	const id = req.params.id;

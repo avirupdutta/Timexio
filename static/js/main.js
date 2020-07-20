@@ -565,4 +565,10 @@
 
 	// for feather icons
 	feather.replace();
+
+	// For tool-tips
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip()
+	})
+
 })(jQuery);

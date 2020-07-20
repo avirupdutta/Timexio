@@ -47,14 +47,14 @@
 								</li>
 								<% if (locals.isAuthenticated) { %>
 									<li>
-										<a href="/account"><span class="flaticon-user"></span></a>
+										<a href="/account"><span data-feather="user"></span></a>
 									</li>
 									<li>
-										<a href="/account/cart"><span class="flaticon-shopping-cart"></span></a>
+										<a href="/account/cart"><span data-feather="shopping-cart"></span></a>
 									</li>
 								<% if (locals.admin) { %>
 									<li>
-										<a href="/admin"><span>Admin</span></a>
+										<a href="/admin"><span data-feather="settings"></span></a>
 									</li>
 								<% } %> <% } else { %>
 									<li>

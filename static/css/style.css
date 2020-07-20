@@ -6297,9 +6297,9 @@ del {
 .button {
 	display: inline-block;
 	border: 1px solid transparent;
-	font-size: 15px;
+	font-size: 1rem;
 	font-weight: 500;
-	padding: 12px 54px;
+	padding: 1rem;
 	border-radius: 4px;
 	color: #fff;
 	border: 1px solid #fdcb9e;
@@ -8539,7 +8539,7 @@ input:focus {
 	color: #415094;
 	padding-bottom: 15px;
 }
-.order_box .list li a {
+.order_box .list li p {
 	font-size: 14px;
 	color: #828bb2;
 	font-weight: normal;
@@ -8547,10 +8547,10 @@ input:focus {
 	display: block;
 	line-height: 42px;
 }
-.order_box .list li a span {
+.order_box .list li p span {
 	float: right;
 }
-.order_box .list li a .middle {
+.order_box .list li p .middle {
 	float: none;
 	width: 50px;
 	text-align: right;
@@ -8558,19 +8558,19 @@ input:focus {
 	margin-left: 30px;
 	color: #415094;
 }
-.order_box .list li:nth-child(4) a .middle {
+.order_box .list li:nth-child(4) p .middle {
 	margin-left: 48px;
 }
-.order_box .list_2 li a {
+.order_box .list_2 li p {
 	text-transform: uppercase;
 	color: #415094;
 	font-weight: 500;
 }
-.order_box .list_2 li a span {
+.order_box .list_2 li p span {
 	color: #828bb2;
 	text-transform: capitalize;
 }
-.order_box .list_2 li:last-child a span {
+.order_box .list_2 li:last-child p span {
 	color: #415094;
 }
 .order_box .payment_item h4 {
@@ -9751,4 +9751,12 @@ input:focus {
 	background-color: #dc3545;
 	color: #fff;
 	transition: all 0.3s ease-in-out;
+}
+.feather {
+	width: 20px;
+}
+.icon-lg .feather {
+	width: 50px;
+	height: 50px;
+	color: var(--dark);
 }
