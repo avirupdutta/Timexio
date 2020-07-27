@@ -9760,3 +9760,6 @@ input:focus {
 	height: 50px;
 	color: var(--dark);
 }
+.product-unavailable {
+	opacity: 0.5;
+}

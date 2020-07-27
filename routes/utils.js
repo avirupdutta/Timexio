@@ -1,5 +1,6 @@
 const modelNames = require("../models/index");
 const categories = require("../models/productCategories");
+const settings = require("../settings");
 
 const {
 	ensureAuthenticated,
@@ -72,9 +73,29 @@ const getCommonMetaData = (req, title) => {
 	};
 };
 
+const getPriceDetails = cart => {
+	const priceDetails = {
+		shippingPrice: 0
+	};
+	if (cart.length > 1) {
+		priceDetails.items = cart.reduce((acc, current) => parseFloat(acc.quantity) + parseFloat(current.quantity));
+		priceDetails.totalAmount = cart.reduce((acc, current) => 
+			(parseFloat(acc.quantity) * parseFloat(acc.price)) + (parseFloat(current.quantity)) * parseFloat(current.price));
+	} else if(cart.length === 1){
+		priceDetails.items = cart[0].quantity;
+		priceDetails.totalAmount = cart[0].quantity * cart[0].price
+	}
+	
+	if (priceDetails.totalAmount < settings.minAmtReqForFreeDelivery) {
+		priceDetails.shippingPrice = settings.shippingPrice;
+	}
+	return priceDetails;
+}
+
 module.exports = {
 	getAdminMetaData,
 	getFieldNames,
 	setProductsRoutes,
-	getCommonMetaData
+	getCommonMetaData,
+	getPriceDetails,
 };

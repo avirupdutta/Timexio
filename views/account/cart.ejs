@@ -61,10 +61,23 @@
               <div class="col-12 col-md-4 p-4">
                 <div class="order_box">
                   <h2>Price Details</h2>
-                  <p>Total items: <span class="text-dark font-weight-bold" id="totalItemsCount"><%= priceDetails.items %></span></p>
-                  <p>Delivery Charge: <span class="text-success font-weight-normal">FREE</span></p>
-                  <hr>
-                  <h5>Total Amount: &#8377;<span class="text-dark font-weight-bold" id="totalPayment"><%= priceDetails.totalAmount %></span></h5>
+                  <ul class="list list_2">
+                    <li>
+                      <p>Total Items:
+                        <span><%= priceDetails.items %></span>
+                      </p>
+                    </li>
+                    <li>
+                      <p>Delivery Charge:
+                        <% if (priceDetails.shippingPrice > 0) { %>  
+                          <span class="">&#8377; <%= priceDetails.shippingPrice %> </span>
+                          <% } else { %>
+                          <span class="text-success font-weight-normal">FREE</span>
+                          <% } %>
+                      </p>
+                    </li>
+                  </ul>
+                  <h5 class="mt-4 mb-4">Total Amount: <span class="float-right">&#8377; <%= priceDetails.totalAmount + priceDetails.shippingPrice %></span></h5>
                 </div>
                 <div class="checkout_btn_inner">
                   <a class="button checkout_btn_1 btn-block text-center" href="/account/checkout"><span class="mr-2 text-capitalize">proceed to checkout</span><i data-feather="credit-card"></i></a>

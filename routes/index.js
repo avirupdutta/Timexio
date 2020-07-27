@@ -1,11 +1,13 @@
 const express = require("express");
 const categories = require("../models/productCategories");
-const { getCommonMetaData } = require("./utils");
+const { getCommonMetaData, getPriceDetails } = require("./utils");
 const User = require("../models/User");
+const settings = require("../settings");
 
 const router = express.Router();
 const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 const Product = require("../models/Product");
+const Order = require("../models/Orders");
 
 //* ======= PUBLIC ROUTES BELOW! ======= //
 // welcome page
@@ -43,7 +45,9 @@ router.get("/product/:id/details", async (req, res) => {
 		const product = await Product.findById(id);
 		res.render("productDetails", {
 			...getCommonMetaData(req, product.name),
-			product
+			product,
+			shippingPrice: settings.shippingPrice,
+			minAmtReqForFreeDelivery: settings.minAmtReqForFreeDelivery
 		});
 	} catch (error) {}
 });
@@ -161,7 +165,7 @@ router.get("/account", ensureAuthenticated, (req, res) => {
 // cart page
 //===============
 router.get("/account/cart", ensureAuthenticated, async (req, res) => {
-	let cartItems = [], priceDetails = {};
+	let cartItems = [], priceDetails;
 	await User.findById(req.user.id, (error, user) => {
 		if (error) {
 			return res.render('500', {
@@ -170,14 +174,7 @@ router.get("/account/cart", ensureAuthenticated, async (req, res) => {
 		}
 		if (user) {
 			cartItems = [...user.cart];
-			if (cartItems.length > 1) {
-				priceDetails.items = cartItems.reduce((acc, current) => parseFloat(acc.quantity) + parseFloat(current.quantity));
-				priceDetails.totalAmount = cartItems.reduce((acc, current) => 
-					(parseFloat(acc.quantity) * parseFloat(acc.price)) + (parseFloat(current.quantity)) * parseFloat(current.price));
-			} else if(cartItems.length === 1){
-				priceDetails.items = cartItems[0].quantity;
-				priceDetails.totalAmount = cartItems[0].quantity * cartItems[0].price
-			}
+			priceDetails = getPriceDetails(cartItems);
 
 			return res.render("account/cart", {
 				...getCommonMetaData(req, "Showing all products in your cart"),
@@ -215,6 +212,7 @@ router.post("/account/cart/:id/add", ensureAuthenticated, async (req, res) => {
 								image: product.images[0],
 								price: product.price,
 								quantity: 1,
+								category: product.category
 							});
 						}
 					})
@@ -339,10 +337,72 @@ router.delete("/account/cart/delete", async (req, res) => {
 //===============
 // checkout page
 //===============
+
+// view checkout page 
 router.get("/account/checkout", ensureAuthenticated, (req, res) => {
+	const userCart = req.user.cart;
+	const priceDetails = getPriceDetails(userCart);
+
 	res.render("account/checkout", {
-		...getCommonMetaData(req, "Checkout")
+		...getCommonMetaData(req, "Checkout"),
+		priceDetails
 	});
 });
+
+//todo - Redirect to finish page
+router.post('/account/checkout', ensureAuthenticated, async(req, res) => {
+	const {
+		fullName: userFullName,
+		phoneNumber: userPhoneNumber,
+		email: userEmail,
+		deliveryAddress,
+		city: userCity,
+		pincode: userPincode
+	} = req.body;
+
+	let user, order;
+
+	await User.findById(req.user.id, (err, item) => {
+		if (err) {
+			return res.render('500')
+		}
+		user = item;
+	})
+	const userCart = user.cart;
+
+	for (const cartItem of userCart) {
+		order = new Order({
+			productId: cartItem.id,
+			productName: cartItem.name,
+			productCategory: cartItem.category,
+			price: cartItem.price,
+			quantity: cartItem.quantity,
+			userId: user.id,
+			userFullName,
+			userEmail,
+			userPhoneNumber,
+			deliveryAddress,
+			userCity,
+			userPincode
+		})
+		try {
+			await order.save();
+
+			user.orders.push(order);
+			user.markModified('orders');
+			
+			user.cart = [];
+			user.markModified('cart');
+
+			await user.save();
+
+			return res.json({success: 'Order Placed'})
+			
+		} catch (error) {
+			console.log(error)
+			return res.redirect('500')
+		}
+	}
+})
 
 module.exports = router;

@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	productPrice: {
+	price: {
 		type: Number,
 		required: true
 	},
@@ -29,19 +29,33 @@ const orderSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
+	userPhoneNumber: {
+		type: Number,
+		required: true
+	},
 	deliveryAddress: {
 		type: String,
 		required: true
 	},
+	userCity: {
+		type: String,
+		required: true,
+	},
+	userPincode: {
+		type: Number,
+		required: true
+	},
 	paymentMethod: {
 		type: String,
-		required: true
+		required: true,
+		default: "Cash On Delivery"
 	},
 	isPaid: {
 		type: Boolean,
-		required: true
+		required: true,
+		default: false
 	},
-	orderedQuantity: {
+	quantity: {
 		type: Number,
 		required: true
 	},
