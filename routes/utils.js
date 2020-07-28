@@ -33,7 +33,11 @@ const getFieldNames = model => {
 			fieldName !== "userFullName" &&
 			fieldName !== "paymentMethod" &&
 			fieldName !== "deliveryAddress" &&
-			fieldName !== "deliveryDate"
+			fieldName !== "deliveryDate" &&
+			fieldName !== "deliveryDate" &&
+			fieldName !== "productCategory" &&
+			fieldName !== "userPhoneNumber" &&
+			fieldName !== "userPincode"
 	);
 };
 

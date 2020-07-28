@@ -23,44 +23,12 @@ router.get("/", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
 	});
 });
 
-// ** Working GET Route for User **
-router.get("/user", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
-	const users = User.find({}, (err, data) => {
-		if (err) {
-			console.log(err);
-		}
-		res.render("admin/userData", {
-			...getAdminMetaData(req.user.name),
-
-			currentModel: User,
-			fields: getFieldNames(User),
-			data
-		});
-	});
-});
-
-// ** Working GET Routes for Products **
-setProductsRoutes(router, productCategories);
-
-//todo - Setup admin panel for all orders
-router.get("/order", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
-	Order.find({}, (err, orders) => {
-		if (err) {
-			res.render("500");
-		}
-
-		return res.render("admin/orderData", {
-			...getAdminMetaData(req.user.name),
-			currentModel: Order.modelName,
-			fields: getFieldNames(Order),
-			data: orders
-		});
-	});
-});
-
 /*===================================================*/
 //***************** PRODUCT ROUTES *******************
 /*===================================================*/
+
+// ** setting the GET Routes for Product listing page **
+setProductsRoutes(router, productCategories);
 
 // GET - fetch specific product
 router.get(
@@ -247,6 +215,22 @@ router.delete("/product/:id/delete", (req, res) => {
 //***************** USER ROUTES **********************
 /*===================================================*/
 
+// ** Working GET Route for User **
+router.get("/user", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
+	const users = User.find({}, (err, data) => {
+		if (err) {
+			console.log(err);
+		}
+		res.render("admin/userData", {
+			...getAdminMetaData(req.user.name),
+
+			currentModel: User,
+			fields: getFieldNames(User),
+			data
+		});
+	});
+});
+
 // GET - fetch particular user's details 
 router.get(
 	"/user/:id/details",
@@ -352,5 +336,41 @@ router.delete("/user/:id/delete", (req, res) => {
 		}
 	});
 });
+
+
+
+/*===================================================*/
+//***************** ORDER ROUTES *********************
+/*===================================================*/
+
+router.get("/order", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
+	Order.find({}, (err, orders) => {
+		if (err) {
+			res.render("500", {
+				...getAdminMetaData(req.user.name),
+			});
+		}
+		
+		return res.render("admin/orderData", {
+			...getAdminMetaData(req.user.name),
+			currentModel: Order.modelName,
+			fields: getFieldNames(Order),
+			data: orders
+		});
+	});
+});
+
+router.get("/order/:id/details", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
+	const id = req.params.id;
+	//todo - set up the form for order details
+})
+
+
+
+
+
+
+
+
 
 module.exports = router;

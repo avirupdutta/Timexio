@@ -43,7 +43,7 @@
 						>
 							<thead>
 								<tr>
-                                    <th>Order Id</th>
+									<th scope="col">#</th>
 									<% fields.forEach(fieldName => { %>
 										<th class="text-dark"><%= fieldName %></th>
 									<% }) %>
@@ -52,7 +52,7 @@
 							</thead>
 							<tfoot>
 								<tr>
-                                    <th>Order Id</th>
+									<th scope="col">#</th>
 									<% fields.forEach(fieldName => { %>
 										<th class="text-dark"><%= fieldName %></th>
 									<% }) %>
@@ -60,19 +60,28 @@
 								</tr>
 							</tfoot>
 							<tbody>
-								<% data.forEach(item => { %>
+								<% data.forEach((item, num) => { %>
 								<tr>
+									<td><%= num+1 %></td>
 									<% fields.forEach(fieldName => { %>
 										<td>
 											<% if (item[fieldName]) { %>
 												<%= item[fieldName] %> 
+											<% } else if (item[fieldName] === true) { %>
+												<div class="text-center">
+													<i class="fas fa-check-circle text-success"  data-toggle="tooltip" data-placement="right" title="Paid"></i>
+												</div>
+											<% } else if(item[fieldName] === false) { %>
+												<div class="text-center">
+													<i class="fas fa-times-circle text-danger"  data-toggle="tooltip" data-placement="right" title="Not Paid"></i>
+												</div>
 											<% } else { %>
 												<%= item[fieldName] %>
 											<% } %>
 										</td>
 										<% }) %>
 										<td class="text-center">
-											<a class="btn btn-outline-primary rounded-pill border-0" href="product/<%= item.id %>/details"  data-toggle="tooltip" data-placement="left" title="Detailed view">
+											<a class="btn btn-outline-primary rounded-pill border-0" href="order/<%= item.id %>/details"  data-toggle="tooltip" data-placement="left" title="Detailed view">
 												<i class="fas fa-table"></i>
 											</a>
 											<button class="deleteBtn btn btn-outline-danger rounded-pill border-0" data-id="<%= item.id %>" data-toggle="tooltip" data-placement="left" title="Delete"><i class="fas fa-trash"></i></button>
@@ -127,7 +136,7 @@
 				if (willDelete) {
 					$.ajax({
 						type: 'DELETE',
-						url: `/admin/product/${id}/delete`,
+						url: `/admin/order/${id}/delete`,
 						success: function (data) { 
 							location.reload();
 						},
