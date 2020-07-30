@@ -26,7 +26,7 @@
                 <tr>
                     <td><h4 class="">Price:</h4></td>
                     <td>
-                        <h4 class="text-danger">&#8377;<%= product.price + ((product.tax/100)*product.price) %></h4>
+                        <h4 class="text-danger">&#8377;<%= (product.price + ((product.tax/100)*product.price)).toLocaleString() %></h4>
                         <% if (product.price + ((product.tax/100)*product.price) > minAmtReqForFreeDelivery) { %>
                             <small><strong class="text-success">FREE DELIVERY!</strong></small>
                         <% } else { %>

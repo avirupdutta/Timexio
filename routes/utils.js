@@ -27,14 +27,12 @@ const getFieldNames = model => {
 			fieldName !== "images" &&
 			fieldName !== "specs" &&
 			fieldName !== "date" &&
-			fieldName !== "userEmail" &&
 			fieldName !== "productId" &&
 			fieldName !== "userId" &&
 			fieldName !== "userFullName" &&
+			fieldName !== "userCity" &&
 			fieldName !== "paymentMethod" &&
 			fieldName !== "deliveryAddress" &&
-			fieldName !== "deliveryDate" &&
-			fieldName !== "deliveryDate" &&
 			fieldName !== "productCategory" &&
 			fieldName !== "userPhoneNumber" &&
 			fieldName !== "userPincode"

@@ -73,7 +73,11 @@
 												</div>
 											<% } else if(item[fieldName] === false) { %>
 												<div class="text-center">
-													<i class="fas fa-times-circle text-danger"  data-toggle="tooltip" data-placement="right" title="Not Paid"></i>
+													<i class="fas fa-times-circle text-danger"  data-toggle="tooltip" data-placement="right" title="Not Paid."></i>
+												</div>
+											<% } else if(item[fieldName] === null) { %>
+												<div class="text-center">
+													<i class="fas fa-times-circle text-danger"  data-toggle="tooltip" data-placement="right" title="Not yet delivered."></i>
 												</div>
 											<% } else { %>
 												<%= item[fieldName] %>

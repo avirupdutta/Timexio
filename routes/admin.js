@@ -360,10 +360,32 @@ router.get("/order", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
 	});
 });
 
-router.get("/order/:id/details", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
+router.get("/order/:id/details", ensureAuthenticated, ensureAdminAuthorized, async (req, res) => {
 	const id = req.params.id;
 	//todo - set up the form for order details
-})
+
+	let order = '';
+	await Order.findById(id, (err, data) => {
+		if (err) {
+			return res.render('500', {
+				...getAdminMetaData(req.user.name)
+			})
+		}
+		else if(data) {
+			order = data
+		}
+		else {
+			return res.render('400', {
+				...getAdminMetaData(req.user.name)
+			})
+		}
+	})
+
+	return res.render("admin/orderDetails", {
+		...getAdminMetaData(req.user.name),
+		order
+	});
+});
 
 
 
