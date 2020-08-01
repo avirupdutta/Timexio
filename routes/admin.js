@@ -350,7 +350,7 @@ router.get("/order", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
 				...getAdminMetaData(req.user.name),
 			});
 		}
-		
+		orders = orders.reverse()
 		return res.render("admin/orderData", {
 			...getAdminMetaData(req.user.name),
 			currentModel: Order.modelName,
@@ -387,7 +387,55 @@ router.get("/order/:id/details", ensureAuthenticated, ensureAdminAuthorized, asy
 	});
 });
 
+router.patch("/order/:id/deliver", async (req, res) => {
+	const id = req.params.id;
+	let order, user, product;
 
+	try {
+		order = await Order.findById(id)
+		user = await User.findById(order.userId);
+		product = await Product.findById(order.productId)
+	} catch (error) {
+		console.log(error)
+		return res.status(500).json({message: "Something went wrong! Try again later"})
+	}
+	
+	if (product.quantity >= order.quantity) {
+		const timestamp = Date.now();
+		user.orders.forEach(userOrder => {
+			if (order.id === userOrder.id) {
+				// update user's pending order status
+				userOrder.deliveryDate = timestamp;
+				user.markModified('orders');
+			}
+		});
+
+		// reduce the product quantity
+		product.quantity -= order.quantity;
+		product.markModified('quantity');
+
+		// increase sold count for the product
+		product.sold += order.quantity
+		product.markModified('sold');
+
+		// update order status for admin panel
+		order.deliveryDate = timestamp;
+		order.markModified('deliveryDate');
+
+		try {
+			await user.save();
+			await product.save();
+			await order.save();
+		} catch (error) {
+			console.log(error)
+			return res.status(500).json({message: "Something went wrong! Try again later"})
+		}
+
+		return res.status(200).json({message: 'Order delivered successfully!'});
+	} else {
+		return res.status(405).json({message: "You don't have enough quantity of this product to deliver."})
+	}
+})
 
 
 

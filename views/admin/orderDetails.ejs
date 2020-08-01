@@ -6,17 +6,32 @@
 		<!-- DataTales Example -->
 		<div class="card shadow mb-4">
 			<div class="card-header py-3">
-				<h3 class="font-weight-bolder">Order Id: <small><%= order.id %></small></h3>
+				<div class="row">
+					<div class="col-12 col-md-10">
+						<h3 class="font-weight-bolder">Order Id: 
+							<small id="orderId">
+								<%= order.id %> 
+								<% if (order.deliveryDate) { %>
+									<i class="fas fa-check-circle text-success"  data-toggle="tooltip" data-placement="right" title="Delivered!"></i>
+								<% } %>
+							</small>
+						</h3>
+					</div>
+					<div class="col-12 col-md-2">
+						<% if (order.deliveryDate === null) { %>
+							<button class="btn btn-sm btn-success ml-lg-5" id="deliverBtn">Deliver Now <i class="fas fa-truck"></i></button>
+						<% } %>
+					</div>
+				</div>
 			</div>
 				<div class="card-body">
 					<div class="row">
-						<div class="col-6">
+						<div class="col-12 col-md-6 mt-2 mb-2 mt-md-0 mb-md-0">
 							<h3 class="font-weight-bolder">User Id: <small><%= order.userId %></small></h3>
 							<hr>
 							<p><span class="font-weight-bold">Full Name:</span>&nbsp;<%= order.userFullName %></p>
 							<p><span class="font-weight-bold">Email:</span>&nbsp;<%= order.userEmail %></p>
 							<p><span class="font-weight-bold">Phone Number:</span>&nbsp;<%= order.userPhoneNumber %></p>
-							<p><span class="font-weight-bold">Ordered Date:</span>&nbsp;<%= order.orderedDate %></p>
 							<p><span class="font-weight-bold">Delivery Address:</span>&nbsp;<%= order.deliveryAddress %></p>
 							<p><span class="font-weight-bold">City:</span>&nbsp;<%= order.userCity %></p>
 							<p><span class="font-weight-bold">Pincode:</span>&nbsp;<%= order.userPincode %></p>
@@ -26,13 +41,14 @@
 							<% } else { %>
 								<p><span class="font-weight-bold">Is Paid:</span>&nbsp;<i class="fas fa-times-circle text-danger"  data-toggle="tooltip" data-placement="right" title="Not Paid"></i></p>
 							<% } %>
+							<p><span class="font-weight-bold">Ordered Date:</span>&nbsp;<%= order.orderedDate %></p>
 							<% if (order.deliveryDate) { %>
-								<p><span class="font-weight-bold">Delivery Date:</span>&nbsp;<i class="fas fa-check-circle text-success"  data-toggle="tooltip" data-placement="right" title="Delivered!"></i></p>
+								<p><span class="font-weight-bold">Delivery Date: </span><%= new Date(order.deliveryDate) %></p>
 							<% } else { %>
 								<p><span class="font-weight-bold">Delivery Date:</span>&nbsp;<i class="fas fa-times-circle text-danger"  data-toggle="tooltip" data-placement="right" title="Not yet delivered."></i></p>
 							<% } %>
 						</div>
-						<div class="col-6">
+						<div class="col-12 col-md-6 mt-2 mb-2 mt-md-0 mb-md-0">
 							<h3 class="font-weight-bolder">Product Id: <small><%= order.productId %></small></h3>
 							<hr>
 							<p><span class="font-weight-bold">Product Name:</span>&nbsp;<%= order.productName %></p>
@@ -63,26 +79,27 @@
 <!-- Delete particular Data -->
 <script>
 	$(document).ready(function () { 
-		$('.deleteBtn').click(function(e) {
-			var id = $(this).attr('data-id')
+		$('#deliverBtn').click(function(e) {
+			var id = $('#orderId').html().trim();
 
 			swal({
 				title: "Are you sure?",
-				text: "Once deleted, you will not be able to recover this data!",
+				text: "Note: If you dont't have enough items, delivery will be cancelled automatically",
 				icon: "warning",
 				buttons: true,
 				dangerMode: true
 			})
-			.then((willDelete) => {
-				if (willDelete) {
+			.then((willDeliver) => {
+				if (willDeliver) {
 					$.ajax({
-						type: 'DELETE',
-						url: `/admin/user/${id}/delete`,
+						type: 'PATCH',
+						url: `/admin/order/${id}/deliver`,
 						success: function (data) { 
+							console.log(data)
 							location.reload();
 						},
-						error: function (error) { 
-							swal(error);
+						error: function (error) {
+							swal(error.responseJSON.message);
 						}
 					})
 				}
