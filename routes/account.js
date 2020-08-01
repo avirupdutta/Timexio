@@ -251,15 +251,15 @@ router.post('/checkout', ensureAuthenticated, async(req, res) => {
 
 			await user.save();
 
-			return res.render('account/successfulCheckout', {
-				...getCommonMetaData(req, 'Order Placed Successfully!')
-			})
-			
 		} catch (error) {
 			console.log(error)
 			return res.redirect('500')
 		}
 	}
+	return res.render('account/successfulCheckout', {
+		...getCommonMetaData(req, 'Order Placed Successfully!')
+	})
+	
 })
 
 module.exports = router;
