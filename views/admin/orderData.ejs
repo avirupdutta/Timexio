@@ -65,9 +65,7 @@
 									<td><%= num+1 %></td>
 									<% fields.forEach(fieldName => { %>
 										<td>
-											<% if (item[fieldName]) { %>
-												<%= item[fieldName] %> 
-											<% } else if (item[fieldName] === true) { %>
+											<% if (item[fieldName] === true) { %>
 												<div class="text-center">
 													<i class="fas fa-check-circle text-success"  data-toggle="tooltip" data-placement="right" title="Paid"></i>
 												</div>

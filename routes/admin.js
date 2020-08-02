@@ -1,10 +1,10 @@
 const express = require("express");
-const bcryptjs = require("bcryptjs");
 
 const {
 	getAdminMetaData,
 	getFieldNames,
-	setProductsRoutes
+	setProductsRoutes,
+	getIncome
 } = require("./utils");
 const router = express.Router();
 const {
@@ -17,9 +17,66 @@ const productCategories = require("../models/productCategories");
 const Order = require("../models/Orders");
 
 // ** Working GET Route for admin dashboard **
-router.get("/", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
+router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
+	const orders = await Order.find({});
+	const currentMonth = new Date().getMonth();
+	const currentYear = new Date().getFullYear();
+	const data = {};
+	
+	// Monthly income
+	data.monthlyIncome = 0;
+	orders.forEach(order => {
+		if (order.deliveryDate && new Date(order.deliveryDate).getMonth() === currentMonth) {
+			data.monthlyIncome += getIncome(order);
+		}
+	});
+
+	// Yearly income
+	data.yearlyIncome = 0;
+	orders.forEach(order => {
+		if (order.deliveryDate && new Date(order.deliveryDate).getFullYear() === currentYear) {
+			data.yearlyIncome += getIncome(order);
+		}
+	});
+
+	// deliverd orders (%)
+	let ordersDelivered = 0;
+	orders.forEach(order => {
+		if (order.deliveryDate) {
+			ordersDelivered++;
+		}
+	})
+	data.ordersDelivered = Math.round((ordersDelivered / orders.length) * 100);
+
+	// total customers
+	data.totalCustomers = (await User.find({admin : {$ne: true}})).length;
+
+	// get Earnings overview
+	data.lineChartData = [];
+	
+	let currentMonthIncome;
+	for (let month = 0; month < 12; month++) {
+		currentMonthIncome = 0;
+		orders.forEach(order => {
+			if (order.deliveryDate && new Date(order.deliveryDate).getMonth() === month) {
+				currentMonthIncome += getIncome(order);
+			}
+		});
+		data.lineChartData.push(currentMonthIncome);
+	}
+
+	// get pending orders
+	data.pendingOrders = 0;
+	orders.forEach(order => {
+		if (order.deliveryDate === null) {
+			data.pendingOrders++;
+		}
+	});
+
+
 	res.render("admin/index", {
-		...getAdminMetaData(req.user.name)
+		...getAdminMetaData(req.user.name),
+		data
 	});
 });
 
@@ -406,6 +463,8 @@ router.patch("/order/:id/deliver", async (req, res) => {
 			if (order.id === userOrder.id) {
 				// update user's pending order status
 				userOrder.deliveryDate = timestamp;
+				userOrder.isPaid = true;
+				
 				user.markModified('orders');
 			}
 		});
@@ -420,7 +479,9 @@ router.patch("/order/:id/deliver", async (req, res) => {
 
 		// update order status for admin panel
 		order.deliveryDate = timestamp;
+		order.isPaid = true;
 		order.markModified('deliveryDate');
+		order.markModified('isPaid');
 
 		try {
 			await user.save();

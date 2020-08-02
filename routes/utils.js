@@ -94,10 +94,13 @@ const getPriceDetails = cart => {
 	return priceDetails;
 }
 
+const getIncome = order => (order.price * order.quantity);
+
 module.exports = {
 	getAdminMetaData,
 	getFieldNames,
 	setProductsRoutes,
 	getCommonMetaData,
 	getPriceDetails,
+	getIncome
 };
