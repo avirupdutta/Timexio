@@ -40,13 +40,17 @@ router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
 	});
 
 	// deliverd orders (%)
-	let ordersDelivered = 0;
-	orders.forEach(order => {
-		if (order.deliveryDate) {
-			ordersDelivered++;
-		}
-	})
-	data.ordersDelivered = Math.round((ordersDelivered / orders.length) * 100);
+	if (orders.length > 0) {
+		let ordersDelivered = 0;
+		orders.forEach(order => {
+			if (order.deliveryDate) {
+				ordersDelivered++;
+			}
+		})
+		data.ordersDelivered = Math.round((ordersDelivered / orders.length) * 100);
+	}else {
+		data.ordersDelivered = 0;
+	}
 
 	// total customers
 	data.totalCustomers = (await User.find({admin : {$ne: true}})).length;
@@ -460,7 +464,7 @@ router.patch("/order/:id/deliver", async (req, res) => {
 	if (product.quantity >= order.quantity) {
 		const timestamp = Date.now();
 		user.orders.forEach(userOrder => {
-			if (order.id === userOrder.id) {
+			if (order.id == userOrder._id) {
 				// update user's pending order status
 				userOrder.deliveryDate = timestamp;
 				userOrder.isPaid = true;
@@ -498,7 +502,20 @@ router.patch("/order/:id/deliver", async (req, res) => {
 	}
 })
 
+//! incomplete
+router.delete("/order/:id/delete", async(req, res) => {
+	const id = req.params.id;
+	try {
+		await Order.findByIdAndDelete(id);
 
+		//todo - remove from user's order history as well
+
+		return res.status(200).json({message: 'Item deleted successfully!'});
+	} catch (error) {
+		return res.status(500).json({error: 'Something went wrong! Item is not removed.'});
+	}
+	
+})
 
 
 
