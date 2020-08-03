@@ -464,11 +464,9 @@ router.patch("/order/:id/deliver", async (req, res) => {
 	if (product.quantity >= order.quantity) {
 		const timestamp = Date.now();
 		user.orders.forEach(userOrder => {
-			if (order.id == userOrder._id) {
+			if (order.id == userOrder.id) {
 				// update user's pending order status
 				userOrder.deliveryDate = timestamp;
-				userOrder.isPaid = true;
-				
 				user.markModified('orders');
 			}
 		});
@@ -500,17 +498,20 @@ router.patch("/order/:id/deliver", async (req, res) => {
 	} else {
 		return res.status(405).json({message: "You don't have enough quantity of this product to deliver."})
 	}
-})
+});
 
-//! incomplete
-router.delete("/order/:id/delete", async(req, res) => {
-	const id = req.params.id;
+router.delete("/order/delete", async(req, res) => {
+	const {orderId, userId} = req.body;
+	console.log(req.body)
 	try {
-		await Order.findByIdAndDelete(id);
+		await Order.findByIdAndDelete(orderId);
 
-		//todo - remove from user's order history as well
+		const user = await User.findById(userId);
+		user.orders = user.orders.filter(item => item.id !== orderId)
+		user.markModified('orders');
+		await user.save();
 
-		return res.status(200).json({message: 'Item deleted successfully!'});
+		return res.status(200).json({next: '/admin/order'})
 	} catch (error) {
 		return res.status(500).json({error: 'Something went wrong! Item is not removed.'});
 	}

@@ -7,19 +7,25 @@
 		<div class="card shadow mb-4">
 			<div class="card-header py-3">
 				<div class="row">
-					<div class="col-12 col-md-10">
+					<div class="col-12">
 						<h3 class="font-weight-bolder">Order Id: 
 							<small id="orderId">
-								<%= order.id %> 
-								<% if (order.deliveryDate) { %>
+								<%= order.id %>
+								<% if (!order.isNotCancelled) { %>
+									<i class="fas fa-ban text-warning"  data-toggle="tooltip" data-placement="right" title="Order is Cancelled."></i>
+								<% } else if (order.deliveryDate) { %>
 									<i class="fas fa-check-circle text-success"  data-toggle="tooltip" data-placement="right" title="Delivered!"></i>
 								<% } %>
 							</small>
 						</h3>
 					</div>
-					<div class="col-12 col-md-2">
+					<div class="col-12 mt-2">
 						<% if (order.deliveryDate === null) { %>
-							<button class="btn btn-sm btn-success ml-lg-5" id="deliverBtn">Deliver Now <i class="fas fa-truck"></i></button>
+							<% if (order.isNotCancelled) { %>
+								<button class="btn btn-sm btn-success m-1 ml-0" id="deliverBtn">Deliver Now! <i class="fas fa-truck"></i></button>
+								<button class="btn btn-sm btn-warning m-1" id="cancelBtn">Cancel Order <i class="fas fa-ban"></i></button>
+							<% } %>
+							<button class="btn btn-sm btn-danger m-1" id="deleteBtn">Delete Order <i class="fas fa-trash"></i></button>
 						<% } %>
 					</div>
 				</div>
@@ -27,7 +33,7 @@
 				<div class="card-body">
 					<div class="row">
 						<div class="col-12 col-md-6 mt-2 mb-2 mt-md-0 mb-md-0">
-							<h3 class="font-weight-bolder">User Id: <small><%= order.userId %></small></h3>
+							<h3 class="font-weight-bolder">User Id: <small id="userId"><%= order.userId %></small></h3>
 							<hr>
 							<p><span class="font-weight-bold">Full Name:</span>&nbsp;<%= order.userFullName %></p>
 							<p><span class="font-weight-bold">Email:</span>&nbsp;<%= order.userEmail %></p>
@@ -76,15 +82,16 @@
 <script src="js/demo/datatables-demo.js"></script>
 <script src="js/tooltip.js"></script>
 
-<!-- Delete particular Data -->
+
 <script>
 	$(document).ready(function () { 
-		$('#deliverBtn').click(function(e) {
-			var id = $('#orderId').html().trim();
+		var id = $('#orderId').html().trim();
 
+		//  Deliver particular order
+		$('#deliverBtn').click(function(e) {
 			swal({
 				title: "Are you sure?",
-				text: "Note: If you dont't have enough items, delivery will be cancelled automatically",
+				text: "Note: If you dont't have enough items, delivery will not proceed. ",
 				icon: "warning",
 				buttons: true,
 				dangerMode: true
@@ -104,9 +111,61 @@
 					})
 				}
 			})
-			.catch(err => console.log(err))
-
-
+			.catch(err => console.log(err));
+		})
+	
+		$('#cancelBtn').click(function (e) {
+			swal({
+				title: "Are you sure?",
+				text: "Note: User's order will also be cancelled automatically.",
+				icon: "warning",
+				buttons: true,
+				dangerMode: true
+			})
+			.then((willDeliver) => {
+				if (willDeliver) {
+					$.ajax({
+						type: 'PATCH',
+						url: `/admin/order/${id}/cancel`, // NOTE: this url does not exist yet
+						success: function (data) { 
+							console.log(data)
+							location.reload();
+						},
+						error: function (error) {
+							swal(error.responseJSON.message);
+						}
+					})
+				}
+			})
+			.catch(err => console.log(err));
+		})
+		
+		$('#deleteBtn').click(function (e) {
+			var userId = $('#userId').html().trim();
+			swal({
+				title: "Are you sure?",
+				text: "Note: User's order will also be removed automatically from their history.",
+				icon: "warning",
+				buttons: true,
+				dangerMode: true
+			})
+			.then((willDeliver) => {
+				if (willDeliver) {
+					$.ajax({
+						type: 'DELETE',
+						url: `/admin/order/delete`, // NOTE: this url does not exist yet
+						contentType : 'application/json',
+						data: JSON.stringify({orderId: id, userId}),
+						success: function (data) {
+							location.href = data.next
+						},
+						error: function (error) {
+							swal(error.responseJSON.message);
+						}
+					})
+				}
+			})
+			.catch(err => console.log(err));
 		})
 	})
 </script>

@@ -33,6 +33,7 @@ const getFieldNames = model => {
 			fieldName !== "userCity" &&
 			fieldName !== "paymentMethod" &&
 			fieldName !== "deliveryAddress" &&
+			fieldName !== "deliveryDate" &&
 			fieldName !== "productCategory" &&
 			fieldName !== "userPhoneNumber" &&
 			fieldName !== "userPincode"

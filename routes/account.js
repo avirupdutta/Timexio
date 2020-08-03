@@ -243,7 +243,11 @@ router.post('/checkout', ensureAuthenticated, async(req, res) => {
 		try {
 			await order.save();
 
-			user.orders.push(order);
+			user.orders.push({
+				id: order.id, 
+				deliveryDate: order.deliveryDate, 
+				isNotCancelled: order.isNotCancelled
+			});
 			user.markModified('orders');
 			
 			user.cart = [];

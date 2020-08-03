@@ -66,6 +66,10 @@ const orderSchema = new mongoose.Schema({
 	deliveryDate: {
 		type: Date,
 		default: null
+	},
+	isNotCancelled: {
+		type: Boolean,
+		default: true
 	}
 });
 

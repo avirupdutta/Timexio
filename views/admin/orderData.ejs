@@ -86,7 +86,6 @@
 											<a class="btn btn-outline-primary rounded-pill border-0" href="order/<%= item.id %>/details"  data-toggle="tooltip" data-placement="left" title="Detailed view">
 												<i class="fas fa-table"></i>
 											</a>
-											<button class="deleteBtn btn btn-outline-danger rounded-pill border-0" data-id="<%= item.id %>" data-toggle="tooltip" data-placement="left" title="Delete"><i class="fas fa-trash"></i></button>
 										</td>
 									</tr>
 								<% }) %>
@@ -121,36 +120,3 @@
 <!-- Page level custom scripts -->
 <script src="js/demo/datatables-demo.js"></script>
 <script src="js/tooltip.js"></script>
-<!-- Delete particular Data -->
-<script>
-	$(document).ready(function () { 
-		$('.deleteBtn').click(function(e) {
-			var id = $(this).attr('data-id')
-
-			swal({
-				title: "Are you sure?",
-				text: "Once deleted, you will not be able to recover this data!",
-				icon: "warning",
-				buttons: true,
-				dangerMode: true
-			})
-			.then((willDelete) => {
-				if (willDelete) {
-					$.ajax({
-						type: 'DELETE',
-						url: `/admin/order/${id}/delete`,
-						success: function (data) {
-							location.reload();
-						},
-						error: function (error) { 
-							swal(error);
-						}
-					})
-				}
-			})
-			.catch(err => console.log(err))
-
-
-		})
-	})
-</script>
