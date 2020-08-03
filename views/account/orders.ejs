@@ -1,0 +1,65 @@
+<%- include('../partials/nabvar.ejs') %>
+<main>
+	<div class="container">
+		<div class="mt-5">
+        <h3>All Orders</h3>
+		</div>
+		
+		<br />
+		<br />
+		
+        <div class="table-responsive pt-2">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Product</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Ordered On</th>
+                  <th scope="col">Delivery Date</th>
+                </tr>
+              </thead>
+              
+              <tbody>
+                <% orders.forEach(order => { %>
+                  <tr>
+                    <td style="width: 50%;">
+                      <div class="media">
+                        <div class="d-flex">
+                            <%= order.image %>
+                          <a href="/product/<%= order.id %>/details" target="_blank"><img class="border-0" src="<%= order.image %>" alt="product image" /></a>
+                        </div>
+                        <div class="media-body mx-4 mt-2">
+                          <a href="/product/<%= order.id %>/details" target="_blank"><p class="text-primary"><%= order.productName %></p></a>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                        <h4><span class="input-price"><%= order.quantity %></span></h4>
+                    </td>
+                    <td>
+                        <h4>&#8377;<span class="input-price"><%= order.price %></span></h4>
+                    </td>
+                    <td>
+                        <%= order.orderedDate %>
+                    </td>
+                    <td>
+                        <% if (order.deliveryDate) { %>
+                            <%= order.deliveryDate %>
+                        <% } else { %>
+                            <a href="#" class="text-danger">Cancel Order</a>
+                        <% } %>
+                    </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+            <hr>
+            <div class="checkout_btn_inner">
+              <a class="btn_1 btn-sm" href="/"><span data-feather="arrow-left"></span> Continue Shopping</a>
+            </div>
+        </div>
+	</div>
+</main>
+<%- include('../partials/footer.ejs') %> <%-
+include('../partials/search-box.ejs') %>
