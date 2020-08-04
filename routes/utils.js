@@ -19,7 +19,7 @@ const getAdminMetaData = name => {
 const getFieldNames = model => {
 	return Object.keys(model.schema.paths).filter(
 		fieldName =>
-			fieldName !== "_id" &&
+			// fieldName !== "_id" &&
 			fieldName !== "__v" &&
 			fieldName !== "password" &&
 			fieldName !== "category" &&
@@ -36,6 +36,7 @@ const getFieldNames = model => {
 			fieldName !== "deliveryDate" &&
 			fieldName !== "productCategory" &&
 			fieldName !== "userPhoneNumber" &&
+			fieldName !== "isNotCancelled" &&
 			fieldName !== "userPincode"
 	);
 };

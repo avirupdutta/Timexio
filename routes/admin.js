@@ -1,5 +1,5 @@
 const express = require("express");
-
+const moment = require("moment");
 const {
 	getAdminMetaData,
 	getFieldNames,
@@ -72,7 +72,7 @@ router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
 	// get pending orders
 	data.pendingOrders = 0;
 	orders.forEach(order => {
-		if (order.deliveryDate === null) {
+		if (order.deliveryDate === null && order.isNotCancelled) {
 			data.pendingOrders++;
 		}
 	});
@@ -462,7 +462,7 @@ router.patch("/order/:id/deliver", async (req, res) => {
 	}
 	
 	if (product.quantity >= order.quantity) {
-		const timestamp = Date.now();
+		const timestamp =  moment().format('Do MMMM, YYYY');
 		user.orders.forEach(userOrder => {
 			if (order.id == userOrder.id) {
 				// update user's pending order status

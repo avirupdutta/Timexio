@@ -9,8 +9,8 @@
 				<div class="row">
 					<div class="col-12">
 						<h3 class="font-weight-bolder">Order Id: 
-							<small id="orderId">
-								<%= order.id %>
+							<small>
+								<span id="orderId"><%= order.id %></span>
 								<% if (!order.isNotCancelled) { %>
 									<i class="fas fa-ban text-warning"  data-toggle="tooltip" data-placement="right" title="Order is Cancelled."></i>
 								<% } else if (order.deliveryDate) { %>

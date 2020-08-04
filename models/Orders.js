@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const moment = require("moment");
 
 const orderSchema = new mongoose.Schema({
 	productId: {
@@ -64,11 +65,11 @@ const orderSchema = new mongoose.Schema({
 		required: true
 	},
 	orderedDate: {
-		type: Date,
-		default: Date.now
+		type: String,
+		default: () => moment().format('Do MMMM, YYYY')
 	},
 	deliveryDate: {
-		type: Date,
+		type: String,
 		default: null
 	},
 	isNotCancelled: {

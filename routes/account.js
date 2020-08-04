@@ -274,7 +274,7 @@ router.post('/checkout', ensureAuthenticated, async(req, res) => {
 router.get("/orders", ensureAuthenticated, async(req, res) => {
 	try {
 		const userId = await User.findById(req.user.id);
-		const orders = await Order.find({userId: userId.id}).sort({orderedDate: -1});
+		const orders = (await Order.find({userId: userId.id})).reverse();
 
 		return res.render("account/orders", {
 			...getCommonMetaData(req, "All Orders"),
