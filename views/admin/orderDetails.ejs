@@ -126,9 +126,10 @@
 				if (willDeliver) {
 					$.ajax({
 						type: 'PATCH',
-						url: `/admin/order/${id}/cancel`, // NOTE: this url does not exist yet
-						success: function (data) { 
-							console.log(data)
+						url: `/admin/order/cancel`,
+						contentType : 'application/json',
+						data: JSON.stringify({ id }),
+						success: function (data) {
 							location.reload();
 						},
 						error: function (error) {

@@ -500,9 +500,22 @@ router.patch("/order/:id/deliver", async (req, res) => {
 	}
 });
 
+router.patch("/order/cancel", async (req, res) => {
+	const orderId = req.body.id;
+	try {
+		const order = await Order.findById(orderId)
+		order.isNotCancelled = false;
+		order.markModified('isNotCancelled');
+		await order.save();
+	} catch (error) {
+		console.log(error)
+		return res.status(500).json({message: 'Something went wrong'})
+	}
+	return res.status(200).json({message: "Order cancelled successfully!"});
+});
+
 router.delete("/order/delete", async(req, res) => {
 	const {orderId, userId} = req.body;
-	console.log(req.body)
 	try {
 		await Order.findByIdAndDelete(orderId);
 
@@ -517,9 +530,6 @@ router.delete("/order/delete", async(req, res) => {
 	}
 	
 })
-
-
-
 
 
 module.exports = router;
