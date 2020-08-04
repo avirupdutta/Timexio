@@ -61,7 +61,7 @@
 							</tfoot>
 							<tbody>
 								<% data.forEach((item, num) => { %>
-								<tr>
+								<tr class="<%= !item.isNotCancelled ? 'bg-cancelled' : 'text-dark' %>">
 									<td><%= num+1 %></td>
 									<% fields.forEach(fieldName => { %>
 										<td>
@@ -77,6 +77,8 @@
 												<div class="text-center">
 													<i class="fas fa-times-circle text-danger"  data-toggle="tooltip" data-placement="right" title="Not yet delivered."></i>
 												</div>
+											<% } else if (fieldName === 'image') { %>
+												<img src="<%= item[fieldName] %>" class="w-100">
 											<% } else { %>
 												<%= item[fieldName] %>
 											<% } %>

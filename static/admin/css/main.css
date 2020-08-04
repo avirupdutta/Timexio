@@ -1,0 +1,5 @@
+@import url("./sb-admin-2.min.css");
+
+.bg-cancelled {
+	background-color: #ffe2e2 !important;
+}

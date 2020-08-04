@@ -232,6 +232,7 @@ router.post('/checkout', ensureAuthenticated, async(req, res) => {
 			productCategory: cartItem.category,
 			price: cartItem.price,
 			quantity: cartItem.quantity,
+			image: cartItem.image,
 			userId: user.id,
 			userFullName,
 			userEmail,
@@ -275,30 +276,9 @@ router.get("/orders", ensureAuthenticated, async(req, res) => {
 		const userId = await User.findById(req.user.id);
 		const orders = await Order.find({userId: userId.id}).sort({orderedDate: -1});
 
-		const allOrdersData = orders.map(order => {
-			let productImage = null;
-			Product.findById(order.productId, (err, data) => {
-				if (err) {
-					console.log(err)
-				}
-				productImage = data.images[0]; //! product image is not showing
-			})
-
-			return {
-				id: order.id,
-				image: productImage,
-				productName: order.productName,
-				quantity: order.quantity,
-				price: order.price,
-				orderedDate: order.orderedDate,
-				deliveryDate: order.deliveryDate
-			}
-		})
-		console.log(allOrdersData)
-
 		return res.render("account/orders", {
 			...getCommonMetaData(req, "All Orders"),
-			orders: allOrdersData
+			orders
 		});
 
 	} catch (error) {

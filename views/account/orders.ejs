@@ -13,9 +13,9 @@
               <thead>
                 <tr>
                   <th scope="col">Product</th>
+                  <th scope="col">Order Id</th>
                   <th scope="col">Quantity</th>
                   <th scope="col">Price</th>
-                  <th scope="col">Ordered On</th>
                   <th scope="col">Delivery Date</th>
                 </tr>
               </thead>
@@ -24,33 +24,34 @@
                 <% orders.forEach(order => { %>
                   <tr>
                     <td style="width: 50%;">
-                      <div class="media">
-                        <div class="d-flex">
-                            <%= order.image %>
-                          <a href="/product/<%= order.id %>/details" target="_blank"><img class="border-0" src="<%= order.image %>" alt="product image" /></a>
+                      <a href="/product/<%= order.productId %>/details" target="_blank">
+                        <div class="media">
+                          <div class="d-flex w-25">
+                            <img class="border-0 w-100" src="<%= order.image %>" alt="product image" />
+                          </div>
+                          <div class="media-body mx-4 mt-2">
+                            <p class="text-primary"><%= order.productName %></p>
+                          </div>
                         </div>
-                        <div class="media-body mx-4 mt-2">
-                          <a href="/product/<%= order.id %>/details" target="_blank"><p class="text-primary"><%= order.productName %></p></a>
-                        </div>
-                      </div>
+                      </a>
                     </td>
                     <td>
-                        <h4><span class="input-price"><%= order.quantity %></span></h4>
+                      <%= order.id %>
                     </td>
                     <td>
-                        <h4>&#8377;<span class="input-price"><%= order.price %></span></h4>
+                      <h4><span class="input-price"><%= order.quantity %></span></h4>
                     </td>
                     <td>
-                        <%= order.orderedDate %>
+                      <h4>&#8377;<span class="input-price"><%= order.price %></span></h4>
                     </td>
                     <td>
-                        <% if (order.deliveryDate) { %>
-                            <%= order.deliveryDate %>
-                        <% } else { %>
-                            <a href="#" class="text-danger">Cancel Order</a>
-                        <% } %>
+                      <% if (order.deliveryDate) { %>
+                        <%= order.deliveryDate %>
+                      <% } else { %>
+                        <a href="#" class="text-danger">Cancel Order</a>
+                      <% } %>
                     </td>
-                </tr>
+                  </tr>
                 <% }) %>
               </tbody>
             </table>
