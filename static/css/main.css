@@ -1,0 +1,12 @@
+@import url("./style.css");
+
+.btn1:hover {
+	cursor: pointer;
+}
+
+.disabled,
+.disabled:hover {
+	background-color: #ddd !important;
+	border: none !important;
+	cursor: default !important;
+}

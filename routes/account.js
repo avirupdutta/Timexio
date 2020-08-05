@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router();
 
-const { getCommonMetaData, getPriceDetails } = require("./utils");
+const { getCommonMetaData, getPriceDetails, setOrderToCancel } = require("./utils");
 const User = require("../models/User");
 const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 const Order = require("../models/Orders");
@@ -265,7 +265,7 @@ router.post('/checkout', ensureAuthenticated, async(req, res) => {
 		...getCommonMetaData(req, 'Order Placed Successfully!')
 	})
 	
-})
+});
 
 
 //===============
@@ -287,6 +287,22 @@ router.get("/orders", ensureAuthenticated, async(req, res) => {
 			...getCommonMetaData(req, "Something went wrong")
 		})
 	}
-})
+});
+
+router.patch("/orders/cancel", ensureAuthenticated, async(req, res) => {
+	const orderId = req.body.id;
+
+	try {
+		let order = await Order.findById(orderId);
+		order = setOrderToCancel(order);
+		await order.save();
+	} catch (error) {
+		console.log(error)
+		return res.render("500", {
+			...getCommonMetaData(req, "Something went wrong")
+		})
+	}
+	return res.status(200).json({message: "Order cancelled successfully!"});
+});
 
 module.exports = router;

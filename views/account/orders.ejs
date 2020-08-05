@@ -37,7 +37,7 @@
                       </a>
                     </td>
                     <td>
-                      <%= order.id %>
+                      <span id="orderId"><%= order.id %></span>
                     </td>
                     <td>
                       <h4><span class="input-price"><%= order.quantity %></span></h4>
@@ -53,7 +53,7 @@
                         <% if (order.deliveryDate) { %>
                           <%= order.deliveryDate %>
                         <% } else { %>
-                          <a href="#" class="text-danger">Cancel Order</a>
+                          <button type="button" class="btn1 btn-warning border border-warning btn-sm" id="cancelBtn">Cancel Order <i class="fas fa-ban"></i></button>
                         <% } %>
                       <% } else { %>
                         <h6 class="text-danger">Order cancelled</h6>
@@ -70,5 +70,39 @@
         </div>
 	</div>
 </main>
-<%- include('../partials/footer.ejs') %> <%-
-include('../partials/search-box.ejs') %>
+<%- include('../partials/footer.ejs') %>
+<%- include('../partials/search-box.ejs') %>
+
+<script>
+  $(document).ready(function () { 
+    var id = $('#orderId').html().trim();
+
+		$('#cancelBtn').click(function (e) {
+			swal({
+				title: "Are you sure?",
+				text: `Your order with id "${id}" will be cancelled permanently.`,
+				icon: "warning",
+				buttons: true,
+				dangerMode: true
+			})
+			.then((willCancel) => {
+				if (willCancel) {
+					$.ajax({
+						type: 'PATCH',
+						url: `/account/orders/cancel`,
+						contentType : 'application/json',
+						data: JSON.stringify({ id }),
+						success: function (data) {
+							location.reload();
+						},
+						error: function (error) {
+							swal(error.responseJSON.message);
+						}
+					})
+				}
+			})
+			.catch(err => console.log(err));
+		})
+  })
+
+</script>

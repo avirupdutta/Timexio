@@ -109,6 +109,12 @@ const payNow = order => {
 	return order;
 }
 
+const setOrderToCancel = order => {
+	order.isNotCancelled = false;
+	order.markModified('isNotCancelled');
+	return order;
+}
+
 module.exports = {
 	getAdminMetaData,
 	getFieldNames,
@@ -116,5 +122,6 @@ module.exports = {
 	getCommonMetaData,
 	getPriceDetails,
 	getIncome,
-	payNow
+	payNow,
+	setOrderToCancel
 };

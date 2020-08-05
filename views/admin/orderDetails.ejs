@@ -44,12 +44,13 @@
 							<p><span class="font-weight-bold">Payment Method:</span>&nbsp;<%= order.paymentMethod %></p>
 							<% if (order.isPaid) { %>
 								<p><span class="font-weight-bold">Is Paid:</span>&nbsp;<i class="fas fa-check-circle text-success"  data-toggle="tooltip" data-placement="right" title="Paid"></i></p>
+								<p><span class="font-weight-bold">Payment Timestamp:</span>&nbsp;<%= order.paymentTimestamp %></p>
 							<% } else { %>
 								<p><span class="font-weight-bold">Is Paid:</span>&nbsp;<i class="fas fa-times-circle text-danger"  data-toggle="tooltip" data-placement="right" title="Not Paid"></i></p>
 							<% } %>
 							<p><span class="font-weight-bold">Ordered Date:</span>&nbsp;<%= order.orderedDate %></p>
 							<% if (order.deliveryDate) { %>
-								<p><span class="font-weight-bold">Delivery Date: </span><%= new Date(order.deliveryDate) %></p>
+								<p><span class="font-weight-bold">Delivery Date: </span><%= new Date(order.paymentTimestamp) %></p>
 							<% } else { %>
 								<p><span class="font-weight-bold">Delivery Date:</span>&nbsp;<i class="fas fa-times-circle text-danger"  data-toggle="tooltip" data-placement="right" title="Not yet delivered."></i></p>
 							<% } %>
