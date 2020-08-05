@@ -43,6 +43,7 @@
 						>
 							<thead>
 								<tr>
+									<th scope="col">#</th>
 									<% fields.forEach(fieldName => { %>
 										<th class="text-dark"><%= fieldName %></th>
 									<% }) %>
@@ -51,6 +52,7 @@
 							</thead>
 							<tfoot>
 								<tr>
+									<th scope="col">#</th>
 									<% fields.forEach(fieldName => { %>
 										<th class="text-dark"><%= fieldName %></th>
 									<% }) %>
@@ -58,8 +60,9 @@
 								</tr>
 							</tfoot>
 							<tbody>
-								<% data.forEach(item => { %>
+								<% data.forEach((item, num) => { %>
 								<tr>
+									<td class="text-center"><%= num+1 %></td>
 									<% fields.forEach(fieldName => { %>
 									<td>
 										<a

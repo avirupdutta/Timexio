@@ -13,8 +13,6 @@
 						<nav>
 							<ul id="navigation">
 								<li><a href="/">Home</a></li>
-								<li><a href="/popular">Popular</a></li>
-								<li><a href="about.html">about</a></li>
 								<li>
 									<a href="#">Categories</a>
 									<ul class="submenu">
@@ -25,26 +23,8 @@
 										<% }) %>
 									</ul>
 								</li>
-								<li>
-									<a href="#">Pages</a>
-									<ul class="submenu">
-										<li><a href="login.html">Login</a></li>
-										<li><a href="cart.html">Cart</a></li>
-										<li>
-											<a href="elements.html">Element</a>
-										</li>
-										<li>
-											<a href="confirmation.html"
-												>Confirmation</a
-											>
-										</li>
-										<li>
-											<a href="checkout.html"
-												>Product Checkout</a
-											>
-										</li>
-									</ul>
-								</li>
+								<li><a href="/popular">Popular</a></li>
+								<li><a href="about.html">about</a></li>
 								<% if (locals.isAuthenticated) { %>
 									<li>
 										<a href="/account"><span data-feather="user"></span></a>

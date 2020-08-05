@@ -25,6 +25,23 @@
 					>
 				</div>
 			</div>
+			<% if (data.length > 0) { %>
+				<div class="mb-3">
+					<h5>Legend</h5>
+					<div class="d-flex">
+						<div class="mr-2">
+							<div class="border border-dark bg-light-danger" style="width: 20px; height: 20px;"></div>
+						</div>
+						<div class="">Quantity < than 5</div>
+					</div>
+					<div class="d-flex">
+						<div class="mr-2">
+							<div class="border border-dark" style="width: 20px; height: 20px;"></div>
+						</div>
+						<div class="">Quantity > than 5</div>
+					</div>
+				</div>
+			<% } %>
 
 		<%- include ('../partials/messages.ejs') %>
 
@@ -46,38 +63,43 @@
 						>
 							<thead>
 								<tr>
+									<th scope="col">#</th>
+									<th class="text-center">Options</th>
 									<% fields.forEach(fieldName => { %>
-										<th class="text-dark"><%= fieldName %></th>
+										<th class="text-dark text-center"><%= fieldName %></th>
 									<% }) %>
-									<th>Options</th>
 								</tr>
 							</thead>
 							<tfoot>
 								<tr>
-									<% fields.forEach(fieldName => { %>
-										<th class="text-dark"><%= fieldName %></th>
-									<% }) %>
+									<th scope="col">#</th>
 									<th>Options</th>
+									<% fields.forEach(fieldName => { %>
+										<th class="text-dark text-center"><%= fieldName %></th>
+									<% }) %>
 								</tr>
 							</tfoot>
 							<tbody>
-								<% data.forEach(item => { %>
-								<tr>
-									<% fields.forEach(fieldName => { %>
-										<td>
-											<% if (item[fieldName]) { %>
-												<%= item[fieldName] %> 
-											<% } else { %>
-												<%= item[fieldName] %>
-											<% } %>
-										</td>
-										<% }) %>
+								<% data.forEach((item, num) => { %>	
+									<tr class="<%= item.quantity < adminQuantityWarningCount ? 'bg-light-danger' : 'text-dark' %>">
+										<td><%= num+1 %></td>
 										<td class="text-center">
-											<a class="btn btn-outline-primary rounded-pill border-0" href="product/<%= item.id %>/details"  data-toggle="tooltip" data-placement="left" title="Detailed view">
-												<i class="fas fa-table"></i>
+											<a target="_blank" class="btn btn-outline-primary rounded-pill border-0 m-1" href="product/<%= item.id %>/details"  data-toggle="tooltip" data-placement="left" title="Detailed view">
+												<i class="fas fa-external-link-alt"></i>
 											</a>
-											<button class="deleteBtn btn btn-outline-danger rounded-pill border-0" data-id="<%= item.id %>" data-toggle="tooltip" data-placement="left" title="Delete"><i class="fas fa-trash"></i></button>
-										</td>
+											<button class="deleteBtn btn btn-outline-danger rounded-pill border-0 m-1" data-id="<%= item.id %>" data-toggle="tooltip" data-placement="left" title="Delete"><i class="fas fa-trash"></i></button>
+										</td>								
+										<% fields.forEach(fieldName => { %>
+											<% if (Array.isArray(item[fieldName])) { %>
+												<td class="text-center">
+													<img src="<%= item[fieldName][0] %>" class="w-50" alt=""> 
+												</td>
+											<% } else { %>
+												<td>
+													<%= item[fieldName] %>
+												</td>
+											<% } %>
+										<% }) %>
 									</tr>
 								<% }) %>
 							</tbody>

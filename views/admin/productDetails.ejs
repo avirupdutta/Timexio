@@ -26,61 +26,68 @@
 					</h6>
 				</div>
 				<div class="card-body">
-					<p>Items Sold: <strong><%= product.sold %></strong></p>
-                    <form action="/admin/product/<%= product.id %>/edit" method="post">
-						<div class="form-group">
-							<label for="category">Category<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
-							<select name="category" class="form-control" id="category" required>
-								<option value="none">Select Category</option>
-								<% productCategories.forEach(category => { %>
-									<option value="<%= category %>" <%= category === product.category ? "selected" : "" %>><%= category %></option>
-								<% }) %>
-							</select>
+					<div class="row">
+						<div class="col-6 col-sm-2  m-auto m-sm-0">
+							<img src="<%= product.images[0] %>" class="w-100 mb-5" alt="">
 						</div>
-						<div class="form-group">
-							<label for="name">Product Name<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
-							<input type="text" id="name" name="name"  class="form-control mt-2 mb-2" value="<%= product.name %>" placeholder="Product Name" required>
+						<div class="col-12 col-sm-10">
+							<p>Items Sold: <strong class="text-primary"><%= product.sold %></strong></p>
+							<form action="/admin/product/<%= product.id %>/edit" method="post">
+								<div class="form-group">
+									<label for="category">Category<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
+									<select name="category" class="form-control" id="category" required>
+										<option value="none">Select Category</option>
+										<% productCategories.forEach(category => { %>
+											<option value="<%= category %>" <%= category === product.category ? "selected" : "" %>><%= category %></option>
+										<% }) %>
+									</select>
+								</div>
+								<div class="form-group">
+									<label for="name">Product Name<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
+									<input type="text" id="name" name="name"  class="form-control mt-2 mb-2" value="<%= product.name %>" placeholder="Product Name" required>
+								</div>
+								<div class="form-group">
+									<label for="price">Price (<i class="fas fa-rupee-sign"></i>)<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
+									<input type="number" id="price" name="price" class="form-control mt-2 mb-2" value="<%= product.price %>" placeholder="Price ($)" required>
+								</div>
+								<div class="form-group">
+									<label for="quantity">Available Quantity<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
+									<input type="number" id="quantity" name="quantity" class="form-control mt-2 mb-2" value="<%= product.quantity %>" placeholder="Quantity Available" required>
+								</div>
+								<div class="form-group">
+									<label for="tax">Tax (%)<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
+									<input type="number" id="tax" name="tax" class="form-control mt-2 mb-2" value="<%= product.tax %>" placeholder="Tax (%)" required>
+								</div>
+								<div class="form-group">
+									<label for="primary Image">Primary Image<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
+									<input type="url" name="primaryImage" class="form-control mt-2 mb-2"   value="<%= product.images[0] %>" placeholder="Link of Primary Image" required>
+								</div>
+								<div class="form-group">
+									<label for="productImage1">Product Image 1</label>
+									<input type="url" id="productImage1" name="productImage1" class="form-control mt-2 mb-2"  value="<%= product.images[1] %>" placeholder="Link of Product Image 1">
+								</div>
+								<div class="form-group">
+									<label for="productImage2">Product Image 2</label>
+									<input type="url" id="productImage2" name="productImage2" class="form-control mt-2 mb-2"  value="<%= product.images[2] %>" placeholder="Link of Product Image 2">
+								</div>
+								<div class="form-group">
+									<label for="productImage3">Product Image 3</label>
+									<input type="url" id="productImage3" name="productImage3" class="form-control mt-2 mb-2"  value="<%= product.images[3] %>" placeholder="Link of Product Image 3">
+								</div>
+								<div class="form-group">
+									<label for="specs">Specifications<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
+									<textarea id="specs" name="specs" class="form-control mt-2 mb-2" rows="10" placeholder="specs..." required><%= product.specs %></textarea>
+								</div>
+								<div class="form-group">
+									<label for="created">Created At</label>
+									<input type="datetime" id="created" class="form-control mt-2 mb-2"  value="<%= product.created %>" disabled>
+								</div>
+								<div class="modal-footer">
+									<button type="submit" class="btn btn-primary">Save Changes</button>
+								</div>
+							</form>
 						</div>
-						<div class="form-group">
-							<label for="price">Price (<i class="fas fa-rupee-sign"></i>)<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
-							<input type="number" id="price" name="price" class="form-control mt-2 mb-2" value="<%= product.price %>" placeholder="Price ($)" required>
-						</div>
-						<div class="form-group">
-							<label for="quantity">Available Quantity<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
-							<input type="number" id="quantity" name="quantity" class="form-control mt-2 mb-2" value="<%= product.quantity %>" placeholder="Quantity Available" required>
-						</div>
-						<div class="form-group">
-							<label for="tax">Tax (%)<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
-							<input type="number" id="tax" name="tax" class="form-control mt-2 mb-2" value="<%= product.tax %>" placeholder="Tax (%)" required>
-						</div>
-						<div class="form-group">
-							<label for="primary Image">Primary Image<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
-							<input type="url" name="primaryImage" class="form-control mt-2 mb-2"   value="<%= product.images[0] %>" placeholder="Link of Primary Image" required>
-						</div>
-						<div class="form-group">
-							<label for="productImage1">Product Image 1</label>
-							<input type="url" id="productImage1" name="productImage1" class="form-control mt-2 mb-2"  value="<%= product.images[1] %>" placeholder="Link of Product Image 1">
-						</div>
-						<div class="form-group">
-							<label for="productImage2">Product Image 2</label>
-							<input type="url" id="productImage2" name="productImage2" class="form-control mt-2 mb-2"  value="<%= product.images[2] %>" placeholder="Link of Product Image 2">
-						</div>
-						<div class="form-group">
-							<label for="productImage3">Product Image 3</label>
-							<input type="url" id="productImage3" name="productImage3" class="form-control mt-2 mb-2"  value="<%= product.images[3] %>" placeholder="Link of Product Image 3">
-						</div>
-						<div class="form-group">
-							<label for="specs">Specifications<sup class="text-danger"><i class="fas fa-asterisk" data-toggle="tooltip" data-placement="right" title="This field cannot be empty"></i></sup></label>
-							<textarea id="specs" name="specs" class="form-control mt-2 mb-2" rows="10" placeholder="specs..." required><%= product.specs %></textarea>
-						</div>
-						<div class="form-group">
-							<label for="created">Created At</label>
-							<input type="datetime" id="created" class="form-control mt-2 mb-2"  value="<%= product.created %>" disabled>
-						</div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                        </div>
-                    </form>
+					</div>
 				</div>
 			</div>
 		</div>

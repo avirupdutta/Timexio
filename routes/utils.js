@@ -24,7 +24,6 @@ const getFieldNames = model => {
 			fieldName !== "password" &&
 			fieldName !== "category" &&
 			fieldName !== "created" &&
-			fieldName !== "images" &&
 			fieldName !== "specs" &&
 			fieldName !== "date" &&
 			fieldName !== "productId" &&
@@ -60,7 +59,8 @@ const setProductsRoutes = (router, categories) => {
 						currentModel: category,
 						productCategories: categories,
 						fields: getFieldNames(Product),
-						data
+						data,
+						adminQuantityWarningCount: settings.adminQuantityWarningCount
 					});
 				});
 			}

@@ -23,9 +23,23 @@
 				</div>
 			</div>
 
+			<div class="mb-3">
+				<h5>Legend</h5>
+				<div class="d-flex">
+					<div class="mr-2">
+						<div class="border border-dark bg-light-danger" style="width: 20px; height: 20px;"></div>
+					</div>
+					<div class="">Cancelled Orders</div>
+				</div>
+				<div class="d-flex">
+					<div class="mr-2">
+						<div class="border border-dark" style="width: 20px; height: 20px;"></div>
+					</div>
+					<div class="">Not Cancelled</div>
+				</div>
+			</div>
+
 		<%- include ('../partials/messages.ejs') %>
-
-
 			<!-- DataTales Example -->
 			<div class="card shadow mb-4">
 				<div class="card-header py-3">
@@ -44,25 +58,30 @@
 							<thead>
 								<tr>
 									<th scope="col">#</th>
+									<th class="text-center">Options</th>
 									<% fields.forEach(fieldName => { %>
-										<th class="text-dark"><%= fieldName %></th>
+										<th class="text-dark text-center"><%= fieldName %></th>
 									<% }) %>
-									<th>Options</th>
 								</tr>
 							</thead>
 							<tfoot>
 								<tr>
 									<th scope="col">#</th>
+									<th>Options</th>
 									<% fields.forEach(fieldName => { %>
 										<th class="text-dark"><%= fieldName %></th>
 									<% }) %>
-									<th>Options</th>
 								</tr>
 							</tfoot>
 							<tbody>
 								<% data.forEach((item, num) => { %>
-								<tr class="<%= !item.isNotCancelled ? 'bg-cancelled' : 'text-dark' %>">
+								<tr class="<%= !item.isNotCancelled ? 'bg-light-danger' : 'text-dark' %>">
 									<td><%= num+1 %></td>
+									<td class="text-center">
+										<a target="_blank" class="btn btn-outline-primary rounded-pill border-0" href="order/<%= item.id %>/details"  data-toggle="tooltip" data-placement="left" title="Detailed view">
+											<i class="fas fa-external-link-alt"></i>
+										</a>
+									</td>
 									<% fields.forEach(fieldName => { %>
 										<td>
 											<% if (item[fieldName] === true) { %>
@@ -84,11 +103,6 @@
 											<% } %>
 										</td>
 										<% }) %>
-										<td class="text-center">
-											<a class="btn btn-outline-primary rounded-pill border-0" href="order/<%= item.id %>/details"  data-toggle="tooltip" data-placement="left" title="Detailed view">
-												<i class="fas fa-table"></i>
-											</a>
-										</td>
 									</tr>
 								<% }) %>
 							</tbody>
