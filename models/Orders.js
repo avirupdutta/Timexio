@@ -72,6 +72,10 @@ const orderSchema = new mongoose.Schema({
 		type: String,
 		default: null
 	},
+	paymentTimestamp : {
+		type: Date,
+		default: null
+	},
 	isNotCancelled: {
 		type: Boolean,
 		default: true

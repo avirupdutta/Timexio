@@ -32,6 +32,7 @@ const getFieldNames = model => {
 			fieldName !== "userFullName" &&
 			fieldName !== "userCity" &&
 			fieldName !== "paymentMethod" &&
+			fieldName !== "paymentTimestamp" &&
 			fieldName !== "deliveryAddress" &&
 			fieldName !== "deliveryDate" &&
 			fieldName !== "productCategory" &&
@@ -98,11 +99,22 @@ const getPriceDetails = cart => {
 
 const getIncome = order => (order.price * order.quantity);
 
+const payNow = order => {
+	order.isPaid = true;
+	order.markModified('isPaid');
+
+	order.paymentTimestamp = new Date();
+	order.markModified('paymentTimestamp');
+
+	return order;
+}
+
 module.exports = {
 	getAdminMetaData,
 	getFieldNames,
 	setProductsRoutes,
 	getCommonMetaData,
 	getPriceDetails,
-	getIncome
+	getIncome,
+	payNow
 };

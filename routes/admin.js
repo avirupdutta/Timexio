@@ -4,7 +4,8 @@ const {
 	getAdminMetaData,
 	getFieldNames,
 	setProductsRoutes,
-	getIncome
+	getIncome,
+	payNow
 } = require("./utils");
 const router = express.Router();
 const {
@@ -26,7 +27,7 @@ router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
 	// Monthly income
 	data.monthlyIncome = 0;
 	orders.forEach(order => {
-		if (order.deliveryDate && new Date(order.deliveryDate).getMonth() === currentMonth) {
+		if (order.paymentTimestamp && new Date(order.paymentTimestamp).getMonth() === currentMonth) {
 			data.monthlyIncome += getIncome(order);
 		}
 	});
@@ -34,7 +35,7 @@ router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
 	// Yearly income
 	data.yearlyIncome = 0;
 	orders.forEach(order => {
-		if (order.deliveryDate && new Date(order.deliveryDate).getFullYear() === currentYear) {
+		if (order.paymentTimestamp && new Date(order.paymentTimestamp).getFullYear() === currentYear) {
 			data.yearlyIncome += getIncome(order);
 		}
 	});
@@ -62,7 +63,7 @@ router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
 	for (let month = 0; month < 12; month++) {
 		currentMonthIncome = 0;
 		orders.forEach(order => {
-			if (order.deliveryDate && new Date(order.deliveryDate).getMonth() === month) {
+			if (order.paymentTimestamp && new Date(order.paymentTimestamp).getMonth() === month) {
 				currentMonthIncome += getIncome(order);
 			}
 		});
@@ -481,9 +482,9 @@ router.patch("/order/:id/deliver", async (req, res) => {
 
 		// update order status for admin panel
 		order.deliveryDate = timestamp;
-		order.isPaid = true;
 		order.markModified('deliveryDate');
-		order.markModified('isPaid');
+		
+		order = payNow(order)
 
 		try {
 			await user.save();
