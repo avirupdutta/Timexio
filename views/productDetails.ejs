@@ -43,7 +43,7 @@
             </table>
             <% if (product.quantity > 0) { %>
                 <div class="buy-cart-btns mb-5 d-flex justify-content-center justify-content-md-start flex-wrap">
-                    <button class="btn-buy text-capitalize m-1">Buy Now <i data-feather="zap"></i></button>
+                    <!-- <button class="btn-buy text-capitalize m-1">Quick Buy <i data-feather="zap"></i></button> -->
                     <form action="/account/cart/<%= product.id %>/add" method="POST">
                         <button type="submit" class="btn-addToCart text-capitalize m-1">
                             Add to Cart <i data-feather="shopping-cart"></i>

@@ -1,4 +1,6 @@
 const express = require('express')
+const { maxAllowedQuantityPerItemInCart } = require('../settings');
+
 const router = express.Router();
 
 const { getCommonMetaData, getPriceDetails, setOrderToCancel } = require("./utils");
@@ -53,7 +55,7 @@ router.post("/cart/:id/add", ensureAuthenticated, async (req, res) => {
 			if (cartItem) {
 				user.cart = user.cart.map(itemInCart => {
 					if (itemInCart.id === productId) {
-						itemInCart.quantity < 5? itemInCart.quantity++ : itemInCart.quantity;
+						itemInCart.quantity < maxAllowedQuantityPerItemInCart? itemInCart.quantity++ : itemInCart.quantity;
 					}
 					return itemInCart;
 				})

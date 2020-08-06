@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 
 	// For New Arrivals
 	try {
-		const newArrivalProducts = await Product.find({}).sort({ created: -1 });
+		const newArrivalProducts = await Product.find({'quantity': {$gt: 0}}).sort({ created: -1 });
 		data.newArrivalProducts = newArrivalProducts;
 
 		res.render("index", {
@@ -124,6 +124,7 @@ router.get("/category/:model", async (req, res) => {
 router.get("/search", async (req, res) => {
 	const keywords = req.query.keywords.split(" ");
 	if (keywords.length > 1) {
+		console.log(keywords)
 		// search engine algo here
 		let products = [],
 			sortBy = "relevence";
