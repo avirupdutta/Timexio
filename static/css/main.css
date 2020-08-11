@@ -1,4 +1,6 @@
 @import url("./style.css");
+/* @import "./algolia.css";
+@import "./reset.css"; */
 
 .btn1:hover {
 	cursor: pointer;
@@ -9,4 +11,45 @@
 	background-color: #ddd !important;
 	border: none !important;
 	cursor: default !important;
+}
+
+.search-model-box .search-close-btn {
+	position: unset;
+	top: unset;
+	margin: 2rem auto;
+}
+
+.search-model-box .search-model-form {
+	margin: auto;
+}
+.search-model-box .search-model-form input:focus {
+	border-bottom: 2px solid #fff;
+}
+.ais-search-box {
+	max-width: unset;
+}
+.search-highlight-text {
+	font-size: 1.2rem;
+	vertical-align: sub;
+}
+
+.search-highlight-text em {
+	font-style: normal;
+	color: var(--danger);
+}
+.hit-price .badge {
+	font-size: 1rem;
+}
+.ais-hits--item:hover {
+	background: #eee;
+}
+.search-btn {
+	padding: 0px 2rem;
+	border: none;
+	background: var(--primary);
+	border-radius: 5px;
+	font-size: 1.2rem;
+}
+.search-btn:hover {
+	cursor: pointer;
 }

@@ -123,7 +123,7 @@ router.get("/category/:model", async (req, res) => {
 // search results page
 router.get("/search", async (req, res) => {
 	const keywords = req.query.keywords.split(" ");
-	if (keywords.length > 1) {
+	if (keywords.length >= 1) {
 		console.log(keywords)
 		// search engine algo here
 		let products = [],

@@ -1,14 +1,20 @@
 <!--? Search model Begin -->
 <div class="search-model-box">
-	<div class="h-100 d-flex align-items-center justify-content-center">
+	<div class="h-100">
 		<div class="search-close-btn">+</div>
 		<form class="search-model-form" action="/search" method="GET">
-			<input
+			<div class="d-flex mb-2">
+				<input
+				class="mb-2 input-container aa-input-search form-control"
 				name="keywords"
 				type="text"
 				id="search-input"
-				placeholder="Search here..."
-			/>
+				placeholder="Search here anyting..."
+				autocomplete="off"
+				/>
+				<button type="submit" class="search-btn"><span class="flaticon-search"></span></button>
+			</div>
+			<div class="bg-white" id="hits"></div>
 		</form>
 	</div>
 </div>
