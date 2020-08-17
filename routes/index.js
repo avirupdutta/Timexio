@@ -1,11 +1,12 @@
 const express = require("express");
+const algoliasearch = require("algoliasearch");
+
 const router = express.Router();
 
 const settings = require("../settings");
 const categories = require("../models/productCategories");
 const { getCommonMetaData } = require("./utils");
 const Product = require("../models/Product");
-const User = require("../models/User");
 
 //* ======= PUBLIC ROUTES BELOW! ======= //
 // welcome page
@@ -121,23 +122,35 @@ router.get("/category/:model", async (req, res) => {
 });
 
 // search results page
-router.get("/search", async (req, res) => {
-	const keywords = req.query.keywords.split(" ");
+router.get("/search/:query", (req, res) => {
+	const keywords = req.params.query;
 	if (keywords.length >= 1) {
-		console.log(keywords)
 		// search engine algo here
 		let products = [],
 			sortBy = "relevence";
-		res.render("searchResults", {
-			...getCommonMetaData(
-				req,
-				`Showing results for ${req.query.keywords}`
-			),
-			categoryName: categories,
-			searchKeywords: req.query.keywords,
-			products,
-			sortBy
+
+		const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_ADMIN_API_KEY);
+		const index = client.initIndex('products');
+		
+		index.search(keywords, {
+			attributesToRetrieve:  ['name', 'price', 'images', 'quantity', 'tax', '_id'],
+		}).then(({ hits }) => {
+			hits.forEach(hit => {
+				hit.id = hit._id.$oid;
+			})
+			res.render("searchResults", {
+				...getCommonMetaData(
+					req,
+					`Showing results for ${req.query.keywords}`
+				),
+				categoryName: categories,
+				searchKeywords: keywords,
+				products: hits,
+				sortBy
+			});
 		});
+
+
 	} else {
 		res.redirect("/");
 	}

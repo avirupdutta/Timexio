@@ -2,20 +2,25 @@
 <div class="search-model-box">
 	<div class="h-100">
 		<div class="search-close-btn">+</div>
-		<form class="search-model-form" action="/search" method="GET">
+		<form class="search-model-form" id="searchForm" method="GET">
 			<div class="d-flex mb-2">
 				<input
 				class="mb-2 input-container aa-input-search form-control"
-				name="keywords"
 				type="text"
 				id="search-input"
 				placeholder="Search here anyting..."
 				autocomplete="off"
 				/>
-				<button type="submit" class="search-btn"><span class="flaticon-search"></span></button>
+				<button type="submit" class="search-btn">Search</button>
 			</div>
 			<div class="bg-white" id="hits"></div>
 		</form>
 	</div>
 </div>
 <!-- Search model end -->
+
+<script>
+	$('#search-input').change(e => {
+		$('#searchForm').attr('action', `/search/${e.target.value}`);
+	})
+</script>

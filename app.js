@@ -49,6 +49,7 @@ app.set("layout extractScripts", true);
 
 // routes for static files
 app.use("/", express.static("static"));
+app.use("/search", express.static("static"));
 app.use("/product/:id/", express.static("static"));
 app.use("/category", express.static("static"));
 app.use("/account", express.static("static"));

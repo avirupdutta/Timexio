@@ -33,13 +33,13 @@ search.addWidget(
                     <div class="hit aa-suggestions-category p-3 border-bottom">
                         <div class="hit-content">
 							<p class="hit-price">
-								<img src="{{images}}" class="border" style="max-width: 50px; max-height: 50px;" />
+								<span class="flaticon-search mr-2"></span>
 								<span class="search-highlight-text text-dark">{{{_highlightResult.name.value}}}</span>
 							</p>
                         </div>
                     </div>
                 </a>`,
-			empty: "<strong><em>{{query}}</em></strong> is not found :("
+			empty: ""
         }
 	})
 );
