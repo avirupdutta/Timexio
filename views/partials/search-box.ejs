@@ -14,6 +14,7 @@
 				<button type="submit" class="search-btn">Search</button>
 			</div>
 			<div class="bg-white" id="hits"></div>
+			<p id="algoliaPromo">Search by <a class="text-muted font-weight-bold" href="https://www.algolia.com/">Algolia</a></p>
 		</form>
 	</div>
 </div>
@@ -22,5 +23,7 @@
 <script>
 	$('#search-input').change(e => {
 		$('#searchForm').attr('action', `/search/${e.target.value}`);
-	})
+	});
+
+
 </script>

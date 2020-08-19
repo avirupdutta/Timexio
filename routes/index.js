@@ -1,12 +1,12 @@
 const express = require("express");
 const algoliasearch = require("algoliasearch");
-
 const router = express.Router();
-
 const settings = require("../settings");
 const categories = require("../models/productCategories");
 const { getCommonMetaData } = require("./utils");
 const Product = require("../models/Product");
+
+const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_ADMIN_API_KEY);
 
 //* ======= PUBLIC ROUTES BELOW! ======= //
 // welcome page
@@ -126,14 +126,30 @@ router.get("/search/:query", (req, res) => {
 	const keywords = req.params.query;
 	if (keywords.length >= 1) {
 		// search engine algo here
-		let products = [],
-			sortBy = "relevence";
+		let index = null,
+			sortBy = req.query.sortBy || "relevence";
 
-		const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_ADMIN_API_KEY);
-		const index = client.initIndex('products');
+		switch (sortBy) {
+			case 'relevence':
+				index  = client.initIndex('products');
+				break;
+			case 'lowToHigh':
+				index = client.initIndex('Low to High');
+				break;
+			case 'highToLow':
+				index = client.initIndex('High to Low');
+				break;
+			case 'popularity':
+				index = client.initIndex('Popularity');
+				break;
+		
+			default:
+				index  = client.initIndex('products');
+				break;
+		}
 		
 		index.search(keywords, {
-			attributesToRetrieve:  ['name', 'price', 'images', 'quantity', 'tax', '_id'],
+			attributesToRetrieve:  ['name', 'price', 'images', 'quantity', 'tax', '_id', 'sold'],
 		}).then(({ hits }) => {
 			hits.forEach(hit => {
 				hit.id = hit._id.$oid;
@@ -141,7 +157,7 @@ router.get("/search/:query", (req, res) => {
 			res.render("searchResults", {
 				...getCommonMetaData(
 					req,
-					`Showing results for ${req.query.keywords}`
+					`Showing results for ${keywords}`
 				),
 				categoryName: categories,
 				searchKeywords: keywords,

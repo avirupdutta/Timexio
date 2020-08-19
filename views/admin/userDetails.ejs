@@ -74,8 +74,8 @@
 							<% } %>
 						</div>
 						<div class="form-group">
-                            <input type="checkbox" name="admin" id="admin" value="<%= user.admin %>" <%= user.admin ? "checked" : "" %>>
-							<label for="admin">Allow Admin permissions</label>
+                            <input type="checkbox" name="admin" id="adminCheckBox" value="<%= user.admin %>" <%= user.admin ? "checked" : "" %>>
+							<label for="adminCheckBox">Allow Admin permissions</label>
 						</div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -108,3 +108,9 @@
 <!-- Page level custom scripts -->
 <script src="js/demo/datatables-demo.js"></script>
 <script src="js/tooltip.js"></script>
+
+<script>
+	$('#adminCheckBox').change(e => {
+		e.target.value = e.target.checked
+	})
+</script>
