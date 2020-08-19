@@ -1,12 +1,9 @@
 const express = require("express");
-const algoliasearch = require("algoliasearch");
 const router = express.Router();
 const settings = require("../settings");
 const categories = require("../models/productCategories");
-const { getCommonMetaData } = require("./utils");
+const { getCommonMetaData, client } = require("./utils");
 const Product = require("../models/Product");
-
-const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_ADMIN_API_KEY);
 
 //* ======= PUBLIC ROUTES BELOW! ======= //
 // welcome page

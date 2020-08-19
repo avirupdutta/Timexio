@@ -1,5 +1,6 @@
 const express = require("express");
 const moment = require("moment");
+const { client } = require("./utils");
 const {
 	getAdminMetaData,
 	getFieldNames,
@@ -16,6 +17,9 @@ const User = require("../models/User");
 const Product = require("../models/Product");
 const productCategories = require("../models/productCategories");
 const Order = require("../models/Orders");
+
+const index = client.initIndex('products');
+
 
 // ** Working GET Route for admin dashboard **
 router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
@@ -118,7 +122,6 @@ router.get(
 		});
 	}
 );
-
 // POST - add new product
 router.post(
 	"/product/add",
@@ -158,11 +161,20 @@ router.post(
 			newProduct
 				.save()
 				.then(product => {
-					req.flash(
-						"success_msg",
-						`New ${product.category} has been added!`
-					);
-					res.redirect("back");
+					// save in algolia
+					index.saveObject(product, { autoGenerateObjectIDIfNotExist: true })
+					.then(algoliaResponse => {
+						console.log(algoliaResponse)
+						req.flash(
+							"success_msg",
+							`New ${product.category} has been added!`
+						);
+						res.redirect("back");
+					})
+					.catch(err => {
+						console.log('failed to save in algolia');
+						console.log(err.message);
+					});
 				})
 				.catch(err => {
 					console.log(err);

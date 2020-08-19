@@ -1,6 +1,9 @@
 const modelNames = require("../models/index");
 const categories = require("../models/productCategories");
+const algoliasearch = require("algoliasearch");
 const settings = require("../settings");
+
+const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_ADMIN_API_KEY);
 
 const {
 	ensureAuthenticated,
@@ -116,6 +119,7 @@ const setOrderToCancel = order => {
 }
 
 module.exports = {
+	client,
 	getAdminMetaData,
 	getFieldNames,
 	setProductsRoutes,

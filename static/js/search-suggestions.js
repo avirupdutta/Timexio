@@ -29,7 +29,7 @@ search.addWidget(
 		hitsPerPage: 5,
 		templates: {
 			item: `
-				<a href="/product/{{_id.$oid}}/details">
+				<a href="/product/{{ _id }}/details">
                     <div class="hit aa-suggestions-category p-3 border-bottom">
                         <div class="hit-content">
 							<p class="hit-price">
