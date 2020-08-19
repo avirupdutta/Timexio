@@ -2,51 +2,49 @@
 <main>
     <div class="row mt-5">
         <div class="col-sm-6 col-md-3 border-right pr-5">
-            <div class="categories mb-5">
-                <h4>Categories</h4>
-                <% categories.forEach(category => { %>
-                    <a href="/category/<%= category %>">- <%= category %></a>
-                <% }) %>
-            </div>
-            <div class="filters mb-5">
-                <h4>Filters</h4>
-                <a href="#">- Most Popular</a>
-                <a href="#">- Trending</a>
-                <a href="#">- Featured</a>
-                <a href="#">- Offers</a>
-            </div>
-            <div class="price-range mb-5">
-                <form action="/search" method="GET">
-                    <label for="priceRangeFields"><h4>Price Range</h4></label>
-                    <div class="input-group input-group-sm" id="priceRangeFields">
-                        <input type="number" name="minPrice" placeholder="Min." aria-label="Minimum Price" class="form-control">
-                        <input type="number" name="maxPrice" placeholder="Max." aria-label="Maximum Price" class="form-control">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn-primary border border-primary"><span class="flaticon-search"></span></button>
-                        </div>
+            <div class="sticky-top">
+                <div class="categories mb-5">
+                    <h4>Categories</h4>
+                    <% categories.forEach(category => { %>
+                        <a href="/category/<%= category %>">- <%= category %></a>
+                    <% }) %>
+                </div>
+                <div class="filters mb-5">
+                    <div class="sortby-list">
+                        <h4 class="d-inline">Sort By:</h4>
+                        <a href="?sortBy=relevence"  class="<%= locals.sortBy === 'relevence'  ? 'active' : '' %>">Relevence</a>
+                        <a href="?sortBy=lowToHigh"  class="<%= locals.sortBy === 'lowToHigh'  ? 'active' : '' %>">Low to High</a>
+                        <a href="?sortBy=highToLow"  class="<%= locals.sortBy === 'highToLow'  ? 'active' : '' %>">High to Low</a>
+                        <a href="?sortBy=popularity" class="<%= locals.sortBy === 'popularity' ? 'active' : '' %>">Popularity</a>
+                        <a href="?sortBy=latest"     class="<%= locals.sortBy === 'latest'     ? 'active' : '' %>">Latest</a>
                     </div>
-                </form>
-            </div>
-            <div class="availability">
-                <form action="#">
-                    <h4>Availability</h4>
-                    <input type="checkbox" value="true" id="availability">
-                    <label for="availability">Include out of stock</label>
-                </form>
+                </div>
+                <div class="price-range mb-5">
+                    <form action="/search" method="GET">
+                        <label for="priceRangeFields"><h4>Price Range</h4></label>
+                        <div class="input-group input-group-sm" id="priceRangeFields">
+                            <input type="number" name="minPrice" placeholder="Min." aria-label="Minimum Price" class="form-control">
+                            <input type="number" name="maxPrice" placeholder="Max." aria-label="Maximum Price" class="form-control">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn-primary border border-primary"><span class="flaticon-search"></span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="availability">
+                    <form action="#">
+                        <h4>Availability</h4>
+                        <input type="checkbox" value="true" id="availability">
+                        <label for="availability">Include out of stock</label>
+                    </form>
+                </div>
             </div>
         </div>
         <div class="col-sm-6 col-md-9 pl-5">
             <h1>Showing results for "<%= searchKeywords %>"</h1>
             <% if (products.length > 0) { %>
                 <p>Showing 1-10 results from "<%= products.length %>" products</p>    
-                <div class="sortby-list">
-                    <h5 class="d-inline">Sort By:</h5>
-                    <a href="?sortBy=relevence"  class="<%= locals.sortBy === 'relevence'  ? 'active' : '' %>">Relevence</a>
-                    <a href="?sortBy=lowToHigh"  class="<%= locals.sortBy === 'lowToHigh'  ? 'active' : '' %>">Low to High</a>
-                    <a href="?sortBy=highToLow"  class="<%= locals.sortBy === 'highToLow'  ? 'active' : '' %>">High to Low</a>
-                    <a href="?sortBy=popularity" class="<%= locals.sortBy === 'popularity' ? 'active' : '' %>">Popularity</a>
-                    <a href="?sortBy=latest"     class="<%= locals.sortBy === 'latest'     ? 'active' : '' %>">Latest</a>
-                </div>
+                
             <% } %>
             <hr>
             <div class="row mt-5">
@@ -60,7 +58,7 @@
                 <% products.forEach(product => { %>
                     <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                         <div class="p-1 border-bottom" style="min-height: 100%;">
-                            <a href="/product/<%= product.id %>/details">
+                            <a href="/product/<%= product._id %>/details">
                                 <div class="single-new-pro mb-30 text-center <%= product.quantity < 1 ? 'product-unavailable' : '' %>">
                                     <div class="product-img" style="height: 100%;">
                                         <img src="<%= product.images[0] %>" alt="product image"/>

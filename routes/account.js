@@ -19,6 +19,40 @@ router.get("/", ensureAuthenticated, (req, res) => {
 	});
 });
 
+router.get("/credentials", ensureAuthenticated, (req, res) => {
+	res.render("account/credentials", {
+		...getCommonMetaData(req, "Account Credentials"),
+		user: req.user
+	});
+});
+
+router.post("/credentials", ensureAuthenticated, async(req, res) => {
+	const { name, email } = req.body;
+	
+	// check if the email is already present or not
+	try {
+		const emailIsTaken = req.user.email === email ? false : await User.findOne({email});
+		
+		if(!emailIsTaken) {
+			const user = await User.findById(req.user.id);
+			user.name = name;
+			user.email = email;
+			await user.save();
+			
+			req.flash("success_msg", "Credentials have been updated!");
+			return res.redirect('back');
+		} 
+
+		req.flash("error_msg", "This email is already taken!");
+		return res.redirect('back');
+		
+	} catch (error) {
+		console.log(error)
+		req.flash("error_msg", "Something went wrong. Try again later!");
+		return res.redirect('back');
+	}
+});
+
 //===============
 // cart page
 //===============
