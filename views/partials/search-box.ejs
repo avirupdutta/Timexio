@@ -1,17 +1,21 @@
 <!--? Search model Begin -->
-<div class="search-model-box">
+<div class="search-model-box container-fluid">
 	<div class="h-100">
 		<div class="search-close-btn">+</div>
 		<form class="search-model-form" id="searchForm" method="GET">
-			<div class="d-flex mb-2">
-				<input
-				class="mb-2 input-container aa-input-search form-control"
-				type="text"
-				id="search-input"
-				placeholder="Search here anyting..."
-				autocomplete="off"
-				/>
-				<button type="submit" class="search-btn">Search</button>
+			<div class="row mb-2">
+				<div class="col-9 col-sm-11">
+					<input
+					class="mb-2 input-container aa-input-search form-control"
+					type="text"
+					id="search-input"
+					placeholder="Search here anything..."
+					autocomplete="off"
+					/>
+				</div>
+				<div class="col-3 col-sm-1 text-right">
+					<button type="submit" class="search-btn"><span data-feather="search"></span></button>
+				</div>
 			</div>
 			<div class="bg-white" id="hits"></div>
 			<p id="algoliaPromo">Search by <a class="text-muted font-weight-bold" href="https://www.algolia.com/">Algolia</a></p>

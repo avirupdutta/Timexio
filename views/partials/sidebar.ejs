@@ -1,0 +1,85 @@
+<div class="sidebar">
+    <!-- Visible from small devices but hidden in extra-small devices -->
+    <div class="d-none d-sm-block">
+        <div class="categories mb-5">
+            <h4>Categories</h4>
+            <% categories.forEach(category => { %>
+                <a href="/category/<%= category %>">- <%= category %></a>
+            <% }) %>
+        </div>
+        <div class="filters mb-5">
+            <div class="sortby-list">
+                <h4 class="d-inline">Sort By:</h4>
+                <a href="?sortBy=relevence"  class="<%= locals.sortBy === 'relevence'  ? 'active' : '' %>">Relevence</a>
+                <a href="?sortBy=lowToHigh"  class="<%= locals.sortBy === 'lowToHigh'  ? 'active' : '' %>">Low to High</a>
+                <a href="?sortBy=highToLow"  class="<%= locals.sortBy === 'highToLow'  ? 'active' : '' %>">High to Low</a>
+                <a href="?sortBy=popularity" class="<%= locals.sortBy === 'popularity' ? 'active' : '' %>">Popularity</a>
+                <a href="?sortBy=latest"     class="<%= locals.sortBy === 'latest'     ? 'active' : '' %>">Latest</a>
+            </div>        
+        </div>
+        <div class="price-range mb-5">
+            <form action="/search" method="GET">
+                <label for="priceRangeFields"><h4>Price Range</h4></label>
+                <div class="input-group input-group-sm" id="priceRangeFields">
+                    <input type="number" name="minPrice" placeholder="Min." aria-label="Minimum Price" class="form-control">
+                    <input type="number" name="maxPrice" placeholder="Max." aria-label="Maximum Price" class="form-control">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn-primary border border-primary"><span class="flaticon-search"></span></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="availability">
+            <form action="#">
+                <h4>Availability</h4>
+                <input type="checkbox" value="true" id="availability">
+                <label for="availability">Exclude out of stock</label>
+            </form>
+        </div>
+    </div>
+
+    <!-- Visible on extra-small devices but hidden from small devices -->
+    <div class="d-block d-sm-none">
+        <div class="row">
+            <div class="col-12 mt-2 mb-2">
+                <div class="dropdown">
+                    <button class="btn_1 d-inline btn-secondary dropdown-toggle p-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sort By
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a href="?sortBy=relevence"  class="dropdown-item <%= locals.sortBy === 'relevence'  ? 'active' : '' %>">Relevence</a>
+                        <a href="?sortBy=lowToHigh"  class="dropdown-item <%= locals.sortBy === 'lowToHigh'  ? 'active' : '' %>">Low to High</a>
+                        <a href="?sortBy=highToLow"  class="dropdown-item <%= locals.sortBy === 'highToLow'  ? 'active' : '' %>">High to Low</a>
+                        <a href="?sortBy=popularity" class="dropdown-item <%= locals.sortBy === 'popularity' ? 'active' : '' %>">Popularity</a>
+                        <a href="?sortBy=latest"     class="dropdown-item <%= locals.sortBy === 'latest'     ? 'active' : '' %>">Latest</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-2 mb-2">
+                <div class="dropdown">
+                    <button class="btn_1 d-inline btn-secondary dropdown-toggle p-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Filters
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <form action="/search" class="dropdown-item" method="GET">
+                            <label for="priceRangeFields"><h4>Price Range</h4></label>
+                            <div class="input-group input-group-sm" id="priceRangeFields">
+                                <input type="number" name="minPrice" placeholder="Min." aria-label="Minimum Price" class="form-control">
+                                <input type="number" name="maxPrice" placeholder="Max." aria-label="Maximum Price" class="form-control">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn-primary border border-primary"><span class="flaticon-search"></span></button>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+                        <form action="#" class="dropdown-item">
+                            <h4>Availability</h4>
+                            <input type="checkbox" value="true" id="availability">
+                            <label for="availability">Exclude out of stock</label>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
