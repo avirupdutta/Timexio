@@ -6,7 +6,9 @@ const {
 	getFieldNames,
 	setProductsRoutes,
 	getIncome,
-	payNow
+	payNow,
+	algoliaTotalRecords,
+	algoliaTotalSearchRequest: algoliaTotalSearchReqs
 } = require("./utils");
 const router = express.Router();
 const {
@@ -17,6 +19,11 @@ const User = require("../models/User");
 const Product = require("../models/Product");
 const productCategories = require("../models/productCategories");
 const Order = require("../models/Orders");
+const {
+	increasedMRP,
+	algoliaMaxRecords,
+	algoliaMaxSearchRequests 
+} = require("../settings");
 
 const index = client.initIndex('products');
 
@@ -81,6 +88,23 @@ router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
 			data.pendingOrders++;
 		}
 	});
+
+	
+	// calculate total algolia search records used so far
+	try {
+		const totalRecords = await algoliaTotalRecords();
+		data.algoliaTotalRecordsUsed = (totalRecords / algoliaMaxRecords) * 100;
+	} catch (error) {
+		console.log(error)
+	}
+
+	// calculate total algolia search requests used so far
+	try {
+		const totalSearchReqs = await algoliaTotalSearchReqs();
+		data.algoliaTotalSearchReqsUsed = (totalSearchReqs / algoliaMaxSearchRequests) * 100;
+	} catch (error) {
+		console.log(error)
+	}
 
 
 	res.render("admin/index", {
@@ -148,7 +172,8 @@ router.post(
 			quantity,
 			tax,
 			images: [primaryImage, productImage1, productImage2, productImage3],
-			specs
+			specs,
+			increasedMRP: price*increasedMRP + ((tax/100)*price)
 		});
 
 		if (category === "none") {

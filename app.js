@@ -69,6 +69,7 @@ app.use("/", require("./routes/index"));
 app.use("/users", require("./routes/users"));
 app.use("/account", require("./routes/account"));
 app.use("/admin", require("./routes/admin"));
+app.use("/admin/export", require("./routes/export"));
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, console.log(`Server started http://localhost:${PORT}`));

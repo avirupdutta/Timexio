@@ -30,7 +30,9 @@
 										<a href="/account"><span data-feather="user"></span></a>
 									</li>
 									<li>
-										<a href="/account/cart"><span data-feather="shopping-cart"></span></a>
+										<a href="/account/cart"><span data-feather="shopping-cart"></span><% if (locals.totalCartItems) { %>
+											<span class="ml-1 badge badge-danger"><%= locals.totalCartItems %></span>
+										<% } %></a>
 									</li>
 								<% if (locals.admin) { %>
 									<li>

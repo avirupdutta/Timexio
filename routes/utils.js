@@ -1,3 +1,5 @@
+const moment = require("moment");
+const axios = require("axios");
 const modelNames = require("../models/index");
 const categories = require("../models/productCategories");
 const algoliasearch = require("algoliasearch");
@@ -15,7 +17,8 @@ const getAdminMetaData = name => {
 	return {
 		layout: "adminLayout",
 		name,
-		modelNames
+		modelNames,
+		exportTypes: settings.exportTypes
 	};
 };
 
@@ -77,6 +80,7 @@ const getCommonMetaData = (req, title) => {
 		name: req.user ? req.user.name : null,
 		admin: req.user ? req.user.admin : null,
 		isAuthenticated: req.isAuthenticated(),
+		totalCartItems: req.user ? req.user.cart.length : null,
 		categories
 	};
 };
@@ -118,6 +122,61 @@ const setOrderToCancel = order => {
 	return order;
 }
 
+const getTodayDateStartTime = () => {
+	return `${moment().format('YYYY-MM-DD')}T00:00:00Z`;
+}
+
+const getTodayDateEndTime = () => {
+	return `${moment().format('YYYY-MM-DD')}T00:00:01Z`;
+}
+
+const getMonthStartDate = () => {
+	return `${moment().startOf('month').format('YYYY-MM-DD')}T00:00:00Z`;
+}
+
+const getMonthEndDate = () => {
+	return `${moment().toISOString()}`;
+}
+
+
+// get total algolia records
+const algoliaTotalRecords = () => {
+	return new Promise(async (res, rej) => {
+		try {
+			const response = await axios.get(`https://usage.algolia.com/1/usage/records?startDate=${getMonthStartDate()}&endDate=${getTodayDateEndTime()}`, {
+				headers: {
+					'X-Algolia-API-Key': process.env.ALGOLIA_USAGE_API_KEY,
+					'X-Algolia-Application-Id': process.env.ALGOLIA_APP_ID
+				}
+			});
+			const record = response.data.records.pop();
+			res(record.v);
+		} catch (error) {
+			rej(error.response.data.message);
+		}
+
+	});
+}
+// get total algolia search requests
+const algoliaTotalSearchRequest = () => {
+	return new Promise(async (res, rej) => {
+		try {
+			const response = await axios.get(`https://usage.algolia.com/1/usage/total_search_requests?startDate=${getMonthStartDate()}&endDate=${getMonthEndDate()}`, {
+				headers: {
+					'X-Algolia-API-Key': process.env.ALGOLIA_USAGE_API_KEY,
+					'X-Algolia-Application-Id': process.env.ALGOLIA_APP_ID
+				}
+			});
+			const record = response.data.total_search_requests.reduce((acc, currVal) => {
+				return {v: acc.v + currVal.v}
+			}, {v: 0});
+			res(record.v);
+		} catch (error) {
+			rej(error.response.data.message);
+		}
+	});
+}
+
 module.exports = {
 	client,
 	getAdminMetaData,
@@ -127,5 +186,7 @@ module.exports = {
 	getPriceDetails,
 	getIncome,
 	payNow,
-	setOrderToCancel
+	setOrderToCancel,
+	algoliaTotalRecords,
+	algoliaTotalSearchRequest
 };

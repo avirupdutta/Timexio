@@ -20,13 +20,16 @@
                 <tr>
                     <td><p class="lead">M.R.P:</p></td>
                     <td>
-                        <del class="text-danger">&#8377;<%= (product.price * 13.685).toFixed(2) %></del>
+                        <del class="text-danger">&#8377;<%= product.increasedMRP.toFixed(2) %></del>
                     </td>
                 </tr>
                 <tr>
                     <td><h4 class="">Price:</h4></td>
                     <td>
+                        <!-- display product price with tax -->
                         <h4 class="text-danger">&#8377;<%= (product.price + ((product.tax/100)*product.price)).toLocaleString() %></h4>
+
+                        <!-- check if free delivery is available or not -->
                         <% if (product.price + ((product.tax/100)*product.price) > minAmtReqForFreeDelivery) { %>
                             <small><strong class="text-success">FREE DELIVERY!</strong></small>
                         <% } else { %>
@@ -37,7 +40,7 @@
                 <tr>
                     <td><p class="lead">You save:</p></td>
                     <td>
-                        <p class="text-danger">&#8377;<%= ((product.price * 13.685) - product.price + ((product.tax/100)*product.price)).toFixed(2)  %> <small class="text-dark">Inclusive of all taxes (<%= product.tax %>%)</small></p>
+                        <p class="text-danger">&#8377;<%= (product.increasedMRP - (product.price + ((product.tax/100)*product.price))).toFixed(2)  %> <small class="text-dark">Inclusive of all taxes (<%= product.tax %>%)</small></p>
                     </td>
                 </tr>
             </table>
@@ -70,7 +73,7 @@
 </main>
 
 <script>
-    $('.product-preview-image').click(function (e) { 
+    $('.product-preview-image').hover(function (e) { 
         var image = e.currentTarget.src;
         $('#productPrimaryImage').attr('src', image);
     })

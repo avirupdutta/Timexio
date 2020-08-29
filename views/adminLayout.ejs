@@ -44,30 +44,21 @@
 				<!-- Sidebar - Brand -->
 				<a
 					class="sidebar-brand d-flex align-items-center justify-content-center"
-					href="/"
+					href="/admin"
 				>
-					<div class="sidebar-brand-text mx-auto">
-						view site
+				<i class="fas fa-fw fa-tachometer-alt"></i>
+
+					<div class="sidebar-brand-text mx-2">
+						Dashboard
 					</div>
 				</a>
-
-				<!-- Divider -->
-				<hr class="sidebar-divider my-0" />
-
-				<!-- Nav Item - Dashboard -->
-				<li class="nav-item active">
-					<a class="nav-link" href="/admin">
-						<i class="fas fa-fw fa-tachometer-alt"></i>
-						<span>Dashboard</span></a
-					>
-				</li>
 
 				<!-- Divider -->
 				<hr class="sidebar-divider" />
 
 				<!-- Heading -->
 				<div class="sidebar-heading">
-					Collections
+					<i class="fas fa-table"></i> Tables
 				</div>
 				<% modelNames.forEach(modelName => { %>
 				<li class="nav-item">
@@ -78,11 +69,22 @@
 				<% }) %>
 				<!-- Nav Item - Charts -->
 
+				<!-- Divider -->
+				<hr class="sidebar-divider" />
+
 				<!-- Nav Item - Tables -->
 				<li class="nav-item">
-					<a class="nav-link" href="tables.html">
-						<i class="fas fa-fw fa-table"></i>
-						<span>Tables</span></a
+					<a class="nav-link" href="/admin/export">
+						<i class="fas fa-file-export"></i>
+						<span>Export Center</span></a
+					>
+				</li>
+
+				<!-- Nav Item - Tables -->
+				<li class="nav-item">
+					<a class="nav-link" href="/users/logout">
+						<i class="fas fa-sign-out-alt"></i>
+						<span>Logout</span></a
 					>
 				</li>
 

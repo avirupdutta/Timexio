@@ -69,6 +69,7 @@ router.get("/category/:model", async (req, res) => {
 						}
 					}).sort({ price: 1 });
 					break;
+
 				case "highToLow":
 					products = await Product.find({
 						category: categoryName,
@@ -78,15 +79,19 @@ router.get("/category/:model", async (req, res) => {
 						}
 					}).sort({ price: -1 });
 					break;
+
+				case "popularity":
+					products = await Product.find({
+						category: categoryName
+					}).sort({ sold: 'desc' });
+					break;
+
 				case "latest":
 					products = await Product.find({
-						category: categoryName,
-						price: {
-							$lte: maxPrice || 1000000000,
-							$gte: minPrice || 0
-						}
+						category: categoryName
 					}).sort({ created: -1 });
 					break;
+
 				default:
 					products = await Product.find({
 						category: categoryName,
