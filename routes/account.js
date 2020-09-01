@@ -1,4 +1,5 @@
 const express = require('express')
+const bcryptjs = require('bcryptjs');
 const { maxAllowedQuantityPerItemInCart } = require('../settings');
 
 const router = express.Router();
@@ -26,31 +27,88 @@ router.get("/credentials", ensureAuthenticated, (req, res) => {
 	});
 });
 
-router.post("/credentials", ensureAuthenticated, async(req, res) => {
-	const { name, email } = req.body;
+router.post("/credentials/:type", ensureAuthenticated, async(req, res) => {
+	// update profile
+	if (req.params.type === 'profile') {
+		const { name, email } = req.body;
 	
-	// check if the email is already present or not
-	try {
-		const emailIsTaken = req.user.email === email ? false : await User.findOne({email});
-		
-		if(!emailIsTaken) {
-			const user = await User.findById(req.user.id);
-			user.name = name;
-			user.email = email;
-			await user.save();
+		// check if the email is already present or not
+		try {
+			const emailIsTaken = req.user.email === email ? false : await User.findOne({email});
 			
-			req.flash("success_msg", "Credentials have been updated!");
-			return res.redirect('back');
-		} 
+			if(!emailIsTaken) {
+				const user = await User.findById(req.user.id);
+				user.name = name;
+				user.email = email;
+				await user.save();
+				
+				req.flash("success_msg", "Credentials have been updated!");
+				return res.redirect('back');
+			} 
 
-		req.flash("error_msg", "This email is already taken!");
-		return res.redirect('back');
-		
-	} catch (error) {
-		console.log(error)
-		req.flash("error_msg", "Something went wrong. Try again later!");
-		return res.redirect('back');
+			req.flash("error_msg", "This email is already taken!");
+			return res.redirect('back');
+			
+		} catch (error) {
+			console.log(error)
+			req.flash("error_msg", "Something went wrong. Try again later!");
+			return res.redirect('back');
+		}
 	}
+	// change password
+	else if (req.params.type === 'changepassword') {
+		const { currentPassword, newPassword, confirmPassword } = req.body;
+
+		if (newPassword === currentPassword) {
+			req.flash("error_msg", "Your new password must be different from your old password!");
+			return res.redirect('back');
+		}
+
+		else if (newPassword === confirmPassword) {
+			try {
+				const user = await User.findById(req.user.id);
+				const salt = await bcryptjs.genSalt(10);
+				const hash = await bcryptjs.hash(newPassword, salt);
+
+				user.password = hash;
+				await user.save();
+				req.flash("success_msg", "Password have been updated!");
+				return res.redirect('back');
+			} catch (error) {
+				console.log(error)
+				req.flash("error_msg", "Something went wrong. Try again later!");
+				return res.redirect('back');
+			}
+		}
+		else {
+			req.flash("error_msg", "Your new password must match with your confirm password");
+			return res.redirect('back');
+		}
+	
+		// check if the email is already present or not
+		try {
+			const emailIsTaken = req.user.email === email ? false : await User.findOne({email});
+			
+			if(!emailIsTaken) {
+				const user = await User.findById(req.user.id);
+				user.name = name;
+				user.email = email;
+				await user.save();
+				
+				req.flash("success_msg", "Credentials have been updated!");
+				return res.redirect('back');
+			} 
+
+			req.flash("error_msg", "This email is already taken!");
+			return res.redirect('back');
+			
+		} catch (error) {
+			console.log(error)
+			req.flash("error_msg", "Something went wrong. Try again later!");
+			return res.redirect('back');
+		}
+	}
+	return res.redirect('back'); 
 });
 
 //===============
