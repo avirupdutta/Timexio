@@ -4,9 +4,8 @@ const modelNames = require("../models/index");
 const categories = require("../models/productCategories");
 const algoliasearch = require("algoliasearch");
 const settings = require("../settings");
-
+const Order = require("../models/Orders");
 const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_ADMIN_API_KEY);
-
 const {
 	ensureAuthenticated,
 	ensureAdminAuthorized
@@ -158,7 +157,7 @@ const algoliaTotalRecords = () => {
 	});
 }
 // get total algolia search requests
-const algoliaTotalSearchRequest = () => {
+const algoliaTotalSearchReqs = () => {
 	return new Promise(async (res, rej) => {
 		try {
 			const response = await axios.get(`https://usage.algolia.com/1/usage/total_search_requests?startDate=${getMonthStartDate()}&endDate=${getMonthEndDate()}`, {
@@ -177,6 +176,71 @@ const algoliaTotalSearchRequest = () => {
 	});
 }
 
+
+// Monthly income
+const getMonthlyRevenue = () => {
+	return new Promise(async (res, rej) => {
+		const orders = await Order.find({}, (err, data) => {
+			if (err) {
+				rej(err)
+			}
+		});
+		const currentMonth = new Date().getMonth();
+		let monthlyIncome = 0;
+		orders.forEach(order => {
+			if (order.paymentTimestamp && new Date(order.paymentTimestamp).getMonth() === currentMonth) {
+				monthlyIncome += getIncome(order);
+			}
+		});
+		res(monthlyIncome);
+	})
+}
+
+
+// Yearly income
+const getYearlyRevenue = () => {
+	return new Promise(async (res, rej) => {
+		const orders = await Order.find({}, (err, data) => {
+			if (err) {
+				rej(err)
+			}
+		});
+		const currentYear = new Date().getFullYear();
+		let yearlyIncome = 0;
+		orders.forEach(order => {
+			if (order.paymentTimestamp && new Date(order.paymentTimestamp).getFullYear() === currentYear) {
+				yearlyIncome += getIncome(order);
+			}
+		});
+		res(yearlyIncome);
+	})
+}
+
+const getEarningsOverview = () => {
+	return new Promise(async (res, rej) => {
+		const orders = await Order.find({}, (err, data) => {
+			if (err) {
+				rej(err)
+			}
+		});
+		// get Earnings overview
+		let lineChartData = [];
+		
+		let currentMonthIncome;
+		for (let month = 0; month < 12; month++) {
+			currentMonthIncome = 0;
+			orders.forEach(order => {
+				if (order.paymentTimestamp && new Date(order.paymentTimestamp).getMonth() === month) {
+					currentMonthIncome += getIncome(order);
+				}
+			});
+			lineChartData.push(currentMonthIncome);
+		}
+		res(lineChartData);
+	})
+}
+
+
 module.exports = {
 	client,
 	getAdminMetaData,
@@ -188,5 +252,8 @@ module.exports = {
 	payNow,
 	setOrderToCancel,
 	algoliaTotalRecords,
-	algoliaTotalSearchRequest
+	algoliaTotalSearchReqs,
+	getMonthlyRevenue,
+	getYearlyRevenue,
+	getEarningsOverview
 };

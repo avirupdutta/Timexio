@@ -1,6 +1,6 @@
 const express = require("express");
 const moment = require("moment");
-const { client } = require("./utils");
+const { client, getMonthlyRevenue, getYearlyRevenue, getEarningsOverview } = require("./utils");
 const {
 	getAdminMetaData,
 	getFieldNames,
@@ -8,7 +8,7 @@ const {
 	getIncome,
 	payNow,
 	algoliaTotalRecords,
-	algoliaTotalSearchRequest: algoliaTotalSearchReqs
+	algoliaTotalSearchReqs
 } = require("./utils");
 const router = express.Router();
 const {
@@ -36,20 +36,10 @@ router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
 	const data = {};
 	
 	// Monthly income
-	data.monthlyIncome = 0;
-	orders.forEach(order => {
-		if (order.paymentTimestamp && new Date(order.paymentTimestamp).getMonth() === currentMonth) {
-			data.monthlyIncome += getIncome(order);
-		}
-	});
+	data.monthlyIncome = await getMonthlyRevenue();
 
 	// Yearly income
-	data.yearlyIncome = 0;
-	orders.forEach(order => {
-		if (order.paymentTimestamp && new Date(order.paymentTimestamp).getFullYear() === currentYear) {
-			data.yearlyIncome += getIncome(order);
-		}
-	});
+	data.yearlyIncome = await getYearlyRevenue();
 
 	// deliverd orders (%)
 	if (orders.length > 0) {
@@ -68,18 +58,7 @@ router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
 	data.totalCustomers = (await User.find({admin : {$ne: true}})).length;
 
 	// get Earnings overview
-	data.lineChartData = [];
-	
-	let currentMonthIncome;
-	for (let month = 0; month < 12; month++) {
-		currentMonthIncome = 0;
-		orders.forEach(order => {
-			if (order.paymentTimestamp && new Date(order.paymentTimestamp).getMonth() === month) {
-				currentMonthIncome += getIncome(order);
-			}
-		});
-		data.lineChartData.push(currentMonthIncome);
-	}
+	data.lineChartData = await getEarningsOverview();
 
 	// get pending orders
 	data.pendingOrders = 0;

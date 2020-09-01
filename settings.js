@@ -1,5 +1,5 @@
-// Currency -> In Indian Rupees
 module.exports = {
+    // Currency -> In Indian Rupees
     shippingPrice: 50, // Delivery charge
     minAmtReqForFreeDelivery: 500, // Minimum this much amount is required to qualify for free delivery
     adminQuantityWarningCount: 5,
@@ -13,8 +13,8 @@ module.exports = {
     // export data of
     exportTypes: {
         monthlyIncome: 'monthlyincome',
-        users: 'users'
+        users: 'users',
+        products: 'products',
+        orders: 'orders'
     }
-
-
 }

@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
+const json2Xls = require("json2xls");
 
 const app = express();
 
@@ -12,7 +13,7 @@ const app = express();
 require("./config/passport")(passport);
 
 // DB config
-const db = require("./config/keys").mongoURI;
+const db = require("./config/db");
 mongoose
 	.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
 	.then(() => console.log("MongoDB connected..."))
@@ -63,6 +64,9 @@ app.use("/admin/order/:id", express.static("static/admin/"));
 // for parsing the body
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+// for parsing excel
+app.use(json2Xls.middleware);
 
 // Routes
 app.use("/", require("./routes/index"));
