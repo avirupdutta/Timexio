@@ -40,6 +40,10 @@ const productSchema = new mongoose.Schema({
 	increasedMRP: {
 		type: Number,
 		required: true,
+	},
+	featured: {
+		type: Boolean,
+		default: false
 	}
 });
 

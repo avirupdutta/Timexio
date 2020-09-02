@@ -1,14 +1,15 @@
 const express = require("express");
 const moment = require("moment");
 const { client, getMonthlyRevenue, getYearlyRevenue, getEarningsOverview } = require("./utils");
+const { setAdminCommonData } = require("../middleware/admin");
+
 const {
 	getAdminMetaData,
 	getFieldNames,
-	setProductsRoutes,
-	getIncome,
 	payNow,
 	algoliaTotalRecords,
-	algoliaTotalSearchReqs
+	algoliaTotalSearchReqs,
+	humanizeFieldNames
 } = require("./utils");
 const router = express.Router();
 const {
@@ -24,15 +25,14 @@ const {
 	algoliaMaxRecords,
 	algoliaMaxSearchRequests 
 } = require("../settings");
+const settings = require("../settings");
 
 const index = client.initIndex('products');
 
 
 // ** Working GET Route for admin dashboard **
-router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
+router.get("/", ensureAuthenticated, ensureAdminAuthorized, setAdminCommonData, async(req, res) => {
 	const orders = await Order.find({});
-	const currentMonth = new Date().getMonth();
-	const currentYear = new Date().getFullYear();
 	const data = {};
 	
 	// Monthly income
@@ -87,7 +87,7 @@ router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
 
 
 	res.render("admin/index", {
-		...getAdminMetaData(req.user.name),
+		...res.commonData,
 		data
 	});
 });
@@ -97,7 +97,31 @@ router.get("/", ensureAuthenticated, ensureAdminAuthorized, async(req, res) => {
 /*===================================================*/
 
 // ** setting the GET Routes for Product listing page **
-setProductsRoutes(router, productCategories);
+productCategories.forEach(category => {
+	router.get(
+		`/${category}`,
+		ensureAuthenticated,
+		ensureAdminAuthorized,
+		(req, res) => {
+			Product.find({ category }, (err, data) => {
+				if (err) {
+					console.log(err);
+				}
+				fields = getFieldNames(Product);
+				res.render("admin/productData", {
+					...getAdminMetaData(req.user.name),
+
+					currentModel: category,
+					productCategories: productCategories,
+					humanizedFields: humanizeFieldNames(fields),
+					fields,
+					data,
+					adminQuantityWarningCount: settings.adminQuantityWarningCount
+				});
+			});
+		}
+	);
+});
 
 // GET - fetch specific product
 router.get(
@@ -218,7 +242,8 @@ router.post(
 					productImage1,
 					productImage2,
 					productImage3,
-					specs
+					specs,
+					featured
 				} = req.body;
 
 				const images = [
@@ -241,6 +266,7 @@ router.post(
 				item.specs = specs;
 				item.images = images;
 				item.quantity = quantity;
+				item.featured = featured;
 
 				item.save()
 					.then(item => {
@@ -299,11 +325,13 @@ router.get("/user", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
 		if (err) {
 			console.log(err);
 		}
+		fields = getFieldNames(User)
 		res.render("admin/userData", {
 			...getAdminMetaData(req.user.name),
 
 			currentModel: User,
-			fields: getFieldNames(User),
+			humanizedFields: humanizeFieldNames(fields),
+			fields,
 			data
 		});
 	});
@@ -429,10 +457,12 @@ router.get("/order", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
 			});
 		}
 		orders = orders.reverse()
+		fields = getFieldNames(Order)
 		return res.render("admin/orderData", {
 			...getAdminMetaData(req.user.name),
 			currentModel: Order.modelName,
-			fields: getFieldNames(Order),
+			humanizedFields: humanizeFieldNames(fields),
+			fields,
 			data: orders
 		});
 	});

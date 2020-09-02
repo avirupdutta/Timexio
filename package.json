@@ -21,6 +21,7 @@
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
     "express-session": "^1.17.1",
+    "humanize-string": "^2.1.0",
     "instantsearch.css": "^7.4.3",
     "instantsearch.js": "^4.7.0",
     "json2xls": "^0.1.2",

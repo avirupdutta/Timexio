@@ -60,7 +60,7 @@
 								<tr>
 									<th scope="col">#</th>
 									<th class="text-center">Options</th>
-									<% fields.forEach(fieldName => { %>
+									<% humanizedFields.forEach(fieldName => { %>
 										<th class="text-dark text-center"><%= fieldName %></th>
 									<% }) %>
 								</tr>
@@ -69,7 +69,7 @@
 								<tr>
 									<th scope="col">#</th>
 									<th>Options</th>
-									<% fields.forEach(fieldName => { %>
+									<% humanizedFields.forEach(fieldName => { %>
 										<th class="text-dark"><%= fieldName %></th>
 									<% }) %>
 								</tr>
@@ -100,7 +100,7 @@
 											<% } else if (fieldName === 'image') { %>
 												<img src="<%= item[fieldName] %>" class="w-100">
 											<% } else { %>
-												<%= item[fieldName] %>
+												<%= textLimitter(item[fieldName], 30) %>
 											<% } %>
 										</td>
 										<% }) %>

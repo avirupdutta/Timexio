@@ -65,7 +65,7 @@
 								<tr>
 									<th scope="col">#</th>
 									<th class="text-center">Options</th>
-									<% fields.forEach(fieldName => { %>
+									<% humanizedFields.forEach(fieldName => { %>
 										<th class="text-dark text-center"><%= fieldName %></th>
 									<% }) %>
 								</tr>
@@ -74,7 +74,7 @@
 								<tr>
 									<th scope="col">#</th>
 									<th>Options</th>
-									<% fields.forEach(fieldName => { %>
+									<% humanizedFields.forEach(fieldName => { %>
 										<th class="text-dark text-center"><%= fieldName %></th>
 									<% }) %>
 								</tr>
@@ -94,9 +94,21 @@
 												<td class="text-center">
 													<img src="<%= item[fieldName][0] %>" class="w-50" alt=""> 
 												</td>
+											<% } else if (item[fieldName] === true) { %>
+												<td>
+													<div class="text-center">
+														<i class="fas fa-star text-warning"></i>
+													</div>
+												</td>
+											<% } else if (item[fieldName] === false) { %>
+												<td>
+													<div class="text-center">
+														<i class="fas fa-ban text-danger"></i>
+													</div>
+												</td>
 											<% } else { %>
 												<td>
-													<%= item[fieldName] %>
+													<%= textLimitter(item[fieldName], 30) %>
 												</td>
 											<% } %>
 										<% }) %>

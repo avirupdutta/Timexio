@@ -1,23 +1,26 @@
 const moment = require("moment");
 const axios = require("axios");
+const humanizeString = require("humanize-string");
 const modelNames = require("../models/index");
 const categories = require("../models/productCategories");
 const algoliasearch = require("algoliasearch");
 const settings = require("../settings");
 const Order = require("../models/Orders");
 const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_ADMIN_API_KEY);
-const {
-	ensureAuthenticated,
-	ensureAdminAuthorized
-} = require("../config/auth");
-const Product = require("../models/Product");
+
 
 const getAdminMetaData = name => {
 	return {
 		layout: "adminLayout",
 		name,
 		modelNames,
-		exportTypes: settings.exportTypes
+		exportTypes: settings.exportTypes,
+		textLimitter: (str, limit) => {
+			if (str.length > limit) {
+				return str.slice(0, limit).trim().concat('...');
+			}
+			return str;
+		}
 	};
 };
 
@@ -46,32 +49,10 @@ const getFieldNames = model => {
 	);
 };
 
-const setProductsRoutes = (router, categories) => {
-	categories.forEach(category => {
-		router.get(
-			`/${category}`,
-			ensureAuthenticated,
-			ensureAdminAuthorized,
-			(req, res) => {
-				Product.find({ category }, (err, data) => {
-					if (err) {
-						console.log(err);
-					}
-
-					res.render("admin/productData", {
-						...getAdminMetaData(req.user.name),
-
-						currentModel: category,
-						productCategories: categories,
-						fields: getFieldNames(Product),
-						data,
-						adminQuantityWarningCount: settings.adminQuantityWarningCount
-					});
-				});
-			}
-		);
-	});
-};
+const humanizeFieldNames = names => {
+	names = names.map(name => humanizeString(name));
+	return names;
+}
 
 const getCommonMetaData = (req, title) => {
 	return {
@@ -119,10 +100,6 @@ const setOrderToCancel = order => {
 	order.isNotCancelled = false;
 	order.markModified('isNotCancelled');
 	return order;
-}
-
-const getTodayDateStartTime = () => {
-	return `${moment().format('YYYY-MM-DD')}T00:00:00Z`;
 }
 
 const getTodayDateEndTime = () => {
@@ -245,7 +222,6 @@ module.exports = {
 	client,
 	getAdminMetaData,
 	getFieldNames,
-	setProductsRoutes,
 	getCommonMetaData,
 	getPriceDetails,
 	getIncome,
@@ -255,5 +231,6 @@ module.exports = {
 	algoliaTotalSearchReqs,
 	getMonthlyRevenue,
 	getYearlyRevenue,
-	getEarningsOverview
+	getEarningsOverview,
+	humanizeFieldNames
 };
