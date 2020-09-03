@@ -58,6 +58,40 @@
 	display: none;
 }
 
+.featured-product::before {
+	content: "\2605  Featured";
+	padding: 0.35rem;
+	padding-right: 1.5rem;
+	display: block;
+	position: absolute;
+	top: 0px;
+	background-color: var(--orange);
+	color: #fff;
+	z-index: 1;
+	min-width: 100px;
+	clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);
+}
+
+.z-0 {
+	z-index: 0;
+}
+
+.featured-product-label {
+	padding: 0.35rem;
+	padding-right: 1.5rem;
+	min-width: 125px;
+	clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);
+}
+
+.bg-orange {
+	background-color: var(--orange);
+	color: #fff;
+}
+
+.svg-fill-white {
+	fill: #fff;
+}
+
 @media screen and (max-width: 450px) {
 	.search-model-box {
 		overflow: scroll;
