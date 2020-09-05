@@ -92,6 +92,16 @@
 	fill: #fff;
 }
 
+.product-caption {
+	position: relative;
+	top: -70px;
+	background: #fff;
+}
+
+.border-bottom-5 {
+	border-bottom: 5px solid #dee2e6 !important;
+}
+
 @media screen and (max-width: 450px) {
 	.search-model-box {
 		overflow: scroll;
@@ -110,5 +120,9 @@
 	}
 	.search-btn {
 		padding: 0.5rem 1rem;
+	}
+
+	.product-caption {
+		top: -40px;
 	}
 }

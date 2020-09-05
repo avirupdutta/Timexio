@@ -1,0 +1,15 @@
+<div class="col-12 col-md-6 col-xl-3 mt-3 mb-5" style="height: 400px;">
+    <a href="/product/<%= product.id %>/details">
+        <div class="single-new-pro text-center d-flex flex-wrap h-100 border-bottom-5 <%= product.featured ? 'featured-product' : '' %>">
+            <div class="product-img align-items-start h-75">
+                <img class="" src="<%= product.images[0] %>" alt="product image"/>
+            </div>
+            <div class="product-caption align-items-end h-25 d-flex flex-wrap">
+                <h6 class="align-items-start">
+                    <%= product.name %>
+                </h6>
+                <h3 class="text-danger mx-auto align-items-end">&#8377;<%= (product.price + ((product.tax/100)*product.price)).toLocaleString() %></h3>
+            </div>
+        </div>
+    </a>
+</div>

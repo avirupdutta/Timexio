@@ -14,24 +14,34 @@ router.get("/", async (req, res) => {
 	// New Arrivals    <==> Latest 10 products
 	// Featured        <==> Most bought products among all New Arrivals items
 	// Popular 		   <==> Most bought products among all items
-	// Category		   <==> List Products by category
-	// Editor's Choice <==> Handpicked products
 	// ========================================
 
-	// For New Arrivals
 	try {
-		const newArrivalProducts = await Product.find({'quantity': {$gt: 0}}).sort({ created: -1 });
+		// For New Arrivals
+		const newArrivalProducts = await Product.find({'quantity': {$gt: 0}}).sort({ created: -1 }).limit(8)
 		data.newArrivalProducts = newArrivalProducts;
 
-		res.render("index", {
-			...getCommonMetaData(req, "Home"),
-			...data
-		});
+		// for latest 4 featured items
+		const featuredProducts = await Product.find({'featured': true}).sort({ created: -1 }).limit(4)
+		data.featuredProducts = featuredProducts;
+
+		// for top 6 popular items
+		const popularProducts = await Product.find({}).sort({ sold: -1 }).limit(6)
+		data.popularProducts = popularProducts;
+
 	} catch (error) {
-		res.render("500", {
+		return res.render("500", {
 			...getCommonMetaData(req, `Something went wrong`)
 		});
 	}
+
+
+
+	
+	return res.render("index", {
+		...getCommonMetaData(req, "Home"),
+		...data
+	});
 });
 
 // product details
