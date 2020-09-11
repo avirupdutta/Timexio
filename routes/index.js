@@ -161,7 +161,7 @@ router.get("/search/:query", (req, res) => {
 		}
 		
 		index.search(keywords, {
-			attributesToRetrieve:  ['name', 'price', 'images', 'quantity', 'tax', '_id', 'sold'],
+			attributesToRetrieve:  ['name', 'price', 'images', 'quantity', 'tax', '_id', 'sold', 'increasedMRP'],
 		}).then(({ hits }) => {
 			hits.forEach(hit => {
 				hit.id = hit._id.$oid;

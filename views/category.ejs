@@ -1,26 +1,28 @@
 <%- include('partials/navbar.ejs') %>
 <main>
-    <div class="row mt-5">
-        <div class="col-sm-6 col-md-3 border-right pr-5">
-          <%- include('./partials/sidebar.ejs') %>
-        </div>
-        <div class="col-sm-6 col-md-9 pl-sm-5 mt-5 mt-sm-0">
-            <h1><%= categoryName %></h1>
-            <% if (products.length > 0) { %>
-                <p>Showing 1-10 results from "<%= products.length %>" products</p>
-            <% } %>
-            <hr>
-            <div class="row mt-5">
-                <div class="col-12 text-center">
-                    <% if (products.length === 0) { %>
-                        <div class="m-5 p-5">
-                            <h3 class="m-auto text-muted">No <%= categoryName %> found to display!</h3>
-                        </div>
-                    <% } %>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-sm-6 col-md-3 border-right pr-5">
+            <%- include('./partials/sidebar.ejs') %>
+            </div>
+            <div class="col-sm-6 col-md-9 pl-sm-5 mt-5 mt-sm-0">
+                <h1><%= categoryName %></h1>
+                <% if (products.length > 0) { %>
+                    <p>Showing 1-10 results from "<%= products.length %>" products</p>
+                <% } %>
+                <hr>
+                <div class="row mt-5">
+                    <div class="col-12 text-center">
+                        <% if (products.length === 0) { %>
+                            <div class="m-5 p-5">
+                                <h3 class="m-auto text-muted">No <%= categoryName %> found to display!</h3>
+                            </div>
+                        <% } %>
+                    </div>
+                    <% products.forEach(product => { %>
+                        <%- include('partials/product-snippet-medium.ejs', {product}) %>
+                    <% }) %>
                 </div>
-                <% products.forEach(product => { %>
-                    <%- include('partials/product-snippet-medium.ejs', {product}) %>
-                <% }) %>
             </div>
         </div>
     </div>

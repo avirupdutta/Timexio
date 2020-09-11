@@ -8,7 +8,10 @@
                 <h6 class="align-items-start">
                     <%= product.name %>
                 </h6>
-                <h3 class="text-danger mx-auto align-items-end">&#8377;<%= (product.price + ((product.tax/100)*product.price)).toLocaleString() %></h3>
+                <h4 class="text-danger mx-auto align-items-end">
+                   <small>&#8377;</small><%= (product.price + ((product.tax/100)*product.price)).toLocaleString() %>
+                   <small><del class="text-muted">&#8377;<%= product.increasedMRP.toFixed(2) %></del></small>
+                </h4>
             </div>
         </div>
     </a>

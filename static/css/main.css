@@ -102,6 +102,11 @@
 	border-bottom: 5px solid #dee2e6 !important;
 }
 
+.carousel {
+	max-height: 600px;
+	overflow: hidden;
+}
+
 @media screen and (max-width: 450px) {
 	.search-model-box {
 		overflow: scroll;
@@ -124,5 +129,17 @@
 
 	.product-caption {
 		top: -40px;
+	}
+}
+
+@media only screen and (min-width: 572px) {
+	.carousel {
+		margin-bottom: 7rem;
+	}
+}
+
+@media only screen and (max-width: 572px) {
+	.single-new-pro .product-img img {
+		width: 75%;
 	}
 }
