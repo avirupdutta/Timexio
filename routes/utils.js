@@ -1,6 +1,7 @@
 const moment = require("moment");
 const axios = require("axios");
 const humanizeString = require("humanize-string");
+const nodemailer = require("nodemailer");
 const modelNames = require("../models/index");
 const categories = require("../models/productCategories");
 const algoliasearch = require("algoliasearch");
@@ -114,7 +115,6 @@ const getMonthEndDate = () => {
 	return `${moment().toISOString()}`;
 }
 
-
 // get total algolia records
 const algoliaTotalRecords = () => {
 	return new Promise(async (res, rej) => {
@@ -153,7 +153,6 @@ const algoliaTotalSearchReqs = () => {
 	});
 }
 
-
 // Monthly income
 const getMonthlyRevenue = () => {
 	return new Promise(async (res, rej) => {
@@ -172,7 +171,6 @@ const getMonthlyRevenue = () => {
 		res(monthlyIncome);
 	})
 }
-
 
 // Yearly income
 const getYearlyRevenue = () => {
@@ -217,6 +215,48 @@ const getEarningsOverview = () => {
 	})
 }
 
+class Mail {
+	constructor() {
+		this.transporter = nodemailer.createTransport({
+			service: "gmail",
+			auth: {
+				user: process.env.MAIL_ID,
+				pass: process.env.MAIL_PASSWORD
+			}
+		});
+	}
+	
+
+	signupSuccessful ({name, email}) {
+		const mailOptions = {
+			from: process.env.MAIL_ID,
+			to: email,
+			subject: `Welcome to Timexio, ${name}`,
+			html: `<div style="
+				background: #eee;
+				padding: 2rem;
+			"><h1>This is an automated email</h1><p>Now you can buy any products on our site!</p><a target="_blank" href="#"><button style="
+				padding: 1rem;
+				background: #ff6a6a;
+				color: #fff;
+				font-size: 1.2rem;
+				border: none;
+				border-radius: 5px;
+				">Continue shopping</button></a>
+			</div>`
+		};
+		return new Promise((resolve, reject) => {
+			this.transporter.sendMail(mailOptions, (err, info) => {
+				if (err) {
+					return reject(err);
+				} else {
+					return resolve(info);
+				}
+			});
+		})
+	}
+}
+
 
 module.exports = {
 	client,
@@ -232,5 +272,6 @@ module.exports = {
 	getMonthlyRevenue,
 	getYearlyRevenue,
 	getEarningsOverview,
-	humanizeFieldNames
+	humanizeFieldNames,
+	Mail
 };

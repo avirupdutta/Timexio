@@ -1,4 +1,11 @@
 module.exports = {
+    serverEnv: {
+        PRODUCTION: 'PRODUCTION',
+        DEVELOPMENT: 'DEVELOPMENT',
+        BETA: 'BETA'
+    },
+    siteName: "Timexio",
+
     // Currency -> In Indian Rupees
     shippingPrice: 50, // Delivery charge
     minAmtReqForFreeDelivery: 500, // Minimum this much amount is required to qualify for free delivery

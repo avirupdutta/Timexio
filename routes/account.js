@@ -6,7 +6,7 @@ const router = express.Router();
 
 const { getCommonMetaData, getPriceDetails, setOrderToCancel } = require("./utils");
 const User = require("../models/User");
-const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
+const { ensureAuthenticated } = require("../config/auth");
 const Order = require("../models/Orders");
 const Product = require("../models/Product");
 

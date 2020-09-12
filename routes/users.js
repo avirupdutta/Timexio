@@ -1,10 +1,13 @@
 const express = require("express");
 const bcryptjs = require("bcryptjs");
 const passport = require("passport");
+const axios = require("axios");
 const User = require("../models/User");
 const { forwardAuthenticated } = require("../config/auth");
-const categories = require("../models/productCategories");
 const { getCommonMetaData } = require("./utils");
+const settings = require("../settings");
+const { Mail } = require("./utils");
+
 
 const router = express.Router();
 
@@ -14,9 +17,13 @@ router.get("/signup", forwardAuthenticated, (req, res) => {
 		...getCommonMetaData(req, "Sign Up")
 	});
 });
-router.post("/signup", (req, res) => {
+router.post("/signup", async(req, res) => {
 	let errors = [];
 	const { name, email, password, password2, admin, nextPage } = req.body;
+	const oldUser = await User.findOne({email});
+	if (oldUser) {
+		errors.push({ msg: "This email is already registered!" });
+	}
 	if (!name || !email || !password || !password2) {
 		errors.push({ msg: "Please fill up all the fields!" });
 	}
@@ -27,6 +34,11 @@ router.post("/signup", (req, res) => {
 		errors.push({ msg: "Passwords didn't matched" });
 	}
 	if (errors.length > 0) {
+		if (req.isAuthenticated()) {
+			req.flash('error_msg_list', errors)
+			return res.redirect('back');
+		}
+
 		res.render("signup", {
 			...getCommonMetaData(req, "Sign Up"),
 			errors,
@@ -35,9 +47,13 @@ router.post("/signup", (req, res) => {
 			password,
 			password2
 		});
-	} else {
-		// Validation passed!
+	} 
+	
+	// all Validations passed!
+	else {
 		let newUser;
+
+		// give admin permissions while creating users from admin panel
 		if (admin == "true") {
 			newUser = new User({
 				name,
@@ -45,7 +61,9 @@ router.post("/signup", (req, res) => {
 				password,
 				admin: true
 			});
-		} else {
+		} 
+		// creates user from sign up page
+		else {
 			newUser = new User({
 				name,
 				email,
@@ -53,10 +71,15 @@ router.post("/signup", (req, res) => {
 			});
 		}
 		// hash password
-		bcryptjs.genSalt(10, (err, salt) => {
-			bcryptjs.hash(newUser.password, salt, (err, hash) => {
-				if (err) {
-					throw err;
+		bcryptjs.genSalt(10, (genSaltError, salt) => {
+			if (genSaltError) {
+				console.log(genSaltError);
+				throw genSaltError;
+			}
+			bcryptjs.hash(newUser.password, salt, (hashError, hash) => {
+				if (hashError) {
+					console.log(hashError);
+					throw hashError;
 				}
 				// set password to hash
 				newUser.password = hash;
@@ -66,8 +89,19 @@ router.post("/signup", (req, res) => {
 					.then(user => {
 						req.flash(
 							"success_msg",
-							"Registration successfull! Login to your account."
+							"Registration successful! New account has been created."
 						);
+						// send the mail
+						const newMail = new Mail();
+						newMail.signupSuccessful({name, email}).then(response => {
+							console.log(response)
+							console.log('Mail sent!');
+						}).catch(err => {
+							console.log(err)
+							console.log('Mail failed to send')
+						})
+						
+						// redirect to login page
 						res.redirect(nextPage ? nextPage : "/users/login");
 					})
 					.catch(err => console.log(err));
