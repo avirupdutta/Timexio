@@ -1,0 +1,58 @@
+<%- include('partials/navbar.ejs') %>
+<main role="main">
+    <div class="container mt-5">
+        <h1>Frequently Asked Questions</h1>
+        <hr>
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+              <div class="card-header cursor-pointer" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <h4 class="border-0 text-dark bg-gray">
+                  What is the status of my order?
+                </h4>
+              </div>
+          
+              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    Once you have placed your order, we will send you a confirmation email to track the status of your order.
+                    <br>
+                    Once your order is shipped we will send you another email to confirm you the expected delivery date as well as the link to track your order (when the delivery method allows it).
+                    <br>
+                    Additionally, you can track the status of your order from your "order history" section on your account page on the website.
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header cursor-pointer" id="headingTwo" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                <h4 class="border-0 text-dark bg-gray">
+                  Can I change my order?
+                </h4>
+              </div>
+              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                    We can only change orders that have not been processed for shipping yet.
+                    <br>
+                    Once your order is under the status "preparing for shipping", "shipping" or "delivered", then we cannot accept any edits to your order.
+                    <br>
+                    To make changes to your order, please reach out to support through the helpdesk.
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header cursor-pointer" id="headingThree" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
+                <h4 class="border-0 text-dark bg-gray">
+                  Where do you ship?
+                </h4>
+              </div>
+              <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    We currently ship in the India only.
+                    <br>
+                    For shipping outside of these countries, please reach out to our support through our helpdesk.
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('./partials/footer.ejs') %> 
+<%- include('./partials/search-box.ejs') %>

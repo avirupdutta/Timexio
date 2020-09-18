@@ -1,0 +1,22 @@
+<%- include('partials/navbar.ejs') %>
+<main role="main">
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-sm-6 col-md-12 pl-sm-5 mt-5 mt-sm-0">
+                <h1>Trending</h1>
+                <p>This week's trending products</p>
+                <% if (products.length > 0) { %>
+                    <p></p>
+                <% } %>
+                <hr>
+                <div class="row mt-5">
+                    <% products.forEach(product => { %>
+                        <%- include('partials/product-snippet-medium.ejs', {product}) %>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include('./partials/footer.ejs') %> 
+<%- include('./partials/search-box.ejs') %>

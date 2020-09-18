@@ -201,7 +201,30 @@ router.get('/privacy-policy', (req, res) => {
 	res.render('privacyPolicy', {
 		...getCommonMetaData(req, "Privacy Policies")
 	})
+});
+
+router.get('/trending', async (req, res) => {
+	try{
+		const trendingProducts = await Product.find({featured: true}).sort({ created: -1 }).limit(20);
+		res.render('trending', {
+			...getCommonMetaData(req, "Trending"),
+			products: trendingProducts
+		});
+	} catch(err) {
+		res.render('500', {
+			...getCommonMetaData(req, "Something went wrong")
+		});
+	}
+});
+
+router.get('/frequently-asked-questions', (req, res) => {
+	res.render('faq', {
+		...getCommonMetaData(req, "Frequently Asked Questions"),
+	})
 })
+
+
+
 
 
 module.exports = router;
