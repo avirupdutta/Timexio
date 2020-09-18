@@ -579,4 +579,26 @@ router.delete("/order/delete", async(req, res) => {
 })
 
 
+
+/*===============================================================*/
+//***************** FEATURED PRODUCTS ROUTES *********************
+/*===============================================================*/
+
+router.get('/featured-products', ensureAuthenticated, ensureAdminAuthorized, async (req, res) => {
+	const featuredProducts = await Product.find({featured: true});
+	
+	const data = featuredProducts.reverse()
+	fields = getFieldNames(Product)
+
+	res.render('admin/featuredProducts', {
+		...getAdminMetaData(req.user.name),
+		humanizedFields: humanizeFieldNames(fields),
+		fields,
+		data,
+		adminQuantityWarningCount: settings.adminQuantityWarningCount
+	})
+})
+
+
+
 module.exports = router;

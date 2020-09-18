@@ -61,12 +61,18 @@
 					<i class="fas fa-table"></i> Tables
 				</div>
 				<% modelNames.forEach(modelName => { %>
-				<li class="nav-item">
-					<a class="nav-link" href="/admin/<%= modelName %>">
-						<span><%= modelName %></span></a
-					>
-				</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/admin/<%= modelName %>">
+							<span><%= modelName %></span>
+						</a>
+					</li>
 				<% }) %>
+				
+				<li class="nav-item">
+					<a class="nav-link" href="/admin/featured-products">
+						<span>Featured Products</span>
+					</a>
+				</li>
 				<!-- Nav Item - Charts -->
 
 				<!-- Divider -->

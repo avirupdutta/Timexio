@@ -191,4 +191,17 @@ router.get("/unauthorized", function(req, res) {
 	});
 });
 
+router.get('/terms-and-conditions', (req, res) => {
+	res.render('termsAndConditions', {
+		...getCommonMetaData(req, "Terms and Contions")
+	})
+})
+
+router.get('/privacy-policy', (req, res) => {
+	res.render('privacyPolicy', {
+		...getCommonMetaData(req, "Privacy Policies")
+	})
+})
+
+
 module.exports = router;

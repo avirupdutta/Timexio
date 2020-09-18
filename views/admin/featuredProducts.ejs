@@ -1,0 +1,103 @@
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
+	<!-- Main Content -->
+	<div id="content">
+		<%- include ('../partials/admin/navbar.ejs') %>
+
+		<!-- Begin Page Content -->
+		<div class="container-fluid">
+            <div class="card shadow mb-4">
+				<div class="card-header py-3">
+                    <h3 class="mb-5 text-gray-800">List of all Featured Products</h3>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table
+							class="table table-bordered"
+							id="dataTable"
+							width="100%"
+							cellspacing="0"
+						>
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th class="text-center">Options</th>
+									<% humanizedFields.forEach(fieldName => { %>
+										<th class="text-dark text-center"><%= fieldName %></th>
+									<% }) %>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th scope="col">#</th>
+									<th>Options</th>
+									<% humanizedFields.forEach(fieldName => { %>
+										<th class="text-dark"><%= fieldName %></th>
+									<% }) %>
+								</tr>
+							</tfoot>
+							<tbody>
+								<% data.forEach((item, num) => { %>	
+									<tr class="<%= item.quantity < adminQuantityWarningCount ? 'bg-light-danger' : 'text-dark' %>">
+										<td><%= num+1 %></td>
+										<td class="text-center">
+											<a target="_blank" class="btn btn-outline-primary rounded-pill border-0 m-1" href="product/<%= item.id %>/details"  data-toggle="tooltip" data-placement="left" title="Detailed view">
+												<i class="fas fa-external-link-alt"></i>
+											</a>
+										</td>								
+										<% fields.forEach(fieldName => { %>
+											<% if (Array.isArray(item[fieldName])) { %>
+												<td class="text-center">
+													<img src="<%= item[fieldName][0] %>" class="w-50" alt=""> 
+												</td>
+											<% } else if (item[fieldName] === true) { %>
+												<td>
+													<div class="text-center">
+														<i class="fas fa-star text-warning"></i>
+													</div>
+												</td>
+											<% } else if (item[fieldName] === false) { %>
+												<td>
+													<div class="text-center">
+														<i class="fas fa-ban text-danger"></i>
+													</div>
+												</td>
+											<% } else { %>
+												<td>
+													<%= textLimitter(item[fieldName], 30) %>
+												</td>
+											<% } %>
+										<% }) %>
+									</tr>
+								<% }) %>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+
+
+	</div>
+	<!-- End of Main Content -->
+
+	<!-- Footer -->
+	<footer class="sticky-footer bg-white">
+		<div class="container my-auto">
+			<div class="copyright text-center my-auto">
+				<span>Copyright &copy; Timexio 2020</span>
+			</div>
+		</div>
+	</footer>
+	<!-- End of Footer -->
+</div>
+<!-- End of Content Wrapper -->
+
+<!-- Page level plugins -->
+<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="js/demo/datatables-demo.js"></script>
+<script src="js/tooltip.js"></script>
