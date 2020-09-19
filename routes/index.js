@@ -4,227 +4,262 @@ const settings = require("../settings");
 const categories = require("../models/productCategories");
 const { getCommonMetaData, client } = require("./utils");
 const Product = require("../models/Product");
+const User = require("../models/User");
+const Contact = require("../models/Contact");
 
 //* ======= PUBLIC ROUTES BELOW! ======= //
 // welcome page
 router.get("/", async (req, res) => {
-	let data = {};
-	// Things to be displayed on the home page
-	// ========================================
-	// New Arrivals    <==> Latest 10 products
-	// Featured        <==> Most bought products among all New Arrivals items
-	// Popular 		   <==> Most bought products among all items
-	// ========================================
+    let data = {};
+    // Things to be displayed on the home page
+    // ========================================
+    // New Arrivals    <==> Latest 10 products
+    // Featured        <==> Most bought products among all New Arrivals items
+    // Popular 		   <==> Most bought products among all items
+    // ========================================
 
-	try {
-		// For New Arrivals
-		const newArrivalProducts = await Product.find({'quantity': {$gt: 0}}).sort({ created: -1 }).limit(8)
-		data.newArrivalProducts = newArrivalProducts;
+    try {
+        // For New Arrivals
+        const newArrivalProducts = await Product.find({ quantity: { $gt: 0 } })
+            .sort({ created: -1 })
+            .limit(8);
+        data.newArrivalProducts = newArrivalProducts;
 
-		// for latest 4 featured items
-		const featuredProducts = await Product.find({'featured': true}).sort({ created: -1 }).limit(4)
-		data.featuredProducts = featuredProducts;
+        // for latest 4 featured items
+        const featuredProducts = await Product.find({ featured: true })
+            .sort({ created: -1 })
+            .limit(4);
+        data.featuredProducts = featuredProducts;
 
-		// for top 6 popular items
-		const popularProducts = await Product.find({}).sort({ sold: -1 }).limit(6)
-		data.popularProducts = popularProducts;
+        // for top 6 popular items
+        const popularProducts = await Product.find({})
+            .sort({ sold: -1 })
+            .limit(6);
+        data.popularProducts = popularProducts;
+    } catch (error) {
+        return res.render("500", {
+            ...getCommonMetaData(req, `Something went wrong`),
+        });
+    }
 
-	} catch (error) {
-		return res.render("500", {
-			...getCommonMetaData(req, `Something went wrong`)
-		});
-	}
-
-
-
-	
-	return res.render("index", {
-		...getCommonMetaData(req, "Home"),
-		...data
-	});
+    return res.render("index", {
+        ...getCommonMetaData(req, "Home"),
+        ...data,
+    });
 });
 
 // product details
 router.get("/product/:id/details", async (req, res) => {
-	const id = req.params.id;
-	try {
-		const product = await Product.findById(id);
-		res.render("productDetails", {
-			...getCommonMetaData(req, product.name),
-			product,
-			shippingPrice: settings.shippingPrice,
-			minAmtReqForFreeDelivery: settings.minAmtReqForFreeDelivery
-		});
-	} catch (error) {}
+    const id = req.params.id;
+    try {
+        const product = await Product.findById(id);
+        res.render("productDetails", {
+            ...getCommonMetaData(req, product.name),
+            product,
+            shippingPrice: settings.shippingPrice,
+            minAmtReqForFreeDelivery: settings.minAmtReqForFreeDelivery,
+        });
+    } catch (error) {}
 });
 
 // category page
 router.get("/category/:model", async (req, res) => {
-	const categoryName = req.params.model;
-	if (categories.includes(categoryName)) {
-		// render all products under that category
-		// todo - Add filter by price feature
-		try {
-			let products;
-			let { sortBy, minPrice, maxPrice } = req.query;
+    const categoryName = req.params.model;
+    if (categories.includes(categoryName)) {
+        // render all products under that category
+        // todo - Add filter by price feature
+        try {
+            let products;
+            let { sortBy, minPrice, maxPrice } = req.query;
 
-			// sorting products
-			switch (sortBy) {
-				case "lowToHigh":
-					products = await Product.find({
-						category: categoryName,
-						price: {
-							$lte: maxPrice || 1000000000,
-							$gte: minPrice || 0
-						}
-					}).sort({ price: 1 });
-					break;
+            // sorting products
+            switch (sortBy) {
+                case "lowToHigh":
+                    products = await Product.find({
+                        category: categoryName,
+                        price: {
+                            $lte: maxPrice || 1000000000,
+                            $gte: minPrice || 0,
+                        },
+                    }).sort({ price: 1 });
+                    break;
 
-				case "highToLow":
-					products = await Product.find({
-						category: categoryName,
-						price: {
-							$lte: maxPrice || 1000000000,
-							$gte: minPrice || 0
-						}
-					}).sort({ price: -1 });
-					break;
+                case "highToLow":
+                    products = await Product.find({
+                        category: categoryName,
+                        price: {
+                            $lte: maxPrice || 1000000000,
+                            $gte: minPrice || 0,
+                        },
+                    }).sort({ price: -1 });
+                    break;
 
-				case "popularity":
-					products = await Product.find({
-						category: categoryName
-					}).sort({ sold: 'desc' });
-					break;
+                case "popularity":
+                    products = await Product.find({
+                        category: categoryName,
+                    }).sort({ sold: "desc" });
+                    break;
 
-				case "latest":
-					products = await Product.find({
-						category: categoryName
-					}).sort({ created: -1 });
-					break;
+                case "latest":
+                    products = await Product.find({
+                        category: categoryName,
+                    }).sort({ created: -1 });
+                    break;
 
-				default:
-					products = await Product.find({
-						category: categoryName,
-						price: {
-							$lte: maxPrice || 1000000000,
-							$gte: minPrice || 0
-						}
-					});
-					sortBy = "relevence";
-					break;
-			}
-			res.render("category", {
-				...getCommonMetaData(req, `Category for ${categoryName}`),
-				categoryName,
-				products,
-				sortBy
-			});
-		} catch (error) {
-			console.log(error);
-			res.render("500", {
-				...getCommonMetaData(req, `Something went wrong`),
-				sortBy: "relevence"
-			});
-		}
-	} else {
-		res.render("404", {
-			...getCommonMetaData(req, `${categoryName} category not found!`)
-		});
-	}
+                default:
+                    products = await Product.find({
+                        category: categoryName,
+                        price: {
+                            $lte: maxPrice || 1000000000,
+                            $gte: minPrice || 0,
+                        },
+                    });
+                    sortBy = "relevence";
+                    break;
+            }
+            res.render("category", {
+                ...getCommonMetaData(req, `Category for ${categoryName}`),
+                categoryName,
+                products,
+                sortBy,
+            });
+        } catch (error) {
+            console.log(error);
+            res.render("500", {
+                ...getCommonMetaData(req, `Something went wrong`),
+                sortBy: "relevence",
+            });
+        }
+    } else {
+        res.render("404", {
+            ...getCommonMetaData(req, `${categoryName} category not found!`),
+        });
+    }
 });
 
 // search results page
 router.get("/search/:query", (req, res) => {
-	const keywords = req.params.query;
-	if (keywords.length >= 1) {
-		// search engine algo here
-		let index = null,
-			sortBy = req.query.sortBy || "relevence";
+    const keywords = req.params.query;
+    if (keywords.length >= 1) {
+        // search engine algo here
+        let index = null,
+            sortBy = req.query.sortBy || "relevence";
 
-		switch (sortBy) {
-			case 'relevence':
-				index  = client.initIndex('products');
-				break;
-			case 'lowToHigh':
-				index = client.initIndex('Low to High');
-				break;
-			case 'highToLow':
-				index = client.initIndex('High to Low');
-				break;
-			case 'popularity':
-				index = client.initIndex('Popularity');
-				break;
-		
-			default:
-				index  = client.initIndex('products');
-				break;
-		}
-		
-		index.search(keywords, {
-			attributesToRetrieve:  ['name', 'price', 'images', 'quantity', 'tax', '_id', 'sold', 'increasedMRP'],
-		}).then(({ hits }) => {
-			hits.forEach(hit => {
-				hit.id = hit._id.$oid;
-			})
-			res.render("searchResults", {
-				...getCommonMetaData(
-					req,
-					`Showing results for ${keywords}`
-				),
-				categoryName: categories,
-				searchKeywords: keywords,
-				products: hits,
-				sortBy
-			});
-		});
+        switch (sortBy) {
+            case "relevence":
+                index = client.initIndex("products");
+                break;
+            case "lowToHigh":
+                index = client.initIndex("Low to High");
+                break;
+            case "highToLow":
+                index = client.initIndex("High to Low");
+                break;
+            case "popularity":
+                index = client.initIndex("Popularity");
+                break;
 
+            default:
+                index = client.initIndex("products");
+                break;
+        }
 
-	} else {
-		res.redirect("/");
-	}
+        index
+            .search(keywords, {
+                attributesToRetrieve: ["name", "price", "images", "quantity", "tax", "_id", "sold", "increasedMRP"],
+            })
+            .then(({ hits }) => {
+                hits.forEach(hit => {
+                    hit.id = hit._id.$oid;
+                });
+                res.render("searchResults", {
+                    ...getCommonMetaData(req, `Showing results for ${keywords}`),
+                    categoryName: categories,
+                    searchKeywords: keywords,
+                    products: hits,
+                    sortBy,
+                });
+            });
+    } else {
+        res.redirect("/");
+    }
 });
 
 // a page for auauthorized access
 router.get("/unauthorized", function(req, res) {
-	res.render("unauthorized", {
-		...getCommonMetaData(req, "Authorization Error!")
-	});
+    res.render("unauthorized", {
+        ...getCommonMetaData(req, "Authorization Error!"),
+    });
 });
 
-router.get('/terms-and-conditions', (req, res) => {
-	res.render('termsAndConditions', {
-		...getCommonMetaData(req, "Terms and Contions")
-	})
-})
-
-router.get('/privacy-policy', (req, res) => {
-	res.render('privacyPolicy', {
-		...getCommonMetaData(req, "Privacy Policies")
-	})
+router.get("/terms-and-conditions", (req, res) => {
+    res.render("termsAndConditions", {
+        ...getCommonMetaData(req, "Terms and Contions"),
+    });
 });
 
-router.get('/trending', async (req, res) => {
-	try{
-		const trendingProducts = await Product.find({featured: true}).sort({ created: -1 }).limit(20);
-		res.render('trending', {
-			...getCommonMetaData(req, "Trending"),
-			products: trendingProducts
-		});
-	} catch(err) {
-		res.render('500', {
-			...getCommonMetaData(req, "Something went wrong")
-		});
-	}
+router.get("/privacy-policy", (req, res) => {
+    res.render("privacyPolicy", {
+        ...getCommonMetaData(req, "Privacy Policies"),
+    });
 });
 
-router.get('/frequently-asked-questions', (req, res) => {
-	res.render('faq', {
-		...getCommonMetaData(req, "Frequently Asked Questions"),
-	})
-})
+router.get("/trending", async (req, res) => {
+    try {
+        const trendingProducts = await Product.find({ featured: true })
+            .sort({ created: -1 })
+            .limit(20);
+        res.render("trending", {
+            ...getCommonMetaData(req, "Trending"),
+            products: trendingProducts,
+        });
+    } catch (err) {
+        res.render("500", {
+            ...getCommonMetaData(req, "Something went wrong"),
+        });
+    }
+});
 
+router.get("/frequently-asked-questions", (req, res) => {
+    res.render("faq", {
+        ...getCommonMetaData(req, "Frequently Asked Questions"),
+    });
+});
 
+router.get("/contact-us", (req, res) => {
+    res.render("contact", {
+        ...getCommonMetaData(req, "Contact Us"),
+    });
+});
 
+router.post("/contact-us", async (req, res) => {
+    const { name, email, phone, subject, message } = req.body;
+    let byRegisteredUser = false;
+    try {
+        const user = await User.findOne({ email });
+        if (user) {
+            if (req.isAuthenticated()) {
+                byRegisteredUser = true;
+                const registeredContact = new Contact({ name, email, phone, subject, message, byRegisteredUser });
+                await registeredContact.save();
 
+                req.flash("success_msg", "Your message has been sent! We'll contact you shortly.");
+                return res.redirect("back");
+            } else {
+                req.flash("error_msg", "Failed to send! You must login to contact from a registered email.");
+                return res.redirect("back");
+            }
+        }
+        const unRegisteredContact = new Contact({ name, email, phone, subject, message, byRegisteredUser });
+        await unRegisteredContact.save();
+
+        req.flash("success_msg", "Your message has been sent! We'll contact you shortly.");
+        return res.redirect("back");
+    } catch (error) {
+        console.log(error);
+        req.flash("error_msg", "Internal error occured! Try again later.");
+        return res.redirect("back");
+    }
+});
 
 module.exports = router;
