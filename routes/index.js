@@ -262,4 +262,10 @@ router.post("/contact-us", async (req, res) => {
     }
 });
 
+router.get("/about-us", (req, res) => {
+    res.render("aboutUs", {
+        ...getCommonMetaData(req, "About Us"),
+    });
+});
+
 module.exports = router;
