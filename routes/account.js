@@ -10,7 +10,7 @@ const User = require("../models/User");
 const { ensureAuthenticated } = require("../config/auth");
 const Order = require("../models/Orders");
 const Product = require("../models/Product");
-const Issue = require("../models/Issues");
+const Issue = require("../models/Issue");
 
 //* ======= PRIVATE ROUTES BELOW! ======= //
 //===============
@@ -389,7 +389,7 @@ router.patch("/orders/cancel", ensureAuthenticated, async (req, res) => {
 //===============
 
 router.get("/issues", ensureAuthenticated, async (req, res) => {
-    const allIssues = await Issue.find({ email: req.user.email });
+    const allIssues = (await Issue.find({ email: req.user.email })).reverse();
     res.render("account/issues", {
         ...getCommonMetaData(req, "All Issues"),
         allIssues,

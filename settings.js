@@ -1,8 +1,8 @@
 module.exports = {
     serverEnv: {
-        PRODUCTION: 'PRODUCTION',
-        DEVELOPMENT: 'DEVELOPMENT',
-        BETA: 'BETA'
+        PRODUCTION: "PRODUCTION",
+        DEVELOPMENT: "DEVELOPMENT",
+        BETA: "BETA",
     },
     siteName: "Timexio",
 
@@ -10,7 +10,7 @@ module.exports = {
     shippingPrice: 50, // Delivery charge
     minAmtReqForFreeDelivery: 500, // Minimum this much amount is required to qualify for free delivery
     adminQuantityWarningCount: 5,
-    maxAllowedQuantityPerItemInCart: 5, // user cannot have more than 5 quantity of same item in cart 
+    maxAllowedQuantityPerItemInCart: 5, // user cannot have more than 5 quantity of same item in cart
     increasedMRP: 11.356, // increase the MRP by this %
 
     // Algolia
@@ -19,9 +19,10 @@ module.exports = {
 
     // export data of
     exportTypes: {
-        monthlyIncome: 'monthlyincome',
-        users: 'users',
-        products: 'products',
-        orders: 'orders'
-    }
-}
+        monthlyIncome: "monthlyincome",
+        users: "users",
+        products: "products",
+        orders: "orders",
+        customerIssues: "customer-issues",
+    },
+};

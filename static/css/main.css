@@ -147,3 +147,7 @@
 .cursor-pointer {
 	cursor: pointer;
 }
+
+.rounded-pill {
+	border-radius: 150px
+}
