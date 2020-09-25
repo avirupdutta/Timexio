@@ -15,17 +15,17 @@ require("./config/passport")(passport);
 // DB config
 const db = require("./config/db");
 mongoose
-	.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
-	.then(() => console.log("MongoDB connected..."))
-	.catch(err => console.log(err));
+    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log("MongoDB connected..."))
+    .catch(err => console.log(err));
 
 // express session
 app.use(
-	session({
-		secret: "secret",
-		resave: true,
-		saveUninitialized: true
-	})
+    session({
+        secret: "secret",
+        resave: true,
+        saveUninitialized: true,
+    })
 );
 
 // passport middleware
@@ -37,11 +37,11 @@ app.use(flash());
 
 // Global vars
 app.use((req, res, next) => {
-	res.locals.success_msg = req.flash("success_msg");
-	res.locals.error_msg = req.flash("error_msg");
-	res.locals.error = req.flash("error");
-	res.locals.error_msg_list = req.flash("error_msg_list");
-	next();
+    res.locals.success_msg = req.flash("success_msg");
+    res.locals.error_msg = req.flash("error_msg");
+    res.locals.error = req.flash("error");
+    res.locals.error_msg_list = req.flash("error_msg_list");
+    next();
 });
 
 // EJS
@@ -61,6 +61,7 @@ app.use("/admin/data", express.static("static/admin/"));
 app.use("/admin/product/:id", express.static("static/admin/"));
 app.use("/admin/user/:id", express.static("static/admin/"));
 app.use("/admin/order/:id", express.static("static/admin/"));
+app.use("/admin/customer-issues/:id", express.static("static/admin/"));
 
 // for parsing the body
 app.use(express.urlencoded({ extended: false }));

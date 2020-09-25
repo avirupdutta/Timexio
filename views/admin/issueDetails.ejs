@@ -1,0 +1,101 @@
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
+	<!-- Main Content -->
+	<div id="content">
+		<%- include ('../partials/admin/navbar.ejs') %>
+
+		<!-- Begin Page Content -->
+		<div class="container-fluid">
+			<!-- Page Heading -->
+			<div class="mb-4">
+                <p>Status: 
+                    <% if (data.closedDate) { %>
+                        <span class="badge badge-success">Closed!</span>
+                    <% } else { %>
+                        <span class="badge badge-danger">Open</span>
+                    <% } %>
+                </p>
+				<h1 class="h4 mb-0 text-grey-800">
+                    Issue ID: <%= data.id %>
+				</h1>
+			</div>
+
+		<%- include ('../partials/messages.ejs') %>
+			<!-- DataTales Example -->
+			<div class="card shadow mb-4">
+				<div class="card-header py-3">
+                    <div class="row">
+                        <div class="col-12 col-md-11">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                Details
+                            </h6>
+                        </div>
+                        <div class="col-12 col-md-1">
+                            <% if (!data.closedDate) { %>
+                                <form action="/admin/customer-issues/close" method="post">
+                                    <input type="hidden" name="issueId" value="<%= data.id %>">
+                                    <button type="submit" class="float-right btn btn-success rounded-pill" data-toggle="tooltip" data-placement="right" title="close issue"><i class="fas fa-times-circle"></i></button>
+                                </form>
+                            <% } %>
+                        </div>
+                    </div>
+				</div>
+				<div class="card-body">
+                    <div class="form-group">
+                        <p><span class="font-weight-bold">Opened On</span>: <%= data.openedDate %></p>
+                        <% if (data.closedDate) { %>
+                            <p><span class="font-weight-bold">Closed On</span>: <%= data.closedDate %></p>
+                        <% } %>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <div class="col-12 my-2 my-md-0 col-md-4">
+                            <label for="email">Full Name</label>
+                            <input type="text" value="<%= data.name %>" class="form-control" readonly disabled>
+                        </div>
+                        <div class="col-12 my-2 my-md-0 col-md-4">
+                            <label for="email">Email</label>
+                            <input type="text" value="<%= data.email %>" class="form-control" readonly disabled>
+                        
+                        </div>
+                        <div class="col-12 my-2 my-md-0 col-md-4">
+                            <label for="email">Phone Number</label>
+                            <input type="number" value="<%= data.phone %>" class="form-control" readonly disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject:</label>
+                        <input type="text" value="<%= data.subject %>" class="form-control" readonly disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea class="form-control" rows="5" disabled readonly><%= data.message %></textarea>
+                    </div>
+				</div>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+
+
+	</div>
+	<!-- End of Main Content -->
+
+	<!-- Footer -->
+	<footer class="sticky-footer bg-white">
+		<div class="container my-auto">
+			<div class="copyright text-center my-auto">
+				<span>Copyright &copy; Timexio 2020</span>
+			</div>
+		</div>
+	</footer>
+	<!-- End of Footer -->
+</div>
+<!-- End of Content Wrapper -->
+
+<!-- Page level plugins -->
+<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="js/demo/datatables-demo.js"></script>
+<script src="js/tooltip.js"></script>

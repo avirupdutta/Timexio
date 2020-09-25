@@ -1,6 +1,6 @@
 const express = require("express");
 const moment = require("moment");
-const { client, getMonthlyRevenue, getYearlyRevenue, getEarningsOverview } = require("./utils");
+const { client, getMonthlyRevenue, getYearlyRevenue, getEarningsOverview, getMonthlyIssues } = require("./utils");
 const { setAdminCommonData } = require("../middleware/admin");
 
 const {
@@ -52,6 +52,9 @@ router.get("/", ensureAuthenticated, ensureAdminAuthorized, setAdminCommonData, 
 
     // get Earnings overview
     data.lineChartData = await getEarningsOverview();
+
+    // get Monthly Issues overview
+    data.monthlyIssuesData = await getMonthlyIssues();
 
     // get pending orders
     data.pendingOrders = 0;
@@ -538,6 +541,46 @@ router.get("/customer-issues", ensureAuthenticated, ensureAdminAuthorized, async
             humanizedFields: humanizeFieldNames(fields),
             fields,
             data: issues,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.render("500", {
+            ...getAdminMetaData(req.user.name),
+        });
+    }
+});
+
+router.get("/customer-issues/:issueId/details", ensureAuthenticated, ensureAdminAuthorized, async (req, res) => {
+    try {
+        const issue = await Issue.findById(req.params.issueId);
+        if (issue) {
+            return res.render("admin/issueDetails", {
+                ...getAdminMetaData(req.user.name),
+                data: issue,
+            });
+        }
+        return res.render("404", {
+            ...getAdminMetaData(req.user.name),
+        });
+    } catch (error) {
+        console.log(error);
+        return res.render("500", {
+            ...getAdminMetaData(req.user.name),
+        });
+    }
+});
+
+router.post("/customer-issues/close", ensureAuthenticated, ensureAdminAuthorized, async (req, res) => {
+    try {
+        const issue = await Issue.findById(req.body.issueId);
+        if (issue) {
+            issue.closedDate = moment().format("Do MMMM, YYYY");
+            issue.markModified("closedDate");
+            issue.save();
+            return res.redirect(`/admin/customer-issues/${issue.id}/details`);
+        }
+        return res.render("admin/404", {
+            ...getAdminMetaData(req.user.name),
         });
     } catch (error) {
         console.log(error);

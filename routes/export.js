@@ -6,84 +6,103 @@ const { getEarningsOverview } = require("./utils");
 const User = require("../models/User");
 const Product = require("../models/Product");
 const Order = require("../models/Orders");
+const Issue = require("../models/Issue");
 
 const router = express.Router();
 
-router.get('/:type', async (req, res) => {
-
+router.get("/:type", async (req, res) => {
     // export monthly income as excel sheet
-    if(exportTypes.monthlyIncome === req.params.type) {
+    if (exportTypes.monthlyIncome === req.params.type) {
         const months = moment.months();
         const earnings = await getEarningsOverview();
         const data = [];
 
-        months.forEach ((Month, index) => {
-            data.push({Month, Earning: earnings[index]})
-        })
-        return res.xls('data.xlsx', data)
+        months.forEach((Month, index) => {
+            data.push({ Month, Earning: earnings[index] });
+        });
+        return res.xls("data.xlsx", data);
     }
 
     // export all users data as excel sheet
     else if (exportTypes.users === req.params.type) {
         const users = await User.find({}, (err, data) => {
             if (err) {
-                console.log(err)
+                console.log(err);
             }
         });
 
         const data = users.map(user => {
-            const newUserData = {}
+            const newUserData = {};
             Object.keys(user._doc).map(key => {
-                const upperCasedKey = decamelize(key, '_').toUpperCase();
+                const upperCasedKey = decamelize(key, "_").toUpperCase();
                 newUserData[upperCasedKey] = user[key];
-            })
+            });
             return newUserData;
         });
-        return res.xls('all_users.xlsx', data)
+        return res.xls("all_users.xlsx", data);
     }
 
     // export all products (with given category) data as excel sheet
     else if (exportTypes.products === req.params.type) {
-        const products = await Product.find({category: req.query.category}, (err, data) => {
+        const products = await Product.find({ category: req.query.category }, (err, data) => {
             if (err) {
-                console.log(err)
+                console.log(err);
             }
         });
         const data = products.map(product => {
-            const newProduct = {}
+            const newProduct = {};
             Object.keys(product._doc).map(key => {
-                const upperCasedKey = decamelize(key, '_').toUpperCase();
+                const upperCasedKey = decamelize(key, "_").toUpperCase();
                 newProduct[upperCasedKey] = product[key];
-            })
+            });
             return newProduct;
-        })
-        return res.xls('all_products.xlsx', data);
+        });
+        return res.xls("all_products.xlsx", data);
     }
 
     // export data of all orders
     else if (exportTypes.orders === req.params.type) {
-
         const orders = await Order.find({}, (err, data) => {
             if (err) {
-                console.log(err)
+                console.log(err);
             }
         });
 
         const data = orders.map(order => {
             const newOrder = {};
-            
+
             Object.keys(order._doc).map(key => {
-                const upperCasedKey = decamelize(key, '_').toUpperCase()
-                newOrder[upperCasedKey] = order[key]
-            })
+                const upperCasedKey = decamelize(key, "_").toUpperCase();
+                newOrder[upperCasedKey] = order[key];
+            });
             return newOrder;
         });
 
-        return res.xls('all_orders.xlsx', data);
+        return res.xls("all_orders.xlsx", data);
+    }
+
+    // export all issues
+    else if (exportTypes.customerIssues === req.params.type) {
+        try {
+            const issues = await Issue.find({});
+
+            const data = issues.map(issue => {
+                const newIssueObj = {};
+
+                Object.keys(issue._doc).map(key => {
+                    const upperCasedKey = decamelize(key, "_").toUpperCase();
+                    newIssueObj[upperCasedKey] = issue[key];
+                });
+                return newIssueObj;
+            });
+            return res.xls("all_issues.xlsx", data);
+        } catch (error) {
+            return res.status(500).json({ error: "Something went wrong!" });
+        }
     }
 
     // for invalid request
-    return res.status(400).json({error: 'Bad Request'})
+    return res.status(400).json({ error: "Bad Request" });
 });
 
 module.exports = router;

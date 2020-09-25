@@ -30,6 +30,10 @@ const issueSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 const Issue = mongoose.model("Issues", issueSchema);

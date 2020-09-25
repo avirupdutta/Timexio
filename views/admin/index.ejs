@@ -143,29 +143,7 @@
 			<!-- Content Row -->
 
 			<div class="row">
-				<!-- Area Chart -->
-				<div class="col-xl-9 col-lg-8">
-					<div class="card shadow mb-4">
-						<!-- Card Header - Dropdown -->
-						<div
-							class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
-						>
-							<h6 class="m-0 font-weight-bold text-primary">
-								Earnings Overview
-							</h6>
-							<a target="_blank" href="/admin/export/<%= exportTypes.monthlyIncome %>" class="btn btn-sm btn-outline-primary">
-								Export as .xlsx
-							</a>
-						</div>
-						<!-- Card Body -->
-						<div class="card-body">
-							<div class="chart-area">
-								<canvas id="myAreaChart"></canvas>
-							</div>
-						</div>
-					</div>
-				</div>
-
+				
 				<div class="col-xl-3 col-lg-4">
 					<!-- Pending Orders -->
 					<div class="card shadow mb-4 border-left-danger py-2">
@@ -186,14 +164,8 @@
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
 
-			<!-- Content Row -->
-			<div class="row">
-				<!-- Content Column -->
-				<div class="col-lg-6 mb-4">
-					<!-- Project Card Example -->
+					<!-- Algolia Stats -->
 					<div class="card shadow mb-4">
 						<div class="card-header py-3">
 							<h6 class="m-0 font-weight-bold text-primary">
@@ -229,7 +201,53 @@
 									aria-valuemax="100"
 								></div>
 							</div>
-							<a target="_blank" href="https://www.algolia.com/apps/TPOSGJH6ZQ/dashboard" class="btn btn-outline-primary btn-sm mt-4">Go to Algolia <i class="fas fa-external-link-alt"></i></a>
+							<a target="_blank" href="https://www.algolia.com/apps/TPOSGJH6ZQ/dashboard" class="btn btn-outline-primary btn-sm">See Details <i class="fas fa-external-link-alt"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- Area Chart -->
+				<div class="col-xl-9 col-lg-8">
+					<div class="card shadow mb-4">
+						<!-- Card Header - Dropdown -->
+						<div
+							class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+						>
+							<h6 class="m-0 font-weight-bold text-primary">
+								Earnings Overview
+							</h6>
+							<a target="_blank" href="/admin/export/<%= exportTypes.monthlyIncome %>" class="btn btn-sm btn-outline-primary">
+								Export as .xlsx
+							</a>
+						</div>
+						<!-- Card Body -->
+						<div class="card-body">
+							<div class="chart-area">
+								<canvas id="monthlyIncome"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- Content Row -->
+			<div class="row mb-4">
+				<!-- Content Column -->
+				<div class="col-lg-3">
+				</div>
+				<div class="col-lg-9">
+					
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">
+								Monthly Issues
+							</h6>
+						</div>
+						<div class="card-body">
+							<div class="chart-area">
+								<canvas id="monthlyIssues"></canvas>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -286,8 +304,8 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 }
 
 // Area Chart Example
-var ctx = document.getElementById("myAreaChart");
-var myLineChart = new Chart(ctx, {
+var monthlyIncome = document.getElementById("monthlyIncome");
+var myLineChart = new Chart(monthlyIncome, {
   type: 'line',
   data: {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
@@ -374,5 +392,96 @@ var myLineChart = new Chart(ctx, {
     }
   }
 });
+
+
+var monthlyIssues = document.getElementById("monthlyIssues");
+var monthlyIssues = new Chart(monthlyIssues, {
+	type: 'line',
+  data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [{
+      label: "Issues",
+      lineTension: 0.3,
+      backgroundColor: "rgba(78, 115, 223, 0.05)",
+      borderColor: "rgba(78, 115, 223, 1)",
+      pointRadius: 3,
+      pointBackgroundColor: "rgba(78, 115, 223, 1)",
+      pointBorderColor: "rgba(78, 115, 223, 1)",
+      pointHoverRadius: 3,
+      pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+      pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+      pointHitRadius: 10,
+      pointBorderWidth: 2,
+      data: [<%= data.monthlyIssuesData %>]
+    }],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 25,
+        top: 25,
+        bottom: 0
+      }
+    },
+    scales: {
+      xAxes: [{
+        time: {
+          unit: 'date'
+        },
+        gridLines: {
+          display: false,
+          drawBorder: false
+        },
+        ticks: {
+          maxTicksLimit: 7
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          maxTicksLimit: 5,
+          padding: 10,
+          // Include a dollar sign in the ticks
+          callback: function(value, index, values) {
+            return number_format(value);
+          }
+        },
+        gridLines: {
+          color: "rgb(234, 236, 244)",
+          zeroLineColor: "rgb(234, 236, 244)",
+          drawBorder: false,
+          borderDash: [2],
+          zeroLineBorderDash: [2]
+        }
+      }],
+    },
+    legend: {
+      display: false
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleMarginBottom: 10,
+      titleFontColor: '#6e707e',
+      titleFontSize: 14,
+      borderColor: '#dddfeb',
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      intersect: false,
+      mode: 'index',
+      caretPadding: 10,
+      callbacks: {
+        label: function(tooltipItem, chart) {
+          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+          return datasetLabel + ': ' + number_format(tooltipItem.yLabel);
+        }
+      }
+    }
+  }
+})
+
 
 </script>
