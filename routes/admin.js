@@ -590,4 +590,21 @@ router.post("/customer-issues/close", ensureAuthenticated, ensureAdminAuthorized
     }
 });
 
+router.delete("/customer-issues/:id/delete", ensureAuthenticated, ensureAdminAuthorized, async (req, res) => {
+    const id = req.params.id;
+    if (id) {
+        try {
+            const issue = await Issue.findByIdAndDelete(id);
+            if (issue) {
+                return res.status(200).json({ issue, message: "Issue is deleted successfully!" });
+            }
+            return res.status(404).json({ error: "Issue is not found" });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ error: "Something went wrong" });
+        }
+    }
+    return res.status(401).json({ error: "Bad Request" });
+});
+
 module.exports = router;

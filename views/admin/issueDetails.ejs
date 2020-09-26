@@ -25,18 +25,19 @@
 			<div class="card shadow mb-4">
 				<div class="card-header py-3">
                     <div class="row">
-                        <div class="col-12 col-md-11">
+                        <div class="col-12 col-md-10">
                             <h6 class="m-0 font-weight-bold text-primary">
                                 Details
                             </h6>
                         </div>
-                        <div class="col-12 col-md-1">
+                        <div class="col-12 col-md-2 d-flex justify-content-end">
                             <% if (!data.closedDate) { %>
                                 <form action="/admin/customer-issues/close" method="post">
                                     <input type="hidden" name="issueId" value="<%= data.id %>">
-                                    <button type="submit" class="float-right btn btn-success rounded-pill" data-toggle="tooltip" data-placement="right" title="close issue"><i class="fas fa-times-circle"></i></button>
+                                    <button type="submit" class="float-right btn btn-outline-success border-0 rounded-pill" data-toggle="tooltip" data-placement="bottom" title="close issue"><i class="fas fa-times-circle"></i></button>
                                 </form>
                             <% } %>
+                            <button class="deleteBtn btn btn-outline-danger rounded-pill border-0 m-1 btn-sm" data-issue_id="<%= data.id %>" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
 				</div>
@@ -99,3 +100,33 @@
 <!-- Page level custom scripts -->
 <script src="js/demo/datatables-demo.js"></script>
 <script src="js/tooltip.js"></script>
+<script>
+	$(document).ready(function () { 
+		$('.deleteBtn').click(function(e) {
+			var id = $(this).attr('data-issue_id')
+			console.log(id)
+			swal({
+				title: "Are you sure?",
+				text: "Once deleted, you will not be able to recover this data!",
+				icon: "warning",
+				buttons: true,
+				dangerMode: true
+			})
+			.then((willDelete) => {
+				if (willDelete) {
+					$.ajax({
+						type: 'DELETE',
+						url: `/admin/customer-issues/${id}/delete`,
+						success: function (data) { 
+							location.pathname = '/admin/customer-issues'
+						},
+						error: function (error) { 
+							swal(error);
+						}
+					})
+				}
+			})
+			.catch(err => console.log(err))
+		})
+	})
+</script>
