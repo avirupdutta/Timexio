@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="x-ua-compatible" content="ie=edge" />
-		<title>
-			<% if (locals.title) { %>
-			 <%= title %> -
-			<% } %> Timexio
-		</title>
-		<meta name="description" content="" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<!-- <link rel="manifest" href="site.webmanifest" /> -->
-		<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
 
-		<!-- CSS here -->
-		<link rel="stylesheet" href="css/bootstrap.min.css" />
-		<link rel="stylesheet" href="css/owl.carousel.min.css" />
-		<link rel="stylesheet" href="css/flaticon.css" />
-		<link rel="stylesheet" href="css/slicknav.css" />
-		<link rel="stylesheet" href="css/animate.min.css" />
-		<link rel="stylesheet" href="css/magnific-popup.css" />
-		<link rel="stylesheet" href="css/fontawesome-all.min.css" />
-		<link rel="stylesheet" href="css/themify-icons.css" />
-		<link rel="stylesheet" href="css/slick.css" />		
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-		<link
-			rel="stylesheet"
-			href="css/instantsearch.min.css"
-		/>
-		<link rel="stylesheet" href="css/main.css" />
-	</head>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="x-ua-compatible" content="ie=edge" />
+	<title>
+		<% if (locals.title) { %>
+			<%= title %> -
+				<% } %> Timexio
+	</title>
+	<meta name="description" content="" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!-- <link rel="manifest" href="site.webmanifest" /> -->
+	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
 
-	<body>
-		<%- body %>
+	<!-- CSS here -->
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/owl.carousel.min.css" />
+	<link rel="stylesheet" href="css/flaticon.css" />
+	<link rel="stylesheet" href="css/slicknav.css" />
+	<link rel="stylesheet" href="css/animate.min.css" />
+	<link rel="stylesheet" href="css/magnific-popup.css" />
+	<link rel="stylesheet" href="css/fontawesome-all.min.css" />
+	<link rel="stylesheet" href="css/themify-icons.css" />
+	<link rel="stylesheet" href="css/slick.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/instantsearch.min.css" />
+	<link rel="stylesheet" href="css/main.css" />
+</head>
+
+<body>
+	<%- body %>
 
 		<!-- JS here -->
 		<script src="./js/vendor/modernizr-3.5.0.min.js"></script>
@@ -42,11 +40,11 @@
 		<script src="./js/bootstrap.min.js"></script>
 		<!-- Jquery Mobile Menu -->
 		<script src="./js/jquery.slicknav.min.js"></script>
-		
+
 		<!-- Jquery Slick , Owl-Carousel Plugins -->
 		<script src="./js/owl.carousel.min.js"></script>
 		<script src="./js/slick.min.js"></script>
-		
+
 		<!-- One Page, Animated-HeadLin -->
 		<script src="./js/wow.min.js"></script>
 		<script src="./js/animated.headline.js"></script>
@@ -63,11 +61,11 @@
 		<script src="./js/jquery.validate.min.js"></script>
 		<script src="./js/mail-script.js"></script>
 		<script src="./js/jquery.ajaxchimp.min.js"></script>
-		
+
 
 		<!-- Jquery Plugins, main Jquery -->
 		<script src="./js/plugins.js"></script>
-		
+
 		<!-- Feather icons -->
 		<script src="https://unpkg.com/feather-icons@4.28.0/dist/feather.min.js"></script>
 
@@ -80,8 +78,14 @@
 		<!-- InstantSearch -->
 		<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.3.3/dist/instantsearch.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.4.0/dist/algoliasearch.umd.min.js"></script>
+		<script>
+			const appId = '<%= process.env.ALGOLIA_APP_ID %>';
+			const searchApiKey = '<%= process.env.ALGOLIA_SEARCH_ONLY_KEY %>';
+			const indexName = '<%= process.env.ALGOLIA_SEARCH_INDEX_NAME %>';
+		</script>
 		<script src="./js/search-suggestions.js"></script>
 
 		<%- script %>
-	</body>
+</body>
+
 </html>

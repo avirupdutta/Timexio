@@ -1,12 +1,12 @@
 const search = instantsearch({
-	appId: "TPOSGJH6ZQ",
-	apiKey: "68b9b5bfaed76755f36e9b6bf7cc0721",
-	indexName: "products",
+	appId,
+	apiKey: searchApiKey,
+	indexName,
 	urlSync: true,
 	numericFilters: [
 		'quantity > 0'
 	],
-	searchFunction: function(helper) {
+	searchFunction: function (helper) {
 		var searchResults = $("#hits");
 		if (helper.state.query === "") {
 			searchResults.hide();
@@ -14,7 +14,7 @@ const search = instantsearch({
 		}
 		helper.search();
 		searchResults.show();
-    }
+	}
 });
 
 search.addWidget(
@@ -40,7 +40,7 @@ search.addWidget(
                     </div>
                 </a>`,
 			empty: ""
-        }
+		}
 	})
 );
 
