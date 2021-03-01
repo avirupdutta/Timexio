@@ -78,12 +78,57 @@
 		<!-- InstantSearch -->
 		<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.3.3/dist/instantsearch.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.4.0/dist/algoliasearch.umd.min.js"></script>
+
+		<!-- search suggestions -->
 		<script>
-			const appId = '<%= process.env.ALGOLIA_APP_ID %>';
-			const searchApiKey = '<%= process.env.ALGOLIA_SEARCH_ONLY_KEY %>';
-			const indexName = '<%= process.env.ALGOLIA_SEARCH_INDEX_NAME %>';
+			const search = instantsearch({
+				appId: '<%= process.env.ALGOLIA_APP_ID %>',
+				apiKey: '<%= process.env.ALGOLIA_SEARCH_ONLY_KEY %>',
+				indexName: '<%= process.env.ALGOLIA_SEARCH_INDEX_NAME %>',
+				urlSync: true,
+				numericFilters: [
+					'quantity > 0'
+				],
+				searchFunction: function (helper) {
+					var searchResults = $("#hits");
+					if (helper.state.query === "") {
+						searchResults.hide();
+						return;
+					}
+					helper.search();
+					searchResults.show();
+				}
+			});
+
+			search.addWidget(
+				instantsearch.widgets.searchBox({
+					container: "#search-input"
+				})
+			);
+
+			search.addWidget(
+				instantsearch.widgets.hits({
+					container: "#hits",
+					hitsPerPage: 5,
+					templates: {
+						item: `
+						<a href="/product/{{ _id }}/details">
+							<div class="hit aa-suggestions-category p-3 border-bottom">
+								<div class="hit-content">
+									<p class="hit-price">
+										<span class="flaticon-search mr-2"></span>
+										<span class="search-highlight-text text-dark">{{{_highlightResult.name.value}}}</span>
+									</p>
+								</div>
+							</div>
+						</a>`,
+						empty: ""
+					}
+				})
+			);
+
+			search.start();
 		</script>
-		<script src="./js/search-suggestions.js"></script>
 
 		<%- script %>
 </body>
