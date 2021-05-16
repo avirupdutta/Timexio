@@ -407,6 +407,38 @@ class PriceDropMail {
     }
 }
 
+class OrderDeliver {
+    constructor() {
+        this.transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.MAIL_ID,
+                pass: process.env.MAIL_PASSWORD,
+            },
+        });
+    }
+
+    signupSuccessful({ user, product, order }) {
+        const mailOptions = {
+            from: process.env.MAIL_ID,
+            to: user.email,
+            subject: `Order Invoice`,
+            html: ` 
+            <h1>Your Order has been delivered. </h1>
+            `,
+        };
+        return new Promise((resolve, reject) => {
+            this.transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    return reject(err);
+                } else {
+                    return resolve(info);
+                }
+            });
+        });
+    }
+}
+
 const getMonthlyIssues = () => {
     return new Promise(async (resolve, reject) => {
         const issues = await Issue.find({}, (err, data) => {
@@ -446,5 +478,6 @@ module.exports = {
     Mail,
     ForgetPassword,
     PriceDropMail,
+    OrderDeliver,
     getMonthlyIssues,
 };

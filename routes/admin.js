@@ -20,7 +20,7 @@ const Order = require("../models/Orders");
 const Issue = require("../models/Issue");
 const { increasedMRP, algoliaMaxRecords, algoliaMaxSearchRequests } = require("../settings");
 const settings = require("../settings");
-const { PriceDropMail } = require("./utils");
+const { PriceDropMail, OrderDeliver } = require("./utils");
 
 const index = client.initIndex("products");
 
@@ -467,7 +467,20 @@ router.patch("/order/:id/deliver", async (req, res) => {
             console.log(error);
             return res.status(500).json({ message: "Something went wrong! Try again later" });
         }
-
+        console.log("User: ", user);
+        console.log("Product: ", product);
+        console.log("Order: ", order);
+        const newMail = new OrderDeliver();
+        newMail
+            .signupSuccessful({ user, product, order })
+            .then(response => {
+                console.log(response);
+                console.log("Mail sent!");
+            })
+            .catch(err => {
+                console.log(err);
+                console.log("Mail failed to send");
+            });
         return res.status(200).json({ message: "Order delivered successfully!" });
     } else {
         return res.status(405).json({ message: "You don't have enough quantity of this product to deliver." });
