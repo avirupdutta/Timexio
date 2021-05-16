@@ -20,6 +20,7 @@ const Order = require("../models/Orders");
 const Issue = require("../models/Issue");
 const { increasedMRP, algoliaMaxRecords, algoliaMaxSearchRequests } = require("../settings");
 const settings = require("../settings");
+const { PriceDropMail } = require("./utils");
 
 const index = client.initIndex("products");
 
@@ -135,18 +136,8 @@ router.get("/product/:id/details", ensureAuthenticated, ensureAdminAuthorized, (
 });
 // POST - add new product
 router.post("/product/add", ensureAuthenticated, ensureAdminAuthorized, (req, res) => {
-    const {
-        category,
-        name,
-        price,
-        quantity,
-        tax,
-        primaryImage,
-        productImage1,
-        productImage2,
-        productImage3,
-        specs,
-    } = req.body;
+    const { category, name, price, quantity, tax, primaryImage, productImage1, productImage2, productImage3, specs } =
+        req.body;
 
     const newProduct = new Product({
         category,
@@ -236,9 +227,13 @@ router.post("/product/:id/edit", ensureAuthenticated, ensureAdminAuthorized, (re
             item.save()
                 .then(item => {
                     req.flash("success_msg", "Product updated successfully!");
+                    console.log("Inside Item Save: ", item);
+                    const newMail = new PriceDropMail();
+                    newMail.signupSuccessful(item);
                     return res.redirect("back");
                 })
                 .catch(err => {
+                    console.log("Error in Product Update", err);
                     req.flash("error_msg", "Internal error occured. Try again later!");
                     return res.redirect("back");
                 });
