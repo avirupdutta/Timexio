@@ -245,18 +245,19 @@ class Mail {
             subject: `Welcome to Timexio, ${name}`,
             html: ` 
             <table width="100%" border="1 px" cellspacing="0" cellpadding="0">
-            <tr bgcolor="red">
+            <tr bgcolor="white">
             <td align="center">
-            <h1 style="color: white">Timexio</h1>
+            <img src="https://i.imgur.com/tzLIQuY.png" alt="" width="165" height="60">
             </td>
             </tr>
             <tr>
-            <td align="center" bgcolor="#ECEDEF" background="https://i.imgur.com/4HBwIRv.jpg" width="640" height="400" valign="top" style="background: url('https://i.imgur.com/4HBwIRv.jpg') center / cover no-repeat #000000;">
+            <td align="center" bgcolor="#ECEDEF" background="https://i.imgur.com/eY8hwuy.png" width="640" height="400" valign="top" style="background: url('https://i.imgur.com/eY8hwuy.png') center / cover no-repeat #000000;">
             <br>
             <div style="background: #ECEDEF;
             margin: 0;
             padding: 2rem;
             background: #fff;
+            border-style: solid;
             border-radius: 14px;
             padding-bottom: 20px;
             width: 400px;">
@@ -316,18 +317,19 @@ class ForgetPassword {
             subject: `Reset password`,
             html: ` 
             <table width="100%" border="1px solid black" cellspacing="0" cellpadding="0" >
-            <tr bgcolor="red">
+            <tr bgcolor="white">
             <td align="center">
-            <h1 style="color: white">Timexio</h1>
+            <img src="https://i.imgur.com/tzLIQuY.png" alt="" width="165" height="60">
             </td>
             </tr>
             <tr>
-            <td align="center" bgcolor="#ECEDEF" background="https://i.imgur.com/4HBwIRv.jpg" width="640" height="400" valign="top" style="background: url('https://i.imgur.com/4HBwIRv.jpg') center / cover no-repeat #000000;">
+            <td align="center" bgcolor="#ECEDEF" background="https://i.imgur.com/eY8hwuy.png" width="640" height="400" valign="top" style="background: url('https://i.imgur.com/eY8hwuy.png') center / cover no-repeat #000000;">
             <br>
             <div style="background: #ECEDEF;
                     margin: 0;
                     padding: 2rem;
                     background: #fff;
+                    border-style: solid;
                     border-radius: 14px;
                     padding-bottom: 20px;
                     width: 400px;">
