@@ -145,7 +145,12 @@
                         return true;
                     }
                     function check_pin(pincode) {
-                        document.getElementById("result").innerHTML = pincode;
+                        let available = parseInt(pincode) >= 700001 && parseInt(pincode) <= 700157;
+                        document.getElementById("result").innerHTML =
+                            available == true ? "Delivery Available" : "Delivery not available";
+                    }
+                    function reset_result() {
+                        document.getElementById("result").innerHTML = "";
                     }
                 </script>
                 <form name="pincode">
@@ -158,7 +163,7 @@
                         placeholder="Enter your Pincode"
                     />
                     <input type="button" value="Check" onClick="check_pin(pincode.value)" />
-                    <input type="reset" />
+                    <input type="reset" onclick="reset_result()" />
                     <br />
                     <p id="result"></p>
                 </form>
