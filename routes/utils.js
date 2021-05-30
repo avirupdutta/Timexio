@@ -8,6 +8,7 @@ const algoliasearch = require("algoliasearch");
 const settings = require("../settings");
 const Order = require("../models/Orders");
 const Issue = require("../models/Issue");
+const Product = require("../models/Product");
 const { months } = require("moment");
 const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_ADMIN_API_KEY);
 
@@ -462,6 +463,24 @@ const getMonthlyIssues = () => {
     });
 };
 
+const getWishlistProduct = async ids => {
+    try {
+        const records = await Product.find({ _id: { $in: ids } });
+        const finalRecords = records.map(item => {
+            return {
+                id: item._id,
+                name: item.name,
+                price: item.price + (item.price * item.tax) / 100,
+                images: item.images,
+                increasedMRP: item.increasedMRP,
+            };
+        });
+        return finalRecords;
+    } catch (err) {
+        throw err;
+    }
+};
+
 module.exports = {
     client,
     getAdminMetaData,
@@ -482,4 +501,5 @@ module.exports = {
     PriceDropMail,
     OrderDeliver,
     getMonthlyIssues,
+    getWishlistProduct,
 };

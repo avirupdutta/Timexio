@@ -5,7 +5,7 @@ const { maxAllowedQuantityPerItemInCart } = require("../settings");
 
 const router = express.Router();
 
-const { getCommonMetaData, getPriceDetails, setOrderToCancel } = require("./utils");
+const { getCommonMetaData, getPriceDetails, setOrderToCancel, getWishlistProduct } = require("./utils");
 const User = require("../models/User");
 const { ensureAuthenticated } = require("../config/auth");
 const Order = require("../models/Orders");
@@ -478,21 +478,20 @@ router.post("/wish/:id/add", ensureAuthenticated, async (req, res) => {
 router.get("/wishlist", ensureAuthenticated, async (req, res) => {
     let cartItems = [],
         priceDetails;
-    await User.findById(req.user.id, (error, user) => {
+    await User.findById(req.user.id, async (error, user) => {
         if (error) {
             return res.render("500", {
                 title: "Something went wrong! Try again later.",
             });
         }
         if (user) {
-            cartItems = [...user.cart];
-            priceDetails = getPriceDetails(cartItems);
+            const wishListItems = await getWishlistProduct(user.wishlist);
+            // console.log(wishListItems);
 
             return res.render("account/wishlist", {
-                ...getCommonMetaData(req, "Showing all products in your cart"),
-                cartItems,
+                ...getCommonMetaData(req, "Showing all products in your wishlist"),
+                wishListItems,
                 userId: req.user.id,
-                priceDetails,
             });
         }
     });
