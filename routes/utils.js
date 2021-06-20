@@ -645,7 +645,116 @@ class placedOrder {
             to: user.email,
             subject: `Order Placed`,
             html: `
-                <h1>Your Order has been Placed!</h1>
+            <table width="100%" border="1px solid black" cellspacing="0" cellpadding="0" >
+            <tr bgcolor="white">
+            <td align="center">
+            <img src="https://i.imgur.com/tzLIQuY.png" alt="" width="165" height="60">
+            </td>
+            </tr>
+            <tr>
+            <td align="center" bgcolor="#ECEDEF" background="https://i.imgur.com/eY8hwuy.png" width="640" height="400" valign="top" style="background: url('https://i.imgur.com/eY8hwuy.png') center / cover no-repeat #000000;">
+            <br>
+            <div style="background: #ECEDEF;
+                        margin: 0;
+                        padding: 2rem;
+                        background: #fff;
+                        border-style: solid;
+                        border-radius: 14px;
+                        padding-bottom: 20px;
+                        width: 400px;">
+            <p style="text-align: center;">Hi !</p>
+            <p style="text-align: center;">Thanks for your purchase from Timexio.</p>
+            <p style="text-align: center;">Your Order has been Placed !</p>
+            <h2 style="text-align: center;">INVOICE ID:</h2>
+            <h2 style="text-align: center;">F966457903</h2>
+            <br>
+            <p style="text-align: left; color:grey;"><b>YOUR ORDER INFORMATION:</b></p>
+            <hr class="rounded">
+            <table style="width:100%;border-collapse: separate;border-spacing:0 1em;">
+                <tr>
+                    <td>
+                        <p style="text-align: left;"><b>Order ID</b></p>
+                        <p style="text-align: left;">F966457903</p>
+                    </td>
+                    <td>
+                        <p style="text-align: left;"><b>Bill To:</b></p>
+                        <p style="text-align: left;">temp@gmail.com</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="text-align: left;"><b>Order Date</b></p>
+                        <p style="text-align: left;">May 27, 2021</p>
+                    </td>
+                    <td>
+                        <p style="text-align: left;"><b>Source:</b></p>
+                        <p style="text-align: left;">Timexio</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="text-align: left;"><b>Delivery Address:</b></p>
+                        <p style="text-align: left;">214, Rampur lane, Kolkata - 700154,West Bengal</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="text-align: left;"><b>Phone number:</b></p>
+                        <p style="text-align: left;">9933834299</p>
+                    </td>
+                </tr>
+            </table>
+            <p style="text-align: left; color:grey;"><b>HERE'S WHAT YOU ORDERED:</b></p>
+            <table style="width:100%;
+            padding: 10px;
+            border-collapse: collapse;
+            border-top: 2px solid;
+            border-bottom: 2px solid;">
+                <tr bgcolor="#E5E4E2">
+                    <th style="text-align: left; padding: 10px;">Description:</th>
+                    <th style="text-align: left; padding: 10px;">Price:</th>
+                    <th style="text-align: left; padding: 10px;">Delivery By:</th>
+                </tr>
+                <tr>
+                    <td style="padding: 2px;">
+                        <p style="text-align: left;">Product Name</p>
+                    </td>
+                    <td style="padding: 2px;">
+                        <p style="text-align: left;">₹9000</p>
+                    </td>
+                    <td style="padding: 2px;">
+                        <p style="text-align: left;">May 30, 2021</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 2px;">
+                        <p style="text-align: left;">Product 2</p>
+                    </td>
+                    <td style="padding: 2px;">
+                        <p style="text-align: left;">₹5000</p>
+                    </td>
+                    <td style="padding: 2px;">
+                        <p style="text-align: left;">May 31, 2021</p>
+                    </td>
+                </tr>
+            </table>
+            <table style="width:100%;border-collapse: collapse;">
+                <tr>
+                    <td>
+                        <p style="text-align: left; color:grey; padding: 10px;"><b>TOTAL [INR]:</b></p>
+                    </td>
+                    <td>
+                        <p style="text-align: left; padding: 10px;"><b>₹14000</b></p>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <hr class="rounded">
+            </div>
+            <br>
+            </td>
+            </tr>
+            </table>
             `,
         };
         return new Promise((resolve, reject) => {
