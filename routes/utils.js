@@ -628,6 +628,38 @@ class OrderDeliver {
     }
 }
 
+class placedOrder {
+    constructor() {
+        this.transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.MAIL_ID,
+                pass: process.env.MAIL_PASSWORD,
+            },
+        });
+    }
+
+    signupSuccessful({ user, order, userCart }) {
+        const mailOptions = {
+            from: process.env.MAIL_ID,
+            to: user.email,
+            subject: `Order Placed`,
+            html: `
+                <h1>Your Order has been Placed!</h1>
+            `,
+        };
+        return new Promise((resolve, reject) => {
+            this.transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    return reject(err);
+                } else {
+                    return resolve(info);
+                }
+            });
+        });
+    }
+}
+
 const getMonthlyIssues = () => {
     return new Promise(async (resolve, reject) => {
         const issues = await Issue.find({}, (err, data) => {
@@ -686,6 +718,7 @@ module.exports = {
     ForgetPassword,
     PriceDropMail,
     OrderDeliver,
+    placedOrder,
     getMonthlyIssues,
     getWishlistProduct,
 };

@@ -5,7 +5,7 @@ const { maxAllowedQuantityPerItemInCart } = require("../settings");
 
 const router = express.Router();
 
-const { getCommonMetaData, getPriceDetails, setOrderToCancel, getWishlistProduct } = require("./utils");
+const { getCommonMetaData, getPriceDetails, setOrderToCancel, getWishlistProduct, placedOrder } = require("./utils");
 const User = require("../models/User");
 const { ensureAuthenticated } = require("../config/auth");
 const Order = require("../models/Orders");
@@ -350,6 +350,17 @@ router.post("/checkout", ensureAuthenticated, async (req, res) => {
             return res.redirect("500");
         }
     }
+    const newMail = new placedOrder();
+    newMail
+        .signupSuccessful({ user, order, userCart })
+        .then(response => {
+            console.log(response);
+            console.log("Mail sent!");
+        })
+        .catch(err => {
+            console.log(err);
+            console.log("Mail failed to send");
+        });
     return res.render("account/successfulCheckout", {
         ...getCommonMetaData(req, "Order Placed Successfully!"),
     });
