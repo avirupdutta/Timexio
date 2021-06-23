@@ -1,5 +1,6 @@
 const moment = require("moment");
 const axios = require("axios");
+const uuidAPIKey = require("uuid-apikey");
 const humanizeString = require("humanize-string");
 const nodemailer = require("nodemailer");
 const modelNames = require("../models/index");
@@ -502,6 +503,9 @@ class OrderDeliver {
     }
 
     signupSuccessful({ user, product, order }) {
+        console.log(user);
+        console.log(product);
+        console.log(order);
         const mailOptions = {
             from: process.env.MAIL_ID,
             to: user.email,
@@ -640,6 +644,29 @@ class placedOrder {
     }
 
     signupSuccessful({ user, order, userCart }) {
+        const invoiceID = uuidAPIKey.create();
+        // console.log(user);
+        // console.log(order);
+        // console.log(userCart);
+        let products = "",
+            total = 0;
+        for (let element of userCart) {
+            products += `<tr>
+            <td style="padding: 2px;">
+                <p style="text-align: left;">${element.name}</p>
+            </td>
+            <td style="padding: 2px;">
+                <p style="text-align: left;">₹${element.price}</p>
+            </td>
+            <td style="padding: 2px;">
+                <p style="text-align: left;">${order.orderedDate}</p>
+            </td>
+        </tr>`;
+            total += element.price;
+        }
+        if (total <= 500) {
+            total += 50;
+        }
         const mailOptions = {
             from: process.env.MAIL_ID,
             to: user.email,
@@ -662,11 +689,11 @@ class placedOrder {
                         border-radius: 14px;
                         padding-bottom: 20px;
                         width: 400px;">
-            <p style="text-align: center;">Hi !</p>
+            <p style="text-align: center;">Hi ${user.name}!</p>
             <p style="text-align: center;">Thanks for your purchase from Timexio.</p>
             <p style="text-align: center;">Your Order has been Placed !</p>
             <h2 style="text-align: center;">INVOICE ID:</h2>
-            <h2 style="text-align: center;">F966457903</h2>
+            <h2 style="text-align: center;">${invoiceID.apiKey}</h2>
             <br>
             <p style="text-align: left; color:grey;"><b>YOUR ORDER INFORMATION:</b></p>
             <hr class="rounded">
@@ -674,17 +701,17 @@ class placedOrder {
                 <tr>
                     <td>
                         <p style="text-align: left;"><b>Order ID</b></p>
-                        <p style="text-align: left;">F966457903</p>
+                        <p style="text-align: left;">${invoiceID.apiKey}</p>
                     </td>
                     <td>
                         <p style="text-align: left;"><b>Bill To:</b></p>
-                        <p style="text-align: left;">temp@gmail.com</p>
+                        <p style="text-align: left;">${user.email}</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <p style="text-align: left;"><b>Order Date</b></p>
-                        <p style="text-align: left;">May 27, 2021</p>
+                        <p style="text-align: left;">${order.orderedDate}</p>
                     </td>
                     <td>
                         <p style="text-align: left;"><b>Source:</b></p>
@@ -694,13 +721,13 @@ class placedOrder {
                 <tr>
                     <td>
                         <p style="text-align: left;"><b>Delivery Address:</b></p>
-                        <p style="text-align: left;">214, Rampur lane, Kolkata - 700154,West Bengal</p>
+                        <p style="text-align: left;">${order.deliveryAddress}</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <p style="text-align: left;"><b>Phone number:</b></p>
-                        <p style="text-align: left;">9933834299</p>
+                        <p style="text-align: left;">${order.userPhoneNumber}</p>
                     </td>
                 </tr>
             </table>
@@ -715,36 +742,15 @@ class placedOrder {
                     <th style="text-align: left; padding: 10px;">Price:</th>
                     <th style="text-align: left; padding: 10px;">Delivery By:</th>
                 </tr>
-                <tr>
-                    <td style="padding: 2px;">
-                        <p style="text-align: left;">Product Name</p>
-                    </td>
-                    <td style="padding: 2px;">
-                        <p style="text-align: left;">₹9000</p>
-                    </td>
-                    <td style="padding: 2px;">
-                        <p style="text-align: left;">May 30, 2021</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding: 2px;">
-                        <p style="text-align: left;">Product 2</p>
-                    </td>
-                    <td style="padding: 2px;">
-                        <p style="text-align: left;">₹5000</p>
-                    </td>
-                    <td style="padding: 2px;">
-                        <p style="text-align: left;">May 31, 2021</p>
-                    </td>
-                </tr>
+                ${products}
             </table>
             <table style="width:100%;border-collapse: collapse;">
                 <tr>
                     <td>
-                        <p style="text-align: left; color:grey; padding: 10px;"><b>TOTAL [INR]:</b></p>
+                        <p style="text-align: left; color:grey; padding: 10px;"><b>TOTAL [INR] (including delivery charges):</b></p>
                     </td>
                     <td>
-                        <p style="text-align: left; padding: 10px;"><b>₹14000</b></p>
+                        <p style="text-align: left; padding: 10px;"><b>₹${total}</b></p>
                     </td>
                 </tr>
             </table>
