@@ -147,7 +147,7 @@ router.post("/product/add", ensureAuthenticated, ensureAdminAuthorized, (req, re
         tax,
         images: [primaryImage, productImage1, productImage2, productImage3],
         specs,
-        increasedMRP: price * increasedMRP + (tax / 100) * price,
+        increasedMRP: parseInt(price) + (parseInt(price) * increasedMRP) / 100,
     });
 
     if (category === "none") {
