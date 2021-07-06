@@ -5,7 +5,7 @@ const { maxAllowedQuantityPerItemInCart } = require("../settings");
 
 const router = express.Router();
 
-const { getCommonMetaData, getPriceDetails, setOrderToCancel } = require("./utils");
+const { getCommonMetaData, getPriceDetails, setOrderToCancel, getWishlistProduct, placedOrder } = require("./utils");
 const User = require("../models/User");
 const { ensureAuthenticated } = require("../config/auth");
 const Order = require("../models/Orders");
@@ -282,6 +282,12 @@ router.get("/checkout", ensureAuthenticated, (req, res) => {
     const userCart = req.user.cart;
     const priceDetails = getPriceDetails(userCart);
 
+    if (req.user.confirm === false) {
+        return res.render("notconfirmed", {
+            ...getCommonMetaData(req, "Unconfirmed Account!"),
+        });
+    }
+
     res.render("account/checkout", {
         ...getCommonMetaData(req, "Checkout"),
         priceDetails,
@@ -306,6 +312,7 @@ router.post("/checkout", ensureAuthenticated, async (req, res) => {
         }
         user = item;
     });
+
     const userCart = user.cart;
 
     for (const cartItem of userCart) {
@@ -343,6 +350,17 @@ router.post("/checkout", ensureAuthenticated, async (req, res) => {
             return res.redirect("500");
         }
     }
+    const newMail = new placedOrder();
+    newMail
+        .signupSuccessful({ user, order, userCart })
+        .then(response => {
+            console.log(response);
+            console.log("Mail sent!");
+        })
+        .catch(err => {
+            console.log(err);
+            console.log("Mail failed to send");
+        });
     return res.render("account/successfulCheckout", {
         ...getCommonMetaData(req, "Order Placed Successfully!"),
     });
@@ -435,6 +453,59 @@ router.post("/issues/update", ensureAuthenticated, async (req, res) => {
             ...getCommonMetaData(req, "Something went wrong!"),
         });
     }
+});
+
+router.post("/wish/:id/add", ensureAuthenticated, async (req, res) => {
+    try {
+        const { check, price } = req.body;
+        const productId = req.params.id;
+        if (check == "on" || check == true) {
+            if (price == "" || price == undefined || price == null) {
+                throw "Price is undefined";
+            }
+            const user = await User.findById(req.user.id);
+            const product = await Product.findById(productId);
+            user.wishlist.push(productId);
+            await user.save();
+            product.maillist.push({
+                email: user.email,
+                price: parseInt(price),
+            });
+            await product.save();
+        } else {
+            const user = await User.findById(req.user.id);
+            user.wishlist.push(productId);
+            await user.save();
+        }
+        return res.redirect(`/product/${productId}/details`);
+    } catch (err) {
+        console.log(err);
+        return res.render("500", {
+            ...getCommonMetaData(req, "Something went wrong!"),
+        });
+    }
+});
+
+router.get("/wishlist", ensureAuthenticated, async (req, res) => {
+    let cartItems = [],
+        priceDetails;
+    await User.findById(req.user.id, async (error, user) => {
+        if (error) {
+            return res.render("500", {
+                title: "Something went wrong! Try again later.",
+            });
+        }
+        if (user) {
+            const wishListItems = await getWishlistProduct(user.wishlist);
+            // console.log(wishListItems);
+
+            return res.render("account/wishlist", {
+                ...getCommonMetaData(req, "Showing all products in your wishlist"),
+                wishListItems,
+                userId: req.user.id,
+            });
+        }
+    });
 });
 
 module.exports = router;

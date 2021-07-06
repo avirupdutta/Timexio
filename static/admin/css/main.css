@@ -3,3 +3,11 @@
 .bg-light-danger {
 	background-color: #ffe2e2 !important;
 }
+
+.modal-dialog-scrollable .modal-content {
+	overflow-y: scroll;
+}
+
+.ck.ck-editor__main > .ck-editor__editable {
+	height: 300px;
+}
