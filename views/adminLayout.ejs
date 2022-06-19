@@ -1,180 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1, shrink-to-fit=no"
-		/>
-		<meta name="description" content="" />
-		<meta name="author" content="" />
 
-		<title>Admin - Timexio</title>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
 
-		<!-- Custom fonts for this template-->
-		<link
-			href="vendor/fontawesome-free/css/all.min.css"
-			rel="stylesheet"
-			type="text/css"
-		/>
-		<link
-			href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-			rel="stylesheet"
-		/>
+	<title>Admin - Timexio</title>
 
-		<!-- Custom styles for this template-->
-		<link href="css/main.css" rel="stylesheet" />
+	<!-- Custom fonts for this template-->
+	<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+	<link
+		href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+		rel="stylesheet" />
 
-		<!-- Custom styles for this page -->
-		<link
-			href="vendor/datatables/dataTables.bootstrap4.min.css"
-			rel="stylesheet"
-		/>
-	</head>
+	<!-- Custom styles for this template-->
+	<link href="css/main.css" rel="stylesheet" />
 
-	<body id="page-top">
-		<!-- Page Wrapper -->
-		<div id="wrapper">
-			<!-- Sidebar -->
-			<ul
-				class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
-				id="accordionSidebar"
-			>
-				<!-- Sidebar - Brand -->
-				<a
-					class="sidebar-brand d-flex align-items-center justify-content-center"
-					href="/admin"
-				>
+	<!-- Custom styles for this page -->
+	<link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+</head>
+
+<body id="page-top">
+	<!-- Page Wrapper -->
+	<div id="wrapper">
+		<!-- Sidebar -->
+		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+			<!-- Sidebar - Brand -->
+			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin">
 				<i class="fas fa-fw fa-tachometer-alt"></i>
 
-					<div class="sidebar-brand-text mx-2">
-						Dashboard
-					</div>
-				</a>
-
-				<!-- Divider -->
-				<hr class="sidebar-divider" />
-
-				<!-- Heading -->
-				<div class="sidebar-heading">
-					<i class="fas fa-table"></i> Tables
+				<div class="sidebar-brand-text mx-2">
+					Dashboard
 				</div>
-				<% modelNames.forEach(modelName => { %>
-					<li class="nav-item">
-						<a class="nav-link" href="/admin/<%= modelName %>">
-							<span><%= modelName %></span>
-						</a>
-					</li>
-				<% }) %>
-				
+			</a>
+
+			<!-- Divider -->
+			<hr class="sidebar-divider" />
+
+			<!-- Heading -->
+			<div class="sidebar-heading">
+				<i class="fas fa-table"></i> Tables
+			</div>
+			<% modelNames.forEach(modelName=> { %>
 				<li class="nav-item">
-					<a class="nav-link" href="/admin/featured-products">
-						<span>Featured Products</span>
+					<a class="nav-link" href="/admin/<%= modelName %>">
+						<span>
+							<%= modelName %>
+						</span>
 					</a>
 				</li>
-				<!-- Nav Item - Charts -->
+				<% }) %>
 
-				<!-- Divider -->
-				<hr class="sidebar-divider" />
-				<li class="nav-item">
-					<a class="nav-link" href="/admin/customer-issues">
-						<i class="fas fa-headset"></i>
-						<span>Customer Issues</span></a
-					>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/admin/contacts">
-						<i class="fas fa-envelope fa-fw"></i>
-						<span>Contacts</span></a
-					>
-				</li>
-				<hr class="sidebar-divider" />
+					<li class="nav-item">
+						<a class="nav-link" href="/admin/featured-products">
+							<span>Featured Products</span>
+						</a>
+					</li>
+					<!-- Nav Item - Charts -->
 
-				<!-- Nav Item - Tables -->
-				<li class="nav-item">
-					<a class="nav-link" href="/users/logout">
-						<i class="fas fa-sign-out-alt"></i>
-						<span>Logout</span></a
-					>
-				</li>
+					<!-- Divider -->
+					<hr class="sidebar-divider" />
+					<li class="nav-item">
+						<a class="nav-link" href="/admin/customer-issues">
+							<i class="fas fa-headset"></i>
+							<span>Customer Issues</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/admin/contacts">
+							<i class="fas fa-envelope fa-fw"></i>
+							<span>Contacts</span></a>
+					</li>
+					<hr class="sidebar-divider" />
 
-				<!-- Divider -->
-				<hr class="sidebar-divider d-none d-md-block" />
+					<!-- Nav Item - Tables -->
+					<li class="nav-item">
+						<a class="nav-link" href="/users/logout">
+							<i class="fas fa-sign-out-alt"></i>
+							<span>Logout</span></a>
+					</li>
 
-				<!-- Sidebar Toggler (Sidebar) -->
-				<div class="text-center d-none d-md-inline">
-					<button
-						class="rounded-circle border-0"
-						id="sidebarToggle"
-					></button>
+					<!-- Divider -->
+					<hr class="sidebar-divider d-none d-md-block" />
+
+					<!-- Sidebar Toggler (Sidebar) -->
+					<div class="text-center d-none d-md-inline">
+						<button class="rounded-circle border-0" id="sidebarToggle"></button>
+					</div>
+		</ul>
+		<!-- End of Sidebar -->
+		<%- body %>
+	</div>
+	<!-- End of Page Wrapper -->
+
+	<!-- Scroll to Top Button-->
+	<a class="scroll-to-top rounded" href="#page-top">
+		<i class="fas fa-angle-up"></i>
+	</a>
+
+	<!-- Logout Modal-->
+	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">
+						Ready to Leave?
+					</h5>
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
 				</div>
-			</ul>
-			<!-- End of Sidebar -->
-			<%- body %>
-		</div>
-		<!-- End of Page Wrapper -->
-
-		<!-- Scroll to Top Button-->
-		<a class="scroll-to-top rounded" href="#page-top">
-			<i class="fas fa-angle-up"></i>
-		</a>
-
-		<!-- Logout Modal-->
-		<div
-			class="modal fade"
-			id="logoutModal"
-			tabindex="-1"
-			role="dialog"
-			aria-labelledby="exampleModalLabel"
-			aria-hidden="true"
-		>
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">
-							Ready to Leave?
-						</h5>
-						<button
-							class="close"
-							type="button"
-							data-dismiss="modal"
-							aria-label="Close"
-						>
-							<span aria-hidden="true">×</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						Select "Logout" below if you are ready to end your
-						current session.
-					</div>
-					<div class="modal-footer">
-						<button
-							class="btn btn-secondary"
-							type="button"
-							data-dismiss="modal"
-						>
-							Cancel
-						</button>
-						<a class="btn btn-primary" href="login.html">Logout</a>
-					</div>
+				<div class="modal-body">
+					Select "Logout" below if you are ready to end your
+					current session.
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" type="button" data-dismiss="modal">
+						Cancel
+					</button>
+					<a class="btn btn-primary" href="login.html">Logout</a>
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<!-- Bootstrap core JavaScript-->
-		<script src="vendor/jquery/jquery.min.js"></script>
-		<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- Bootstrap core JavaScript-->
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-		<!-- Core plugin JavaScript-->
-		<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+	<!-- Core plugin JavaScript-->
+	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-		<!-- Custom scripts for all pages-->
-		<script src="js/sb-admin-2.min.js"></script>
+	<!-- Custom scripts for all pages-->
+	<script src="js/sb-admin-2.min.js"></script>
 
-		<!-- Sweet Alert -->
-		<script src="vendor/sweetalert/sweetalert.min.js"></script>
+	<!-- Sweet Alert -->
+	<script src="vendor/sweetalert/sweetalert.min.js"></script>
 
-		<%- script %>
-	</body>
+	<!-- CKeditor -->
+	<script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
+
+	<script>
+		ClassicEditor
+			.create(document.querySelector('#ckeditor'))
+			.catch(error => {
+				console.error(error);
+			});
+	</script>
+
+	<%- script %>
+
+</body>
+
 </html>
